@@ -64,18 +64,20 @@ export async function runBuild(
 
         for (const fileName of outputFiles) {
             const filePath = join(OUTPUT_DIR, fileName);
-            const fileContent = readFileSync(filePath, "utf-8");
-            const fileStats = Bun.file(filePath);
-            const extension = getFullExtension(fileName);
-            const name = basename(fileName, extension);
+            if (statSync(filePath).isFile()) {
+                const fileContent = readFileSync(filePath, "utf-8");
+                const fileStats = Bun.file(filePath);
+                const extension = getFullExtension(fileName);
+                const name = basename(fileName, extension);
 
-            result.files.push({
-                path: filePath,
-                name,
-                extension,
-                size: fileStats.size,
-                content: fileContent,
-            });
+                result.files.push({
+                    path: filePath,
+                    name,
+                    extension,
+                    size: fileStats.size,
+                    content: fileContent,
+                });
+            }
         }
     } catch (error) {
         result.success = false;
@@ -201,7 +203,7 @@ export async function runCli(options: string): Promise<RunCliResult> {
         }
 
         const outputFiles = readdirSync(OUTPUT_DIR);
-        console.log(outputFiles);
+
         for (const fileName of outputFiles) {
             const filePath = join(OUTPUT_DIR, fileName);
             if (statSync(filePath).isFile()) {

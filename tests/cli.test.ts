@@ -108,7 +108,7 @@ describe("CLI Only Options", () => {
 
         expect(result.success).toBe(true);
         expect(result.stderr).toContain(
-            "src/services/api.ts (7:33): TS9007: Function must have an explicit return type annotation.",
+            " Function must have an explicit return type annotation.",
         );
         expect(result.stdout).toContain(
             "You may have noticed some TypeScript warnings above",

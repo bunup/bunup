@@ -46,8 +46,6 @@ describe("CLI Only Options", () => {
             `src/index.ts --onSuccess="echo 'success-message-test'"`,
         );
 
-        console.log(result);
-
         expect(result.success).toBe(true);
         expect(result.stdout).toContain("Running command:");
         expect(result.stdout).toContain("echo 'success-message-test'");

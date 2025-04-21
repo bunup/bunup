@@ -201,6 +201,7 @@ export async function runCli(options: string): Promise<RunCliResult> {
         }
 
         const outputFiles = readdirSync(OUTPUT_DIR);
+        console.log(outputFiles);
         for (const fileName of outputFiles) {
             const filePath = join(OUTPUT_DIR, fileName);
             if (statSync(filePath).isFile()) {

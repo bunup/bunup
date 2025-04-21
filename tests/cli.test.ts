@@ -27,8 +27,6 @@ describe("CLI Only Options", () => {
             "src/index.ts --config custom-bunup.config.ts",
         );
 
-        console.log(result);
-
         expect(result.stdout).toContain("Using config file:");
         expect(result.stdout).toContain("custom-bunup.config.ts");
         const file = findFile(result, "index", ".mjs");
@@ -47,8 +45,6 @@ describe("CLI Only Options", () => {
         const result = await runCli(
             `src/index.ts --onSuccess="echo 'success-message-test'"`,
         );
-
-        console.log(result);
 
         expect(result.success).toBe(true);
         expect(result.stdout).toContain("Running command:");
@@ -103,8 +99,6 @@ describe("CLI Only Options", () => {
         });
 
         const result = await runCli("src/index.ts --dts");
-
-        console.log(result);
 
         expect(result.success).toBe(true);
         expect(result.stderr).toContain(

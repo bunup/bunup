@@ -4,11 +4,11 @@
     },
     "devDependencies": {
         "bunup": "workspace:*",
-        "tsdown": "^0.8.1",
+        "tsdown": "^0.9.1",
         "tsup": "^8.4.0",
         "unbuild": "^3.5.0"
     },
     "dependencies": {
-        "@types/node": "^20.17.30"
+        "@types/node": "^22.14.1"
     }
 }

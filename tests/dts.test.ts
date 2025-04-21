@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "bun:test";
 import { cleanProjectDir, createProject, findFile, runDtsBuild } from "./utils";
 
 describe("dts", () => {
@@ -13,7 +13,7 @@ describe("dts", () => {
                     id: number;
                     name: string;
                 }
-                
+
                 export function getUserName(user: User): string {
                     return user.name;
                 }
@@ -396,7 +396,7 @@ describe("dts", () => {
             `,
             "src/features/auth/services.ts": `
                 import { Credentials } from './models';
-                
+
                 export class AuthService {
                     login(credentials: Credentials): boolean {
                         return true;
@@ -416,7 +416,7 @@ describe("dts", () => {
             `,
             "src/features/user/user.service.ts": `
                 import { User } from './user.model';
-                
+
                 export class UserService {
                     getUser(id: string): User | null {
                         return null;
@@ -915,14 +915,14 @@ describe("dts", () => {
                 import { ServiceA } from './services';
                 import { UtilA } from './utils';
                 import { ComponentA } from './components/ui';
-                
+
                 export function appInit(): void {
                     const service = new ServiceA();
                     const util = new UtilA();
                     const component = new ComponentA();
                     return { service, util, component };
                 }
-                
+
                 export * from './services';
                 export * from './utils';
                 export * from './components/ui';
@@ -930,15 +930,15 @@ describe("dts", () => {
             "src/services/index.ts": `
                 export class ServiceA {
                     name = 'Service A';
-                    
+
                     doSomething(): void {
                         console.log('Service A doing something');
                     }
                 }
-                
+
                 export class ServiceB {
                     name = 'Service B';
-                    
+
                     doSomethingElse(): string {
                         return 'Service B result';
                     }
@@ -950,7 +950,7 @@ describe("dts", () => {
                         return str.toUpperCase();
                     }
                 }
-                
+
                 export function helperFunction(value: number): number {
                     return value * 2;
                 }
@@ -964,7 +964,7 @@ describe("dts", () => {
                     title: string;
                     subtitle?: string;
                 }
-                
+
                 export class ComponentA {
                     render(props: ComponentAProps) {
                         return props.title;
@@ -976,7 +976,7 @@ describe("dts", () => {
                     items: string[];
                     onSelect: (item: string) => void;
                 }
-                
+
                 export class ComponentB {
                     render(props: ComponentBProps) {
                         return props.items.join(', ');
@@ -1010,13 +1010,13 @@ describe("dts", () => {
                 // Import deeply nested modules through index files
                 import { Feature } from './features';
                 import { SubFeature } from './features/a/b/c/index';
-                
+
                 export function initializeApp() {
                     const feature = new Feature();
                     const subFeature = new SubFeature();
                     return { feature, subFeature };
                 }
-                
+
                 export * from './features';
                 export * from './features/a/b/c';
             `,
@@ -1064,7 +1064,7 @@ describe("dts", () => {
                     timeout: number;
                     retries?: number;
                 }
-                
+
                 export class SubFeature {
                     name = 'Sub Feature';
                     configure(options: SubFeatureOptions): void {

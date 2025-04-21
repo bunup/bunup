@@ -1,5 +1,5 @@
+import { beforeEach, describe, expect, it } from "bun:test";
 import type { BunPlugin } from "bun";
-import { beforeEach, describe, expect, it } from "vitest";
 import {
     cleanProjectDir,
     createProject,

@@ -1,9 +1,11 @@
 {
+	"name": "bunup-benchmarks",
+	"private": true,
     "scripts": {
         "benchmark": "bun run src/main.mjs && node src/tsup.mjs"
     },
     "devDependencies": {
-        "bunup": "workspace:*",
+        "bunup": "workspace:.",
         "tsdown": "^0.8.1",
         "tsup": "^8.4.0",
         "unbuild": "^3.5.0"

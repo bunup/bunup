@@ -1,1 +1,3 @@
-pnpm tsc && pnpm lint && pnpm format
+bun run tsc
+bun run lint
+bun run format

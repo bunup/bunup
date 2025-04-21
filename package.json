@@ -28,10 +28,10 @@
     "scripts": {
         "build": "bunup",
         "dev": "bunup --watch",
-        "build:docs": "pnpm -C docs build",
+        "build:docs": "bun run --cwd docs build",
         "create-bunup": "create-bunup",
-        "dev:docs": "pnpm -C docs dev",
-        "test-build": "pnpm -C tests build",
+        "dev:docs": "bun run --cwd docs dev",
+        "test-build": "bun run --cwd tests build",
         "test": "bun test",
         "lint": "biome check .",
         "lint:fix": "biome check --write .",
@@ -40,13 +40,13 @@
         "tsc": "tsc --noEmit",
         "release": "bumpp -r --commit --push --tag",
         "release:ci": "bumpp patch -r --commit --push --tag --yes",
-        "publish:ci": "pnpm --filter bunup --filter create-bunup publish --access public --no-git-checks",
-        "benchmark": "pnpm -C benchmarks benchmark",
-        "upgrade-deps": "pnpx taze -r -w && pnpm install && git add . && git commit -m 'chore: upgrade deps' && pnpm release:ci",
+        "publish:ci": "bun run --filter bunup --filter create-bunup publish --access public --no-git-checks",
+        "benchmark": "bun run --cwd benchmarks benchmark",
+        "upgrade-deps": "pnpx taze -r -w && bun install && git add . && git commit -m 'chore: upgrade deps' && bun run release:ci",
         "prepare": "husky",
         "fetch-latest-dep-versions": "pnpm -C create-bunup fetch-latest-dep-versions"
     },
-    "packageManager": "pnpm@10.8.1",
+    "workspaces": ["tests", "docs", "benchmarks", "create-bunup"],
     "dependencies": {
         "chokidar": "^4.0.3",
         "coffi": "^0.1.23",
@@ -72,7 +72,7 @@
         "@types/bun": "^1.2.5",
         "bumpp": "^10.1.0",
         "bunup": "^0.4.23",
-        "create-bunup": "workspace:*",
+        "create-bunup": "workspace:create-bunup",
         "husky": "^9.1.7",
         "typescript": "^5.8.3"
     }

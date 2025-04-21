@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 import { createProject, findFile, runDtsBuild } from "./utils";
 
 describe("dts-resolve", () => {
@@ -13,7 +13,7 @@ describe("dts-resolve", () => {
             }),
             "src/index.ts": `
                         import { SomeType } from 'external-lib';
-    
+
                         export function process(data: SomeType) {
                             return data;
                         }
@@ -57,17 +57,17 @@ describe("dts-resolve", () => {
                     import { format, type DateFormat } from 'date-fns';
                     import chalk, { type ChalkColor } from 'chalk';
                     import { v4, type UUID } from 'uuid';
-    
+
                     export type { DateFormat, UUID, ChalkColor };
-                    
+
                     export function formatTimestamp() {
                         return format(new Date(), 'yyyy-MM-dd');
                     }
-                    
+
                     export function colorize(text: string) {
                         return chalk.blue(text);
                     }
-                    
+
                     export function generateId() {
                         return v4();
                     }
@@ -83,7 +83,7 @@ describe("dts-resolve", () => {
                     function blue(text) {
                         return text;
                     }
-                    
+
                     export default {
                         blue
                     };
@@ -132,16 +132,16 @@ describe("dts-resolve", () => {
             }),
             "src/index.ts": `
                     import { MainType } from 'main-lib';
-                    
+
                     export function processData(data: MainType): MainType {
                         return data;
                     }
-                    
+
                     export type { MainType };
                 `,
             "node_modules/main-lib/index.d.ts": `
                     import { NestedType } from 'nested-lib';
-                    
+
                     export interface MainType {
                         id: number;
                         name: string;
@@ -150,7 +150,7 @@ describe("dts-resolve", () => {
                 `,
             "node_modules/nested-lib/index.d.cts": `
                     import { DeepType } from 'deep-lib';
-    
+
                     export interface NestedType {
                         value: string;
                         priority: number;
@@ -198,11 +198,11 @@ describe("dts-resolve", () => {
             }),
             "src/index.ts": `
                 import { Component } from 'source-lib';
-                
+
                 export function createComponent(): Component {
                     return { id: 1, name: "test" };
                 }
-                
+
                 export type { Component };
             `,
             "node_modules/source-lib/index.ts": `
@@ -256,11 +256,11 @@ describe("dts-resolve", () => {
             "src/index.ts": `
                 import { DepType } from 'dep-lib';
                 import { PeerType } from 'peer-lib';
-                
+
                 export function useTypes(dep: DepType, peer: PeerType) {
                     return { dep, peer };
                 }
-                
+
                 export type { DepType, PeerType };
             `,
             "node_modules/dep-lib/index.d.ts": `
@@ -305,11 +305,11 @@ describe("dts-resolve", () => {
             "src/index.ts": `
                 import { ExternalType } from 'external-pkg';
                 import { InternalType } from 'internal-pkg';
-                
+
                 export function processData(ext: ExternalType, int: InternalType) {
                     return { ext, int };
                 }
-                
+
                 export type { ExternalType, InternalType };
             `,
             "node_modules/external-pkg/index.d.ts": `
@@ -362,11 +362,11 @@ describe("dts-resolve", () => {
                 import { TypeA } from 'lib-a';
                 import { TypeB } from 'lib-b';
                 import { TypeC } from 'lib-c';
-                
+
                 export function combineTypes(a: TypeA, b: TypeB, c: TypeC) {
                     return { ...a, ...b, ...c };
                 }
-                
+
                 export type { TypeA, TypeB, TypeC };
             `,
             "node_modules/lib-a/index.d.ts": `
@@ -421,11 +421,11 @@ describe("dts-resolve", () => {
             "src/index.ts": `
                 import { ExternalType } from 'external-lib';
                 import { IncludedType } from 'included-lib';
-                
+
                 export function process(ext: ExternalType, inc: IncludedType) {
                     return { ext, inc };
                 }
-                
+
                 export type { ExternalType, IncludedType };
             `,
             "node_modules/external-lib/index.d.ts": `

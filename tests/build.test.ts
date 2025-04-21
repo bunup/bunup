@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "bun:test";
 import {
     cleanProjectDir,
     createProject,
@@ -510,7 +510,7 @@ describe("Build Process", () => {
             "src/index.ts": `
                 import { exec } from 'uvu';
                 import * as uvuExpect from 'uvu-expect';
-                
+
                 export const test = exec;
                 export const expect = uvuExpect;
             `,

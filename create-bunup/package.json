@@ -25,7 +25,6 @@
     "scripts": {
         "fetch-latest-dep-versions": "bun run fetch-latest-dep-versions.ts && biome format --write src/latest-dep-versions.json"
     },
-    "packageManager": "pnpm@9.15.9",
     "dependencies": {
         "@clack/prompts": "^0.7.0",
         "picocolors": "^1.1.1"

@@ -204,7 +204,7 @@ export async function runCli(options: string): Promise<RunCliResult> {
         for (const fileName of outputFiles) {
             const filePath = join(OUTPUT_DIR, fileName);
             const fileContent = readFileSync(filePath, "utf-8");
-            const stats = statSync(filePath);
+            const stats = Bun.file(filePath);
             const extension = getFullExtension(fileName);
             const name = basename(fileName, extension);
 

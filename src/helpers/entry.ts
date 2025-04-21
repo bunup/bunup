@@ -1,3 +1,4 @@
+import { basename, extname } from "node:path";
 import { logger } from "../logger";
 import type { Entry } from "../options";
 import { generateRandomSuffix, isTypeScriptFile } from "../utils";
@@ -8,7 +9,9 @@ export type ProcessableEntry = {
 };
 
 export function getEntryNameOnly(entry: string): string {
-    return entry.split("/").pop()?.split(".").slice(0, -1).join(".") || "";
+    const filename = basename(entry);
+    const extension = extname(filename);
+    return extension ? filename.slice(0, -extension.length) : filename;
 }
 
 export function normalizeEntryToProcessableEntries(

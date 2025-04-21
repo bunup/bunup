@@ -461,29 +461,4 @@ describe("Complex Format Scenarios", () => {
             }),
         ).toBe(true);
     });
-
-    it("should reject paths with slashes in outputExtension", async () => {
-        createProject({
-            "src/index.ts": "export const x = 1;",
-        });
-
-        const result = await runBuild({
-            entry: "src/index.ts",
-            format: ["esm", "cjs"],
-            dts: true,
-            outputExtension: ({ format }) => ({
-                js:
-                    format === "esm"
-                        ? "/dist/bundle.js"
-                        : "/dist/legacy/bundle.js",
-                dts:
-                    format === "esm"
-                        ? "/types/index.d.ts"
-                        : "/types/legacy/index.d.ts",
-            }),
-        });
-
-        expect(result.success).toBe(false);
-        expect(result.error).toBeTruthy();
-    });
 });

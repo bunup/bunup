@@ -14,34 +14,34 @@
  * while working around the Bun compatibility issue.
  */
 
-import path from "node:path";
-import { build as tsupBuild } from "tsup";
+import path from 'node:path'
+import { build as tsupBuild } from 'tsup'
 
-import { ENTRY_POINT, RESULTS_FILE } from "./constants";
-import type { Bundler } from "./types";
-import { appendBenchmarkResults, runBenchmarksForBundlers } from "./utils";
+import { ENTRY_POINT, RESULTS_FILE } from './constants'
+import type { Bundler } from './types'
+import { appendBenchmarkResults, runBenchmarksForBundlers } from './utils'
 
 const tsupBundler: Bundler = {
-    name: "tsup",
-    buildFn: (options) => tsupBuild(options),
-    options: (dts) => ({
-        entry: [ENTRY_POINT],
-        outDir: "tsup-dist",
-        format: ["esm", "cjs"],
-        dts,
-        treeshake: true,
-        clean: true,
-    }),
-};
-
-async function runBenchmarks() {
-    try {
-        const results = await runBenchmarksForBundlers([tsupBundler]);
-        const benchmarkFilePath = path.resolve(process.cwd(), RESULTS_FILE);
-        await appendBenchmarkResults(results, benchmarkFilePath);
-    } catch (error) {
-        console.error("Tsup benchmarking failed:", error);
-    }
+	name: 'tsup',
+	buildFn: (options) => tsupBuild(options),
+	options: (dts) => ({
+		entry: [ENTRY_POINT],
+		outDir: 'tsup-dist',
+		format: ['esm', 'cjs'],
+		dts,
+		treeshake: true,
+		clean: true,
+	}),
 }
 
-runBenchmarks();
+async function runBenchmarks() {
+	try {
+		const results = await runBenchmarksForBundlers([tsupBundler])
+		const benchmarkFilePath = path.resolve(process.cwd(), RESULTS_FILE)
+		await appendBenchmarkResults(results, benchmarkFilePath)
+	} catch (error) {
+		console.error('Tsup benchmarking failed:', error)
+	}
+}
+
+runBenchmarks()

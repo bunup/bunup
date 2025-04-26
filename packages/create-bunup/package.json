@@ -1,40 +1,40 @@
 {
-    "name": "create-bunup",
-    "description": "Quickly scaffold a new TypeScript package with Bunup",
-    "version": "0.5.6",
-    "license": "MIT",
-    "author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
-    "type": "module",
-    "maintainers": [
-        {
-            "name": "Arshad Yaseen",
-            "email": "m@arshadyaseen.com",
-            "url": "https://arshadyaseen.com"
-        }
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/arshad-yaseen/bunup.git"
-    },
-    "homepage": "https://bunup.dev/docs/typescript-library-starter",
-    "funding": "https://github.com/sponsors/arshad-yaseen",
-    "keywords": ["bunup", "typescript", "cli", "bun", "create", "starter"],
-    "files": ["dist"],
-    "bin": {
-        "create-bunup": "dist/index.js"
-    },
-    "scripts": {
-        "fetch-latest-dep-versions": "bun run fetch-latest-dep-versions.ts && biome format --write src/latest-dep-versions.json",
-        "npm-publish": "bun publish --access public --no-git-checks",
-        "prepack": "cp ../../LICENSE .",
-        "postpack": "rm LICENSE"
-    },
-    "dependencies": {
-        "@clack/prompts": "^0.7.0",
-        "picocolors": "^1.1.1"
-    },
-    "devDependencies": {
-        "@types/node": "^20.17.30",
-        "typescript": "^5.8.2"
-    }
+	"name": "create-bunup",
+	"description": "Quickly scaffold a new TypeScript package with Bunup",
+	"version": "0.5.6",
+	"license": "MIT",
+	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+	"type": "module",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "m@arshadyaseen.com",
+			"url": "https://arshadyaseen.com"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/arshad-yaseen/bunup.git"
+	},
+	"homepage": "https://bunup.dev/docs/typescript-library-starter",
+	"funding": "https://github.com/sponsors/arshad-yaseen",
+	"keywords": ["bunup", "typescript", "cli", "bun", "create", "starter"],
+	"files": ["dist"],
+	"bin": {
+		"create-bunup": "dist/index.js"
+	},
+	"scripts": {
+		"fetch-latest-dep-versions": "bun run fetch-latest-dep-versions.ts && biome format --write src/latest-dep-versions.json",
+		"npm-publish": "bun publish --access public --no-git-checks",
+		"prepack": "cp ../../LICENSE .",
+		"postpack": "rm LICENSE"
+	},
+	"dependencies": {
+		"@clack/prompts": "^0.7.0",
+		"picocolors": "^1.1.1"
+	},
+	"devDependencies": {
+		"@types/node": "^20.17.30",
+		"typescript": "^5.8.2"
+	}
 }

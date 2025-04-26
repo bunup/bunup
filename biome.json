@@ -1,30 +1,36 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
-    "organizeImports": {
-        "enabled": true
-    },
-    "linter": {
-        "enabled": true,
-        "rules": {
-            "recommended": true,
-            "suspicious": {
-                "noExplicitAny": "off"
-            },
-            "style": {
-                "noUselessElse": "off"
-            }
-        },
-        "ignore": ["**/dist", "benchmarks/src", "**/bun.lock"]
-    },
-    "formatter": {
-        "enabled": true,
-        "indentStyle": "space",
-        "indentWidth": 4,
-        "ignore": ["**/dist", "**/bun.lock"]
-    },
-    "vcs": {
-        "enabled": true,
-        "useIgnoreFile": true,
-        "clientKind": "git"
-    }
+	"$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "off"
+			},
+			"style": {
+				"noUselessElse": "off"
+			}
+		},
+		"ignore": ["**/dist", "benchmarks/src", "**/bun.lock"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"ignore": ["**/dist", "**/bun.lock"]
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "asNeeded"
+		}
+	},
+	"vcs": {
+		"enabled": true,
+		"useIgnoreFile": true,
+		"clientKind": "git"
+	}
 }

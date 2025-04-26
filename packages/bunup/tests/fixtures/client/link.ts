@@ -1,3 +1,3 @@
 export function link() {
-    return "link";
+	return 'link'
 }

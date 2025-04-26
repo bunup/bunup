@@ -1,13 +1,13 @@
-import type { Arrayable, DefineConfigItem, DefineWorkspaceItem } from "./types";
+import type { Arrayable, DefineConfigItem, DefineWorkspaceItem } from './types'
 
 export function defineConfig(
-    options: Arrayable<DefineConfigItem>,
+	options: Arrayable<DefineConfigItem>,
 ): Arrayable<DefineConfigItem> {
-    return options;
+	return options
 }
 
 export function defineWorkspace(
-    options: DefineWorkspaceItem[],
+	options: DefineWorkspaceItem[],
 ): DefineWorkspaceItem[] {
-    return options;
+	return options
 }

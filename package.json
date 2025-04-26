@@ -1,39 +1,39 @@
 {
-    "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
-        "@types/bun": "^1.2.5",
-        "bumpp": "^10.1.0",
-        "bunup": "0.4.95",
-        "create-bunup": "workspace:*",
-        "husky": "^9.1.7",
-        "lint-staged": "^15.5.1",
-        "typescript": "^5.8.3"
-    },
-    "lint-staged": {
-        "*": "bun run format:fix && git add .",
-        "src/**/*.(m|c)?(j|t)s": "bun run tsc"
-    },
-    "scripts": {
-        "build": "bunup",
-        "dev": "bunup --watch",
-        "build:docs": "bun run --cwd docs build",
-        "create-bunup": "create-bunup",
-        "dev:docs": "bun run --cwd docs dev",
-        "test-build": "bun run --cwd packages/bunup/tests build",
-        "test": "bun test",
-        "lint": "biome check .",
-        "lint:fix": "biome check --write .",
-        "format": "biome format .",
-        "format:fix": "biome format --write .",
-        "tsc": "tsc --noEmit",
-        "release": "bumpp",
-        "release:ci": "bumpp patch --yes",
-        "publish:ci": "bun run --filter=\"./packages/*\" npm-publish",
-        "benchmark": "bun run --cwd benchmarks benchmark",
-        "upgrade-deps": "bunx taze -r -w && bun install && git add . && git commit -m 'chore: upgrade deps' && bun run release:ci",
-        "prepare": "husky",
-        "fetch-latest-dep-versions": "bun run --filter=\"create-bunup\" fetch-latest-dep-versions"
-    },
-    "workspaces": ["docs", "benchmarks", "packages/*", "packages/bunup/tests"],
-    "trustedDependencies": ["@biomejs/biome", "@swc/core"]
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/bun": "^1.2.5",
+		"bumpp": "^10.1.0",
+		"bunup": "0.4.95",
+		"create-bunup": "workspace:*",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.5.1",
+		"typescript": "^5.8.3"
+	},
+	"lint-staged": {
+		"*": "bun run format:fix && git add .",
+		"src/**/*.(m|c)?(j|t)s": "bun run tsc"
+	},
+	"scripts": {
+		"build": "bunup",
+		"dev": "bunup --watch",
+		"build:docs": "bun run --cwd docs build",
+		"create-bunup": "create-bunup",
+		"dev:docs": "bun run --cwd docs dev",
+		"test-build": "bun run --cwd packages/bunup/tests build",
+		"test": "bun test",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format .",
+		"format:fix": "biome format --write .",
+		"tsc": "tsc --noEmit",
+		"release": "bumpp",
+		"release:ci": "bumpp patch --yes",
+		"publish:ci": "bun run --filter=\"./packages/*\" npm-publish",
+		"benchmark": "bun run --cwd benchmarks benchmark",
+		"upgrade-deps": "bunx taze -r -w && bun install && git add . && git commit -m 'chore: upgrade deps' && bun run release:ci",
+		"prepare": "husky",
+		"fetch-latest-dep-versions": "bun run --filter=\"create-bunup\" fetch-latest-dep-versions"
+	},
+	"workspaces": ["docs", "benchmarks", "packages/*", "packages/bunup/tests"],
+	"trustedDependencies": ["@biomejs/biome", "@swc/core"]
 }

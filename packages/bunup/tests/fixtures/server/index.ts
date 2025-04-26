@@ -1,3 +1,3 @@
 function server() {
-    return "server";
+	return 'server'
 }

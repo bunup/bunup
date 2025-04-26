@@ -1,17 +1,17 @@
 {
-    "compilerOptions": {
-        "target": "es2020",
-        "module": "esnext",
-        "strict": true,
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-        "noUnusedLocals": true,
-        "noImplicitAny": true,
-        "noEmit": true,
-        "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "allowJs": true
-    },
-    "include": ["packages/bunup/src/**/*", "packages/create-bunup/src/**/*"],
-    "exclude": ["node_modules", "dist"]
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "esnext",
+		"strict": true,
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"noUnusedLocals": true,
+		"noImplicitAny": true,
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"allowJs": true
+	},
+	"include": ["packages/bunup/src/**/*", "packages/create-bunup/src/**/*"],
+	"exclude": ["node_modules", "dist"]
 }

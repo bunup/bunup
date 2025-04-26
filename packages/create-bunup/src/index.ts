@@ -1,288 +1,288 @@
 #!/usr/bin/env node
-import { exec as execCallback } from "node:child_process";
-import { existsSync } from "node:fs";
-import { mkdir, writeFile } from "node:fs/promises";
-import { basename, join, resolve } from "node:path";
-import { promisify } from "node:util";
+import { exec as execCallback } from 'node:child_process'
+import { existsSync } from 'node:fs'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { basename, join, resolve } from 'node:path'
+import { promisify } from 'node:util'
 
 import {
-    confirm,
-    intro,
-    log,
-    note,
-    outro,
-    select,
-    spinner,
-    text,
-} from "@clack/prompts";
-import colors from "picocolors";
+	confirm,
+	intro,
+	log,
+	note,
+	outro,
+	select,
+	spinner,
+	text,
+} from '@clack/prompts'
+import colors from 'picocolors'
 
-import latestDepVersions from "./latest-dep-versions.json" assert {
-    type: "json",
-};
+import latestDepVersions from './latest-dep-versions.json' assert {
+	type: 'json',
+}
 
-const exec = promisify(execCallback);
+const exec = promisify(execCallback)
 
-type PackageManager = "bun" | "pnpm";
+type PackageManager = 'bun' | 'pnpm'
 
 interface ProjectOptions {
-    projectPath: string;
-    projectDir: string;
-    projectName: string;
-    packageManager: PackageManager;
-    isMonorepo: boolean;
-    packages: string[];
-    githubRepo: string;
-    description: string;
+	projectPath: string
+	projectDir: string
+	projectName: string
+	packageManager: PackageManager
+	isMonorepo: boolean
+	packages: string[]
+	githubRepo: string
+	description: string
 }
 
 interface PackageJson {
-    name: string;
-    version: string;
-    description?: string;
-    private?: boolean;
-    workspaces?: string[];
-    main?: string;
-    module?: string;
-    types?: string;
-    files?: string[];
-    scripts: Record<string, string>;
-    dependencies: Record<string, string>;
-    devDependencies: Record<string, string>;
-    license: string;
-    repository?: {
-        type: string;
-        url: string;
-    };
-    homepage?: string;
-    packageManager?: string;
+	name: string
+	version: string
+	description?: string
+	private?: boolean
+	workspaces?: string[]
+	main?: string
+	module?: string
+	types?: string
+	files?: string[]
+	scripts: Record<string, string>
+	dependencies: Record<string, string>
+	devDependencies: Record<string, string>
+	license: string
+	repository?: {
+		type: string
+		url: string
+	}
+	homepage?: string
+	packageManager?: string
 }
 
 async function main() {
-    intro(colors.bgCyan(colors.black(" TypeScript Library Starter ")));
+	intro(colors.bgCyan(colors.black(' TypeScript Library Starter ')))
 
-    const projectPath = await text({
-        message: "Where would you like to create your project?",
-        placeholder: "my-ts-lib",
-        initialValue: "my-ts-lib",
-        validate(value) {
-            if (!value) return "Please enter a directory name";
-            if (existsSync(value) && value !== ".")
-                return "Directory already exists";
-            return;
-        },
-    });
+	const projectPath = await text({
+		message: 'Where would you like to create your project?',
+		placeholder: 'my-ts-lib',
+		initialValue: 'my-ts-lib',
+		validate(value) {
+			if (!value) return 'Please enter a directory name'
+			if (existsSync(value) && value !== '.')
+				return 'Directory already exists'
+			return
+		},
+	})
 
-    if (typeof projectPath !== "string") process.exit(1);
+	if (typeof projectPath !== 'string') process.exit(1)
 
-    const githubRepo = await text({
-        message: "GitHub username and repo name (username/repo):",
-        placeholder: "username/repo-name",
-        validate(value) {
-            if (!value.includes("/"))
-                return "Please use the format username/repo";
-            return;
-        },
-    });
+	const githubRepo = await text({
+		message: 'GitHub username and repo name (username/repo):',
+		placeholder: 'username/repo-name',
+		validate(value) {
+			if (!value.includes('/'))
+				return 'Please use the format username/repo'
+			return
+		},
+	})
 
-    if (typeof githubRepo !== "string") process.exit(1);
+	if (typeof githubRepo !== 'string') process.exit(1)
 
-    const description = await text({
-        message: "Package description:",
-        placeholder: "A TypeScript library",
-    });
+	const description = await text({
+		message: 'Package description:',
+		placeholder: 'A TypeScript library',
+	})
 
-    if (typeof description !== "string") process.exit(1);
+	if (typeof description !== 'string') process.exit(1)
 
-    const packageManager = (await select({
-        message: "Select a package manager:",
-        options: [
-            {
-                value: "bun",
-                label: "bun",
-                hint: "Fast all-in-one JavaScript runtime",
-            },
-            {
-                value: "pnpm",
-                label: "pnpm",
-                hint: "Fast, disk space efficient package manager",
-            },
-        ],
-    })) as PackageManager;
+	const packageManager = (await select({
+		message: 'Select a package manager:',
+		options: [
+			{
+				value: 'bun',
+				label: 'bun',
+				hint: 'Fast all-in-one JavaScript runtime',
+			},
+			{
+				value: 'pnpm',
+				label: 'pnpm',
+				hint: 'Fast, disk space efficient package manager',
+			},
+		],
+	})) as PackageManager
 
-    if (typeof packageManager !== "string") process.exit(1);
+	if (typeof packageManager !== 'string') process.exit(1)
 
-    const projectDir =
-        projectPath === "."
-            ? process.cwd()
-            : resolve(process.cwd(), projectPath);
+	const projectDir =
+		projectPath === '.'
+			? process.cwd()
+			: resolve(process.cwd(), projectPath)
 
-    const projectName =
-        projectPath === "." ? basename(process.cwd()) : basename(projectPath);
+	const projectName =
+		projectPath === '.' ? basename(process.cwd()) : basename(projectPath)
 
-    const isMonorepo = await confirm({
-        message: "Set up as a monorepo?",
-        initialValue: false,
-    });
+	const isMonorepo = await confirm({
+		message: 'Set up as a monorepo?',
+		initialValue: false,
+	})
 
-    if (typeof isMonorepo !== "boolean") process.exit(1);
+	if (typeof isMonorepo !== 'boolean') process.exit(1)
 
-    let packages: string[] = [];
-    if (isMonorepo) {
-        const pkg1 = await text({
-            message: "Name for first package:",
-            placeholder: projectName,
-            initialValue: projectName,
-            validate(value) {
-                if (!value) return "Please enter a package name";
-                return;
-            },
-        });
+	let packages: string[] = []
+	if (isMonorepo) {
+		const pkg1 = await text({
+			message: 'Name for first package:',
+			placeholder: projectName,
+			initialValue: projectName,
+			validate(value) {
+				if (!value) return 'Please enter a package name'
+				return
+			},
+		})
 
-        if (typeof pkg1 !== "string") process.exit(1);
+		if (typeof pkg1 !== 'string') process.exit(1)
 
-        packages = [pkg1];
-    }
+		packages = [pkg1]
+	}
 
-    try {
-        const options: ProjectOptions = {
-            projectPath,
-            projectDir,
-            projectName,
-            packageManager,
-            isMonorepo,
-            packages,
-            githubRepo,
-            description,
-        };
+	try {
+		const options: ProjectOptions = {
+			projectPath,
+			projectDir,
+			projectName,
+			packageManager,
+			isMonorepo,
+			packages,
+			githubRepo,
+			description,
+		}
 
-        const createSpinner = spinner();
-        createSpinner.start("Creating your TypeScript project");
+		const createSpinner = spinner()
+		createSpinner.start('Creating your TypeScript project')
 
-        await createProjectFiles(options);
-        createSpinner.stop(`${colors.green("Project created")}`);
+		await createProjectFiles(options)
+		createSpinner.stop(`${colors.green('Project created')}`)
 
-        note(
-            `${colors.cyan("cd")} ${projectPath !== "." ? projectPath : ""}
+		note(
+			`${colors.cyan('cd')} ${projectPath !== '.' ? projectPath : ''}
 ${colors.cyan(`${packageManager} install`)}
 ${colors.cyan(`${packageManager} run dev`)}`,
-            "Next steps",
-        );
+			'Next steps',
+		)
 
-        outro("Happy coding!");
-    } catch (error: any) {
-        log.error(`Error: ${error.message}`);
-        process.exit(1);
-    }
+		outro('Happy coding!')
+	} catch (error: any) {
+		log.error(`Error: ${error.message}`)
+		process.exit(1)
+	}
 }
 
 async function createProjectFiles(options: ProjectOptions): Promise<void> {
-    const {
-        projectDir,
-        projectName,
-        packageManager,
-        isMonorepo,
-        packages,
-        githubRepo,
-    } = options;
+	const {
+		projectDir,
+		projectName,
+		packageManager,
+		isMonorepo,
+		packages,
+		githubRepo,
+	} = options
 
-    if (projectDir !== process.cwd() && !existsSync(projectDir)) {
-        await mkdir(projectDir, { recursive: true });
-    }
+	if (projectDir !== process.cwd() && !existsSync(projectDir)) {
+		await mkdir(projectDir, { recursive: true })
+	}
 
-    if (isMonorepo) {
-        await mkdir(join(projectDir, "packages"), { recursive: true });
-    }
+	if (isMonorepo) {
+		await mkdir(join(projectDir, 'packages'), { recursive: true })
+	}
 
-    const rootPackageJson = createRootPackageJson(options);
-    await writeFile(
-        join(projectDir, "package.json"),
-        JSON.stringify(rootPackageJson, null, 2),
-    );
+	const rootPackageJson = createRootPackageJson(options)
+	await writeFile(
+		join(projectDir, 'package.json'),
+		JSON.stringify(rootPackageJson, null, 2),
+	)
 
-    const tsConfig = generateTsConfig(isMonorepo);
-    await writeFile(
-        join(projectDir, "tsconfig.json"),
-        JSON.stringify(tsConfig, null, 2),
-    );
+	const tsConfig = generateTsConfig(isMonorepo)
+	await writeFile(
+		join(projectDir, 'tsconfig.json'),
+		JSON.stringify(tsConfig, null, 2),
+	)
 
-    const contributing = generateContributing(options);
-    await writeFile(join(projectDir, "CONTRIBUTING.md"), contributing);
+	const contributing = generateContributing(options)
+	await writeFile(join(projectDir, 'CONTRIBUTING.md'), contributing)
 
-    const license = generateLicense(githubRepo.split("/")[0]);
-    await writeFile(join(projectDir, "LICENSE"), license);
+	const license = generateLicense(githubRepo.split('/')[0])
+	await writeFile(join(projectDir, 'LICENSE'), license)
 
-    const biomeConfig = {
-        $schema: "https://biomejs.dev/schemas/1.5.3/schema.json",
-        organizeImports: {
-            enabled: true,
-        },
-        linter: {
-            enabled: true,
-            rules: {
-                recommended: true,
-            },
-            ignore: ["dist", "node_modules"],
-        },
-        formatter: {
-            enabled: true,
-            indentStyle: "space",
-            indentWidth: 4,
-            ignore: ["dist", "node_modules"],
-        },
-        vcs: {
-            enabled: true,
-            useIgnoreFile: true,
-            clientKind: "git",
-        },
-    };
+	const biomeConfig = {
+		$schema: 'https://biomejs.dev/schemas/1.5.3/schema.json',
+		organizeImports: {
+			enabled: true,
+		},
+		linter: {
+			enabled: true,
+			rules: {
+				recommended: true,
+			},
+			ignore: ['dist', 'node_modules'],
+		},
+		formatter: {
+			enabled: true,
+			indentStyle: 'space',
+			indentWidth: 4,
+			ignore: ['dist', 'node_modules'],
+		},
+		vcs: {
+			enabled: true,
+			useIgnoreFile: true,
+			clientKind: 'git',
+		},
+	}
 
-    await writeFile(
-        join(projectDir, "biome.json"),
-        JSON.stringify(biomeConfig, null, 2),
-    );
+	await writeFile(
+		join(projectDir, 'biome.json'),
+		JSON.stringify(biomeConfig, null, 2),
+	)
 
-    await writeFile(
-        join(projectDir, "commitlint.config.mjs"),
-        `export default {
+	await writeFile(
+		join(projectDir, 'commitlint.config.mjs'),
+		`export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'subject-case': [0],
   },
 };
 `,
-    );
+	)
 
-    await writeFile(
-        join(projectDir, "vitest.config.ts"),
-        `import { defineConfig } from 'vitest/config'
+	await writeFile(
+		join(projectDir, 'vitest.config.ts'),
+		`import { defineConfig } from 'vitest/config'
 
 export default defineConfig({})
 `,
-    );
+	)
 
-    await mkdir(join(projectDir, ".husky"), { recursive: true });
+	await mkdir(join(projectDir, '.husky'), { recursive: true })
 
-    await writeFile(
-        join(projectDir, ".husky/commit-msg"),
-        "npx --no -- commitlint --edit $1",
-    );
+	await writeFile(
+		join(projectDir, '.husky/commit-msg'),
+		'npx --no -- commitlint --edit $1',
+	)
 
-    await writeFile(
-        join(projectDir, ".husky/pre-commit"),
-        packageManager === "bun"
-            ? "bun run tsc && bun run lint && bun run format"
-            : "pnpm tsc && pnpm lint && pnpm format",
-    );
+	await writeFile(
+		join(projectDir, '.husky/pre-commit'),
+		packageManager === 'bun'
+			? 'bun run tsc && bun run lint && bun run format'
+			: 'pnpm tsc && pnpm lint && pnpm format',
+	)
 
-    try {
-        await exec(`chmod +x ${join(projectDir, ".husky/commit-msg")}`);
-        await exec(`chmod +x ${join(projectDir, ".husky/pre-commit")}`);
-    } catch (error) {}
+	try {
+		await exec(`chmod +x ${join(projectDir, '.husky/commit-msg')}`)
+		await exec(`chmod +x ${join(projectDir, '.husky/pre-commit')}`)
+	} catch (error) {}
 
-    await writeFile(
-        join(projectDir, ".gitignore"),
-        `node_modules
+	await writeFile(
+		join(projectDir, '.gitignore'),
+		`node_modules
 .pnp
 .pnp.js
 coverage
@@ -303,13 +303,13 @@ yarn-error.log*
 .env.production.local
 .turbo
 `,
-    );
+	)
 
-    await writeFile(join(projectDir, ".gitattributes"), "* text=auto eol=lf");
+	await writeFile(join(projectDir, '.gitattributes'), '* text=auto eol=lf')
 
-    await writeFile(
-        join(projectDir, ".editorconfig"),
-        `root = true
+	await writeFile(
+		join(projectDir, '.editorconfig'),
+		`root = true
 
 [*]
 indent_style = tab
@@ -322,13 +322,13 @@ quote_type = single
 [*.yml]
 indent_style = space
 indent_size = 2`,
-    );
+	)
 
-    await writeFile(
-        join(projectDir, "README.md"),
-        `# ${projectName}
+	await writeFile(
+		join(projectDir, 'README.md'),
+		`# ${projectName}
 
-${options.description ? options.description : "A TypeScript library built with [bunup](https://bunup.dev/)."}
+${options.description ? options.description : 'A TypeScript library built with [bunup](https://bunup.dev/).'}
 
 ## Installation
 
@@ -348,16 +348,16 @@ console.log(greet('World')); // Hello, World!
 
 \`\`\`bash
 # Install dependencies
-${packageManager === "bun" ? "bun install" : "pnpm install"}
+${packageManager === 'bun' ? 'bun install' : 'pnpm install'}
 
 # Build
-${packageManager === "bun" ? "bun run build" : "pnpm build"}
+${packageManager === 'bun' ? 'bun run build' : 'pnpm build'}
 
 # Develop with watch mode
-${packageManager === "bun" ? "bun run dev" : "pnpm dev"}
+${packageManager === 'bun' ? 'bun run dev' : 'pnpm dev'}
 
 # Run tests
-${packageManager === "bun" ? "bun run test" : "pnpm test"}
+${packageManager === 'bun' ? 'bun run test' : 'pnpm test'}
 \`\`\`
 
 ## Contributing
@@ -368,15 +368,15 @@ Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines.
 
 MIT
 `,
-    );
+	)
 
-    await createBunupConfig(options);
+	await createBunupConfig(options)
 
-    await mkdir(join(projectDir, ".github", "workflows"), { recursive: true });
+	await mkdir(join(projectDir, '.github', 'workflows'), { recursive: true })
 
-    await writeFile(
-        join(projectDir, ".github", "workflows", "ci.yml"),
-        `name: CI
+	await writeFile(
+		join(projectDir, '.github', 'workflows', 'ci.yml'),
+		`name: CI
 on:
       push:
             branches:
@@ -399,8 +399,8 @@ jobs:
                     with:
                           node-version: \${{ matrix.node-version }}
 ${
-    packageManager === "pnpm"
-        ? `
+	packageManager === 'pnpm'
+		? `
                   - name: Install pnpm
                     uses: pnpm/action-setup@v2
                     with:
@@ -414,7 +414,7 @@ ${
 
                   - name: Run tests
                     run: pnpm test`
-        : `
+		: `
                   - name: Setup Bun
                     uses: oven-sh/setup-bun@v1
                     with:
@@ -430,11 +430,11 @@ ${
                     run: bun run test`
 }
 `,
-    );
+	)
 
-    await writeFile(
-        join(projectDir, ".github", "workflows", "release.yml"),
-        `name: Release
+	await writeFile(
+		join(projectDir, '.github', 'workflows', 'release.yml'),
+		`name: Release
 
 permissions:
       contents: write
@@ -460,27 +460,27 @@ jobs:
                     with:
                           bun-version: latest
 ${
-    packageManager === "pnpm"
-        ? `                  - uses: pnpm/action-setup@v4
+	packageManager === 'pnpm'
+		? `                  - uses: pnpm/action-setup@v4
                   - run: pnpm install
                   - run: pnpm build`
-        : `                  - run: bun install
+		: `                  - run: bun install
                   - run: bun run build`
 }
                   - run: npx changelogithub
                     continue-on-error: true
                     env:
                           GITHUB_TOKEN: \${{secrets.GITHUB_TOKEN}}
-                  - run: ${packageManager === "pnpm" ? "pnpm" : "bun"} run publish:ci
+                  - run: ${packageManager === 'pnpm' ? 'pnpm' : 'bun'} run publish:ci
                     env:
-                          ${packageManager === "bun" ? "NPM_CONFIG_TOKEN" : "NODE_AUTH_TOKEN"}: \${{ secrets.NPM_TOKEN }}
+                          ${packageManager === 'bun' ? 'NPM_CONFIG_TOKEN' : 'NODE_AUTH_TOKEN'}: \${{ secrets.NPM_TOKEN }}
                           NPM_CONFIG_PROVENANCE: true
 `,
-    );
+	)
 
-    await writeFile(
-        join(projectDir, ".github", "workflows", "close-issues.yml"),
-        `name: Close inactive issues
+	await writeFile(
+		join(projectDir, '.github', 'workflows', 'close-issues.yml'),
+		`name: Close inactive issues
 on:
       schedule:
             - cron: '30 1 * * *'
@@ -503,13 +503,13 @@ jobs:
                           days-before-pr-close: -1
                           repo-token: \${{ secrets.GITHUB_TOKEN }}
 `,
-    );
+	)
 
-    await mkdir(join(projectDir, ".github"), { recursive: true });
+	await mkdir(join(projectDir, '.github'), { recursive: true })
 
-    await writeFile(
-        join(projectDir, ".github", "PULL_REQUEST_TEMPLATE.md"),
-        `<!--
+	await writeFile(
+		join(projectDir, '.github', 'PULL_REQUEST_TEMPLATE.md'),
+		`<!--
 Thanks for your interest in the project. Bugs filed and PRs submitted are appreciated!
 
 Please make sure that you are familiar with and follow the Code of Conduct for
@@ -545,11 +545,11 @@ merge of your pull request!
 
 <!-- feel free to add additional comments -->
 `,
-    );
+	)
 
-    await writeFile(
-        join(projectDir, ".github", "ISSUE_TEMPLATE.md"),
-        `<!--
+	await writeFile(
+		join(projectDir, '.github', 'ISSUE_TEMPLATE.md'),
+		`<!--
 Thanks for your interest in the project. I appreciate bugs filed and PRs submitted!
 Please make sure that you are familiar with and follow the Code of Conduct for
 this project (found in the CODE_OF_CONDUCT.md file).
@@ -583,47 +583,47 @@ Problem description:
 
 Suggested solution:
 `,
-    );
+	)
 
-    if (isMonorepo) {
-        if (packageManager === "pnpm") {
-            await writeFile(
-                join(projectDir, "pnpm-workspace.yaml"),
-                `packages:
+	if (isMonorepo) {
+		if (packageManager === 'pnpm') {
+			await writeFile(
+				join(projectDir, 'pnpm-workspace.yaml'),
+				`packages:
   - 'packages/*'
 `,
-            );
-        }
+			)
+		}
 
-        for (const pkg of packages) {
-            const pkgDir = join(projectDir, "packages", pkg);
-            await mkdir(pkgDir, { recursive: true });
-            await mkdir(join(pkgDir, "src"), { recursive: true });
-            await mkdir(join(pkgDir, "test"), { recursive: true });
+		for (const pkg of packages) {
+			const pkgDir = join(projectDir, 'packages', pkg)
+			await mkdir(pkgDir, { recursive: true })
+			await mkdir(join(pkgDir, 'src'), { recursive: true })
+			await mkdir(join(pkgDir, 'test'), { recursive: true })
 
-            const pkgJson = createPackageJson(pkg, options);
-            await writeFile(
-                join(pkgDir, "package.json"),
-                JSON.stringify(pkgJson, null, 2),
-            );
+			const pkgJson = createPackageJson(pkg, options)
+			await writeFile(
+				join(pkgDir, 'package.json'),
+				JSON.stringify(pkgJson, null, 2),
+			)
 
-            const packageTsConfig = generatePackageTsConfig();
-            await writeFile(
-                join(pkgDir, "tsconfig.json"),
-                JSON.stringify(packageTsConfig, null, 2),
-            );
+			const packageTsConfig = generatePackageTsConfig()
+			await writeFile(
+				join(pkgDir, 'tsconfig.json'),
+				JSON.stringify(packageTsConfig, null, 2),
+			)
 
-            await writeFile(
-                join(pkgDir, "src", "index.ts"),
-                `export function greet(name: string): string {
+			await writeFile(
+				join(pkgDir, 'src', 'index.ts'),
+				`export function greet(name: string): string {
   return \`Hello, \${name}! Welcome to the ${pkg} package.\`;
 }
 `,
-            );
+			)
 
-            await writeFile(
-                join(pkgDir, "test", "index.test.ts"),
-                `import { describe, it, expect } from 'vitest';
+			await writeFile(
+				join(pkgDir, 'test', 'index.test.ts'),
+				`import { describe, it, expect } from 'vitest';
 import { greet } from '../src';
 
 describe('${pkg} package', () => {
@@ -632,23 +632,23 @@ describe('${pkg} package', () => {
   });
 });
 `,
-            );
-        }
-    } else {
-        await mkdir(join(projectDir, "src"), { recursive: true });
-        await mkdir(join(projectDir, "test"), { recursive: true });
+			)
+		}
+	} else {
+		await mkdir(join(projectDir, 'src'), { recursive: true })
+		await mkdir(join(projectDir, 'test'), { recursive: true })
 
-        await writeFile(
-            join(projectDir, "src", "index.ts"),
-            `export function greet(name: string): string {
+		await writeFile(
+			join(projectDir, 'src', 'index.ts'),
+			`export function greet(name: string): string {
   return \`Hello, \${name}!\`;
 }
 `,
-        );
+		)
 
-        await writeFile(
-            join(projectDir, "test", "index.test.ts"),
-            `import { describe, it, expect } from 'vitest';
+		await writeFile(
+			join(projectDir, 'test', 'index.test.ts'),
+			`import { describe, it, expect } from 'vitest';
 import { greet } from '../src';
 
 describe('greet', () => {
@@ -657,149 +657,149 @@ describe('greet', () => {
   });
 });
 `,
-        );
-    }
+		)
+	}
 
-    try {
-        await exec(`cd ${projectDir} && git init`);
-        await exec(
-            `cd ${projectDir} && git remote add origin https://github.com/${githubRepo}.git`,
-        );
-    } catch (error) {
-        console.error("Failed to initialize git repository:", error);
-    }
+	try {
+		await exec(`cd ${projectDir} && git init`)
+		await exec(
+			`cd ${projectDir} && git remote add origin https://github.com/${githubRepo}.git`,
+		)
+	} catch (error) {
+		console.error('Failed to initialize git repository:', error)
+	}
 }
 
 function createRootPackageJson(options: ProjectOptions): PackageJson {
-    const {
-        projectName,
-        packageManager,
-        isMonorepo,
-        packages,
-        githubRepo,
-        description,
-    } = options;
+	const {
+		projectName,
+		packageManager,
+		isMonorepo,
+		packages,
+		githubRepo,
+		description,
+	} = options
 
-    const workspaces = isMonorepo ? { workspaces: ["packages/*"] } : {};
-    const repoUrl = `https://github.com/${githubRepo}`;
+	const workspaces = isMonorepo ? { workspaces: ['packages/*'] } : {}
+	const repoUrl = `https://github.com/${githubRepo}`
 
-    return {
-        name: isMonorepo ? `${projectName}-monorepo` : projectName,
-        version: "0.1.0",
-        description: !isMonorepo ? description : undefined,
-        private: isMonorepo ? true : undefined,
-        main: "./dist/index.js",
-        module: "./dist/index.mjs",
-        types: "./dist/index.d.ts",
-        files: ["dist"],
-        ...workspaces,
-        scripts: {
-            build: "bunup",
-            dev: "bunup --watch",
-            lint: "biome check .",
-            "lint:fix": "biome check --write .",
-            format: "biome format .",
-            "format:fix": "biome format --write .",
-            tsc: "tsc --noEmit",
-            test: "vitest run",
-            "test:watch": "vitest",
-            "test:coverage": "vitest run --coverage",
-            release: `bumpp${isMonorepo ? " -r" : ""} --commit --push --tag`,
-            "publish:ci": `${packageManager}${isMonorepo ? ` --filter ${packages.map((pkg) => `'${pkg}'`).join(" --filter ")}` : ""} publish --access public --no-git-checks`,
-            prepare: "husky",
-        },
-        dependencies: {},
-        devDependencies: latestDepVersions.starterRootDevDependencies,
-        license: "MIT",
-        repository: {
-            type: "git",
-            url: `git+${repoUrl}.git`,
-        },
-        homepage: `${repoUrl}#readme`,
-        ...(packageManager === "pnpm"
-            ? {
-                  packageManager: `pnpm@${latestDepVersions.internal.pnpm}`,
-              }
-            : {}),
-    };
+	return {
+		name: isMonorepo ? `${projectName}-monorepo` : projectName,
+		version: '0.1.0',
+		description: !isMonorepo ? description : undefined,
+		private: isMonorepo ? true : undefined,
+		main: './dist/index.js',
+		module: './dist/index.mjs',
+		types: './dist/index.d.ts',
+		files: ['dist'],
+		...workspaces,
+		scripts: {
+			build: 'bunup',
+			dev: 'bunup --watch',
+			lint: 'biome check .',
+			'lint:fix': 'biome check --write .',
+			format: 'biome format .',
+			'format:fix': 'biome format --write .',
+			tsc: 'tsc --noEmit',
+			test: 'vitest run',
+			'test:watch': 'vitest',
+			'test:coverage': 'vitest run --coverage',
+			release: `bumpp${isMonorepo ? ' -r' : ''} --commit --push --tag`,
+			'publish:ci': `${packageManager}${isMonorepo ? ` --filter ${packages.map((pkg) => `'${pkg}'`).join(' --filter ')}` : ''} publish --access public --no-git-checks`,
+			prepare: 'husky',
+		},
+		dependencies: {},
+		devDependencies: latestDepVersions.starterRootDevDependencies,
+		license: 'MIT',
+		repository: {
+			type: 'git',
+			url: `git+${repoUrl}.git`,
+		},
+		homepage: `${repoUrl}#readme`,
+		...(packageManager === 'pnpm'
+			? {
+					packageManager: `pnpm@${latestDepVersions.internal.pnpm}`,
+				}
+			: {}),
+	}
 }
 
 function generateTsConfig(isMonorepo: boolean): Record<string, any> {
-    return {
-        compilerOptions: {
-            target: "ES2020",
-            module: "ESNext",
-            moduleResolution: "bundler",
-            esModuleInterop: true,
-            strict: true,
-            skipLibCheck: true,
-            declaration: true,
-            outDir: "./dist",
-            ...(!isMonorepo ? { rootDir: "./src" } : {}),
-            ...(!isMonorepo ? { baseUrl: "." } : {}),
-        },
-        include: [!isMonorepo ? "src/**/*" : "packages/**/src/**/*"],
-        exclude: ["node_modules", "dist"],
-    };
+	return {
+		compilerOptions: {
+			target: 'ES2020',
+			module: 'ESNext',
+			moduleResolution: 'bundler',
+			esModuleInterop: true,
+			strict: true,
+			skipLibCheck: true,
+			declaration: true,
+			outDir: './dist',
+			...(!isMonorepo ? { rootDir: './src' } : {}),
+			...(!isMonorepo ? { baseUrl: '.' } : {}),
+		},
+		include: [!isMonorepo ? 'src/**/*' : 'packages/**/src/**/*'],
+		exclude: ['node_modules', 'dist'],
+	}
 }
 
 function generatePackageTsConfig(): Record<string, any> {
-    return {
-        extends: "../../tsconfig.json",
-        compilerOptions: {
-            rootDir: "./src",
-            outDir: "./dist",
-        },
-        include: ["src/**/*"],
-    };
+	return {
+		extends: '../../tsconfig.json',
+		compilerOptions: {
+			rootDir: './src',
+			outDir: './dist',
+		},
+		include: ['src/**/*'],
+	}
 }
 
 function createPackageJson(
-    packageName: string,
-    options: ProjectOptions,
+	packageName: string,
+	options: ProjectOptions,
 ): PackageJson {
-    const { projectName, isMonorepo, githubRepo, description } = options;
-    const repoUrl = `https://github.com/${githubRepo}`;
+	const { projectName, isMonorepo, githubRepo, description } = options
+	const repoUrl = `https://github.com/${githubRepo}`
 
-    return {
-        name: isMonorepo ? `@${projectName}/${packageName}` : packageName,
-        version: "0.1.0",
-        description:
-            isMonorepo && packageName === options.packages[0]
-                ? description
-                : undefined,
-        main: "./dist/index.js",
-        module: "./dist/index.mjs",
-        types: "./dist/index.d.ts",
-        files: ["dist"],
-        scripts: {
-            build: "bunup",
-            dev: "bunup --watch",
-            test: "vitest run",
-        },
-        dependencies: {},
-        devDependencies: {},
-        license: "MIT",
-        repository: {
-            type: "git",
-            url: `git+${repoUrl}.git`,
-        },
-        homepage: `${repoUrl}#readme`,
-    };
+	return {
+		name: isMonorepo ? `@${projectName}/${packageName}` : packageName,
+		version: '0.1.0',
+		description:
+			isMonorepo && packageName === options.packages[0]
+				? description
+				: undefined,
+		main: './dist/index.js',
+		module: './dist/index.mjs',
+		types: './dist/index.d.ts',
+		files: ['dist'],
+		scripts: {
+			build: 'bunup',
+			dev: 'bunup --watch',
+			test: 'vitest run',
+		},
+		dependencies: {},
+		devDependencies: {},
+		license: 'MIT',
+		repository: {
+			type: 'git',
+			url: `git+${repoUrl}.git`,
+		},
+		homepage: `${repoUrl}#readme`,
+	}
 }
 
 async function createBunupConfig(options: ProjectOptions): Promise<void> {
-    const { projectDir, isMonorepo, packages } = options;
+	const { projectDir, isMonorepo, packages } = options
 
-    if (isMonorepo) {
-        await writeFile(
-            join(projectDir, "bunup.config.ts"),
-            `import { defineWorkspace } from 'bunup';
+	if (isMonorepo) {
+		await writeFile(
+			join(projectDir, 'bunup.config.ts'),
+			`import { defineWorkspace } from 'bunup';
 
 export default defineWorkspace([
   ${packages
-      .map(
-          (pkg) => `{
+		.map(
+			(pkg) => `{
     name: '${pkg}',
     root: 'packages/${pkg}',
     config: {
@@ -809,15 +809,15 @@ export default defineWorkspace([
       minify: true,
     },
   }`,
-      )
-      .join(",\n  ")}
+		)
+		.join(',\n  ')}
 ]);
 `,
-        );
-    } else {
-        await writeFile(
-            join(projectDir, "bunup.config.ts"),
-            `import { defineConfig } from 'bunup';
+		)
+	} else {
+		await writeFile(
+			join(projectDir, 'bunup.config.ts'),
+			`import { defineConfig } from 'bunup';
 
 export default defineConfig({
   entry: ['src/index.ts'],
@@ -826,16 +826,16 @@ export default defineConfig({
   minify: true,
 });
 `,
-        );
-    }
+		)
+	}
 }
 
 function generateContributing(options: ProjectOptions): string {
-    const { projectName, packageManager, isMonorepo, githubRepo } = options;
-    const runCmd = packageManager === "bun" ? "bun run" : "pnpm";
-    const username = githubRepo.split("/")[0];
+	const { projectName, packageManager, isMonorepo, githubRepo } = options
+	const runCmd = packageManager === 'bun' ? 'bun run' : 'pnpm'
+	const username = githubRepo.split('/')[0]
 
-    return `# Contributing to ${projectName}
+	return `# Contributing to ${projectName}
 
 Thank you for your interest in contributing to our project! This guide will help you get started with the development process.
 
@@ -843,7 +843,7 @@ Thank you for your interest in contributing to our project! This guide will help
 
 ### Prerequisites
 
-- ${packageManager === "bun" ? "Bun" : "Node.js and pnpm"} installed on your system
+- ${packageManager === 'bun' ? 'Bun' : 'Node.js and pnpm'} installed on your system
 
 ### Getting Started
 
@@ -854,12 +854,12 @@ Thank you for your interest in contributing to our project! This guide will help
 5. Start development: \`${runCmd} dev\`
 
 ${
-    isMonorepo
-        ? `
+	isMonorepo
+		? `
 ## Working with the Monorepo
 
-This project uses a monorepo structure with ${packageManager === "bun" ? "Bun workspaces" : "pnpm workspaces"}. All packages are located in the \`packages/\` directory.`
-        : ""
+This project uses a monorepo structure with ${packageManager === 'bun' ? 'Bun workspaces' : 'pnpm workspaces'}. All packages are located in the \`packages/\` directory.`
+		: ''
 }
 
 ## Development Workflow
@@ -903,13 +903,13 @@ Please be respectful and constructive in all interactions within our community.
 If you have any questions, please open an issue for discussion.
 
 Thank you for contributing to ${projectName}!
-`;
+`
 }
 
 function generateLicense(username: string): string {
-    const year = new Date().getFullYear();
+	const year = new Date().getFullYear()
 
-    return `MIT License
+	return `MIT License
 
 Copyright (c) ${year} ${namify(username)}
 
@@ -929,13 +929,13 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.`;
+SOFTWARE.`
 }
 
 function namify(name: string): string {
-    return name
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (char) => char.toUpperCase());
+	return name
+		.replace(/-/g, ' ')
+		.replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
-main().catch(console.error);
+main().catch(console.error)

@@ -1,3 +1,3 @@
-export const foo = "bar";
+export const foo = 'bar'
 
-export { link } from "./link";
+export { link } from './link'

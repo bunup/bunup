@@ -1,9 +1,9 @@
 {
-    "compilerOptions": {
-        "declaration": true,
-        "isolatedDeclarations": true,
-        "esModuleInterop": true,
-        "allowImportingTsExtensions": true,
-        "noEmit": true
-    }
+	"compilerOptions": {
+		"declaration": true,
+		"isolatedDeclarations": true,
+		"esModuleInterop": true,
+		"allowImportingTsExtensions": true,
+		"noEmit": true
+	}
 }

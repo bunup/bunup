@@ -13,8 +13,8 @@
         "src/**/*.(m|c)?(j|t)s": "bun run tsc"
     },
     "scripts": {
-        "build": "bunx bunup@latest",
-        "dev": "bunx bunup@latest --watch",
+        "build": "bunup",
+        "dev": "bunup --watch",
         "build:docs": "bun run --cwd docs build",
         "create-bunup": "create-bunup",
         "dev:docs": "bun run --cwd docs dev",

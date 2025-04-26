@@ -3,7 +3,7 @@
         "@biomejs/biome": "^1.9.4",
         "@types/bun": "^1.2.5",
         "bumpp": "^10.1.0",
-        "bunup": "0.5.6",
+        "bunup": "0.4.95",
         "create-bunup": "workspace:*",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.1",

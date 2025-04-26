@@ -8,7 +8,7 @@ import {
     isTypeScriptSourceCodeFile,
     removeDtsVirtualPrefix,
 } from "../src/dts/utils";
-import { DTS_VIRTUAL_FILE_PREFIX } from "../src/dts/virtual-files";
+import { DTS_VIRTUAL_FILE_PREFIX } from "../src/dts/virtual-dts";
 
 describe("DTS Utils", () => {
     describe("getDtsPathFromSourceCodePath", () => {

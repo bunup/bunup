@@ -18,7 +18,7 @@
     "funding": "https://github.com/sponsors/arshad-yaseen",
     "homepage": "https://bunup.dev",
     "keywords": ["bun", "bunup", "bun-bundler"],
-    "files": ["dist", "./../../LICENSE"],
+    "files": ["dist"],
     "dependencies": {
         "chokidar": "^4.0.3",
         "coffi": "^0.1.25",
@@ -54,7 +54,9 @@
         }
     },
     "scripts": {
-        "npm-publish": "bun publish --access public --no-git-checks"
+        "npm-publish": "bun publish --access public --no-git-checks",
+        "prepack": "cp ../../LICENSE .",
+        "postpack": "rm LICENSE"
     },
     "type": "module"
 }

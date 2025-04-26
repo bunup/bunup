@@ -1,9 +1,8 @@
+import path from "node:path";
+
 import type { TsConfigData } from "../loaders";
 import type { BuildOptions } from "../options";
 import { bundleDts } from "./bundler";
-import { collectTsFiles } from "./collector";
-import { generateDtsContent } from "./generator";
-import { validateInputs } from "./validation";
 
 export async function generateDts(
     rootDir: string,
@@ -12,15 +11,6 @@ export async function generateDts(
     tsconfig: TsConfigData,
     packageJson: Record<string, unknown> | null,
 ): Promise<string> {
-    const { absoluteEntry } = await validateInputs(rootDir, entry);
-    const tsFiles = await collectTsFiles(absoluteEntry, tsconfig, rootDir);
-    const dtsMap = await generateDtsContent(tsFiles, options.watch);
-    return bundleDts(
-        absoluteEntry,
-        dtsMap,
-        options,
-        packageJson,
-        tsconfig,
-        rootDir,
-    );
+    const absoluteEntry = path.resolve(path.resolve(rootDir), entry);
+    return bundleDts(absoluteEntry, options, packageJson, tsconfig, rootDir);
 }

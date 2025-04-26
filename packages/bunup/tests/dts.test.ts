@@ -955,7 +955,7 @@ describe("dts", () => {
                     return value * 2;
                 }
             `,
-            "src/components/ui/index.d.ts": `
+            "src/components/ui/index.ts": `
                 export * from './component-a';
                 export * from './component-b';
             `,

@@ -1,8 +1,10 @@
 import { isExternal } from "../helpers/external";
 import type { BuildOptions, DtsResolve } from "../options";
-import { DTS_VIRTUAL_FILE_PREFIX } from "./virtual-files";
+import { DTS_VIRTUAL_FILE_PREFIX } from "./virtual-dts";
 
-const JSTS_REGEX = /\.(js|mjs|cjs|ts|mts|cts|tsx|jsx)$/;
+export const TS_DTS_RE: RegExp = /\.(d\.ts|d\.mts|d\.cts|ts|mts|cts|tsx)$/;
+export const NODE_MODULES_RE: RegExp = /[\\/]node_modules[\\/]/;
+export const JS_TS_RE: RegExp = /\.(js|mjs|cjs|ts|mts|cts|tsx|jsx)$/;
 
 export function isDtsFile(filePath: string): boolean {
     return (
@@ -13,7 +15,7 @@ export function isDtsFile(filePath: string): boolean {
 }
 
 export function isSourceCodeFile(filePath: string): boolean {
-    return JSTS_REGEX.test(filePath) && !isDtsFile(filePath);
+    return JS_TS_RE.test(filePath) && !isDtsFile(filePath);
 }
 
 export function isTypeScriptSourceCodeFile(file: string): boolean {
@@ -29,8 +31,8 @@ export function getDtsPathFromSourceCodePath(filePath: string): string {
     if (filePath.endsWith(".mts")) return `${filePath.slice(0, -4)}.d.mts`;
     if (filePath.endsWith(".cts")) return `${filePath.slice(0, -4)}.d.cts`;
 
-    if (JSTS_REGEX.test(filePath)) {
-        return filePath.replace(JSTS_REGEX, ".d.ts");
+    if (JS_TS_RE.test(filePath)) {
+        return filePath.replace(JS_TS_RE, ".d.ts");
     }
 
     return `${filePath}.d.ts`;
@@ -56,19 +58,6 @@ export function removeDtsVirtualPrefix(filePath: string): string {
 
 export function addDtsVirtualPrefix(filePath: string): string {
     return `${DTS_VIRTUAL_FILE_PREFIX}${filePath}`;
-}
-
-export function calculateDtsErrorLineAndColumn(
-    sourceText: string,
-    labelStart: number,
-): string {
-    if (labelStart === undefined) return "";
-
-    const lines = sourceText.slice(0, labelStart).split("\n");
-    const lineNumber = lines.length;
-    const columnStart = lines[lines.length - 1].length + 1;
-
-    return ` (${lineNumber}:${columnStart})`;
 }
 
 export function dtsShouldTreatAsExternal(

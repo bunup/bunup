@@ -19,13 +19,15 @@
     "homepage": "https://bunup.dev/docs/typescript-library-starter",
     "funding": "https://github.com/sponsors/arshad-yaseen",
     "keywords": ["bunup", "typescript", "cli", "bun", "create", "starter"],
-    "files": ["dist", "./../../LICENSE"],
+    "files": ["dist"],
     "bin": {
         "create-bunup": "dist/index.js"
     },
     "scripts": {
         "fetch-latest-dep-versions": "bun run fetch-latest-dep-versions.ts && biome format --write src/latest-dep-versions.json",
-        "npm-publish": "bun publish --access public --no-git-checks"
+        "npm-publish": "bun publish --access public --no-git-checks",
+        "prepack": "cp ../../LICENSE .",
+        "postpack": "rm LICENSE"
     },
     "dependencies": {
         "@clack/prompts": "^0.7.0",

@@ -28,11 +28,11 @@
         "tsc": "tsc --noEmit",
         "release": "bumpp",
         "release:ci": "bumpp patch --yes",
-        "publish:ci": "bun run --cwd packages/bunup npm-publish && bun run --cwd packages/create-bunup npm-publish",
+        "publish:ci": "bun run --filter=\"./packages/*\" npm-publish",
         "benchmark": "bun run --cwd benchmarks benchmark",
         "upgrade-deps": "bunx taze -r -w && bun install && git add . && git commit -m 'chore: upgrade deps' && bun run release:ci",
         "prepare": "husky",
-        "fetch-latest-dep-versions": "bun run --cwd packages/create-bunup fetch-latest-dep-versions"
+        "fetch-latest-dep-versions": "bun run --filter=\"create-bunup\" fetch-latest-dep-versions"
     },
     "workspaces": ["docs", "benchmarks", "packages/*", "packages/bunup/tests"],
     "trustedDependencies": ["@biomejs/biome", "@swc/core"]

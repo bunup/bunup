@@ -3,27 +3,25 @@ name: 🔄️ CI
 on:
   push:
     paths:
-      - packages/bunup/src/**
-      - packages/bunup/tests/**
-      - packages/create-bunup/src/**
+      - .github/workflows/ci.yml
+      - packages/**/src/**
       - package.json
-      - bun.lockb
+      - bun.lock
       - bunup.config.ts
       - tsconfig*.json
       - '!**/*.md'
-      - .github/workflows/ci.yml
 
   pull_request:
     paths:
-      - packages/bunup/src/**
-      - packages/bunup/tests/**
-      - packages/create-bunup/src/**
+      - .github/workflows/ci.yml
+      - packages/**/src/**
       - package.json
-      - bun.lockb
+      - bun.lock
       - bunup.config.ts
       - tsconfig*.json
       - '!**/*.md'
-      - .github/workflows/ci.yml
+
+  workflow_dispatch:
 
 permissions: {}
 
@@ -31,7 +29,7 @@ jobs:
   lint:
     name: 🔍 Lint
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip-ci]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -51,7 +49,7 @@ jobs:
 
   test:
     name: 🧪 Tests
-    if: ${{ !contains(github.event.head_commit.message, '[skip-ci]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -73,3 +71,7 @@ jobs:
 
       - name: 🧪 Run tests
         run: bun run test
+
+      - name: 🛠️ Build
+        if: ${{ !cancelled() }}
+        run: bun run build

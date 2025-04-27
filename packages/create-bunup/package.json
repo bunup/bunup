@@ -1,7 +1,7 @@
 {
 	"name": "create-bunup",
 	"description": "Quickly scaffold a new TypeScript package with Bunup",
-	"version": "0.5.6",
+	"version": "0.5.7",
 	"license": "MIT",
 	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
 	"type": "module",

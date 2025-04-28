@@ -29,7 +29,7 @@
 
 - 🚀 **Easy to Use**: Bunup preconfigures everything you need out-of-the-box. Just focus on your code.
 - 🔥 **Bytecode Generation**: Faster startups by compiling to Bun bytecode—perfect for CLIs.
-- 📦 **[Workspace](https://bunup.dev/workspaces) Support**: Build multiple packages within one config file and command.
+- 📦 **[Workspace](https://bunup.dev/docs/guide/workspaces) Support**: Build multiple packages within one config file and command.
 - 🔄 **Tsup Familiarity**: Familiar tsup-like CLI and config.
 - 🎯 **Bun Target**: First-class bundling support for libraries built with Bun.
 

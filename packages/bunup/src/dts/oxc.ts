@@ -1,8 +1,8 @@
 import { type OxcError, isolatedDeclaration } from 'oxc-transform'
+import pc from 'picocolors'
 import { BunupIsolatedDeclError, parseErrorMessage } from '../errors'
 import { logger } from '../logger'
 import { logIsolatedDeclarationError } from './log-error'
-import pc from 'picocolors'
 
 const allErrors: {
 	error: OxcError

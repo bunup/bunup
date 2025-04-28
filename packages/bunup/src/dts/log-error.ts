@@ -1,7 +1,7 @@
 import type { OxcError } from 'oxc-transform'
+import pc from 'picocolors'
 import { logger } from '../logger'
 import { getShortFilePath } from '../utils'
-import pc from 'picocolors'
 
 export function logIsolatedDeclarationError(
 	error: OxcError,

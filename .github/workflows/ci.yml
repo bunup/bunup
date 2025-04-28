@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/ci.yml
       - packages/**/src/**
+      - packages/**/tests/**
       - package.json
       - bun.lock
       - bunup.config.ts
@@ -15,6 +16,7 @@ on:
     paths:
       - .github/workflows/ci.yml
       - packages/**/src/**
+      - packages/**/tests/**
       - package.json
       - bun.lock
       - bunup.config.ts

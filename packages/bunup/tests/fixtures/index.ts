@@ -5,3 +5,5 @@ import('./utils').then(({ createFixture }) => {
 export function hello() {
 	return 'hello'
 }
+
+export * from './utils'

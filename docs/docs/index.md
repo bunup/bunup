@@ -409,6 +409,21 @@ export default defineConfig({
 });
 ```
 
+::: tip
+Before you begin, it's recommended to enable `"isolatedDeclarations": true` in your `tsconfig.json`.
+Bunup uses TypeScript's [isolatedDeclarations](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html#isolated-declarations) feature to produce accurate and robust type definitions.
+This setting encourages you to provide explicit type annotations as you write code.
+The result? Cleaner, safer, and more reliable type declarations for your library.
+
+```json [tsconfig.json] 4
+{
+	"compilerOptions": {
+		"declaration": true,
+		"isolatedDeclarations": true
+	}
+}
+```
+
 :::
 
 ### Custom Declaration Entry Points

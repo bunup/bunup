@@ -1,7 +1,7 @@
 import { isExternal } from '../helpers/external'
 import type { BuildOptions, DtsResolve } from '../options'
 
-export const TS_DTS_RE: RegExp = /\.(d\.ts|d\.mts|d\.cts|ts|mts|cts|tsx)$/
+export const DTS_RE: RegExp = /\.(d\.ts|d\.mts|d\.cts)$/
 export const NODE_MODULES_RE: RegExp = /[\\/]node_modules[\\/]/
 export const JS_TS_RE: RegExp = /\.(js|mjs|cjs|ts|mts|cts|tsx|jsx)$/
 

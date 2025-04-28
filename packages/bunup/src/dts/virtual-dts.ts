@@ -4,8 +4,8 @@ import { resolveTsImportPath } from 'ts-import-resolver'
 import type { TsConfigData } from '../loaders'
 import { generateDtsContent } from './oxc'
 import {
+	DTS_RE,
 	NODE_MODULES_RE,
-	TS_DTS_RE,
 	getDtsPathFromSourceCodePath,
 	isDtsFile,
 	isTypeScriptSourceCodeFile,
@@ -49,7 +49,7 @@ export const virtualDtsPlugin = (
 		load: {
 			filter: {
 				id: {
-					include: [TS_DTS_RE],
+					include: [DTS_RE],
 					exclude: [NODE_MODULES_RE],
 				},
 			},

@@ -736,6 +736,7 @@ function generateTsConfig(isMonorepo: boolean): Record<string, any> {
 			strict: true,
 			skipLibCheck: true,
 			declaration: true,
+			isolatedDeclarations: true,
 			outDir: './dist',
 			...(!isMonorepo ? { rootDir: './src' } : {}),
 			...(!isMonorepo ? { baseUrl: '.' } : {}),

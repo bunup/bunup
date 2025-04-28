@@ -49,7 +49,7 @@ function processDirectory(dir: string): FileResult[] {
 			const name = basename(fileName, extension)
 
 			newFiles.push({
-				path: filePath,
+				path: cleanPath(filePath),
 				name,
 				extension,
 				size: fileStats.size,
@@ -61,6 +61,10 @@ function processDirectory(dir: string): FileResult[] {
 	}
 
 	return newFiles
+}
+
+function cleanPath(path: string): string {
+	return path.replace(PROJECT_DIR, '').replace(/\\/g, '/')
 }
 
 export async function runBuild(

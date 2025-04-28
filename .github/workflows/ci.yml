@@ -4,8 +4,7 @@ on:
   push:
     paths:
       - .github/workflows/ci.yml
-      - packages/**/src/**
-      - packages/**/tests/**
+      - packages/**
       - package.json
       - bun.lock
       - bunup.config.ts
@@ -15,8 +14,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/ci.yml
-      - packages/**/src/**
-      - packages/**/tests/**
+      - packages/**
       - package.json
       - bun.lock
       - bunup.config.ts

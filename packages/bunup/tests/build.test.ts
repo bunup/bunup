@@ -701,6 +701,8 @@ describe('Build Process', () => {
 			},
 		})
 
+		console.log(result.files)
+
 		expect(result.success).toBe(true)
 		expect(
 			result.files.some((file) =>

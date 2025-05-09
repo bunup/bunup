@@ -3,7 +3,7 @@
 Bunup is the ⚡️ **blazing-fast build tool** for TypeScript and JavaScript libraries, designed for flawless developer experience and speed, **powered by Bun's native bundler** — up to **~50× faster than Tsup**.
 
 ::: tip 💖
-**Building with Bun? You need Bunup.**  Designed specifically for the Bun ecosystem with all the speed advantages that come with it.
+**Building with Bun? You need Bunup.** Designed specifically for the Bun ecosystem with all the speed advantages that come with it.
 :::
 
 ## What Can It Bundle?
@@ -287,28 +287,14 @@ bunup --entry.main src/index.ts --entry.cli src/cli.ts
 # Configuration file
 export default defineConfig({
       entry: {
-            main: 'src/index.ts',
-            cli: 'src/cli.ts',
+            main: 'src/index.ts', // Outputs to dist/main.js
+		api: 'src/api/v1/index.ts', // Outputs to dist/api.js
+		'nested/utils': 'src/utils.ts', // Outputs to dist/nested/utils.js
       },
 });
 ```
 
-This will generate output files with the specified names (e.g., `dist/main.js` and `dist/cli.js`).
-
-#### Organizing Output with Subdirectories
-
-You can include slashes in named entry keys to organize output files into subdirectories:
-
-```typescript
-export default defineConfig({
-	entry: {
-		'client/index': 'src/client/index.ts',
-		'server/index': 'src/server/index.ts',
-	},
-});
-```
-
-This will generate output files in the specified subdirectories (e.g., `dist/client/index.js` and `dist/server/index.js`). This approach is particularly useful when bundling code for different environments or platforms.
+This will generate output files with the specified names (e.g., `dist/main.js` from `src/index.ts`).
 
 ## Output Formats
 

@@ -50,10 +50,6 @@ export function formatTime(ms: number): string {
 	return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`
 }
 
-export function isTypeScriptSourceCodeFile(file: string): boolean {
-	return ['.ts', '.mts', '.cts', '.tsx'].some((ext) => file.endsWith(ext))
-}
-
 export function getPackageDeps(
 	packageJson: Record<string, unknown> | null,
 ): string[] {

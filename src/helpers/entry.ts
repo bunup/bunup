@@ -1,7 +1,6 @@
 import { basename, extname } from 'node:path'
 import type { Entry } from '../options'
 import type { BunBuildOptions } from '../types'
-import { isTypeScriptSourceCodeFile } from '../utils'
 
 export type ProcessableEntry = {
 	fullPath: string
@@ -32,7 +31,7 @@ export function normalizeEntryToProcessableEntries(
 	}))
 }
 
-export function getNamingObject(
+export function getResolvedNaming(
 	customOutputBasePath: string | null,
 	extension: string,
 ): BunBuildOptions['naming'] {
@@ -41,10 +40,4 @@ export function getNamingObject(
 		chunk: `${customOutputBasePath || '[name]'}-[hash].[ext]`,
 		asset: `${customOutputBasePath ? `${customOutputBasePath}-` : ''}[name]-[hash].[ext]`,
 	}
-}
-
-export function filterTypeScriptEntries(
-	entries: ProcessableEntry[],
-): ProcessableEntry[] {
-	return entries.filter((entry) => isTypeScriptSourceCodeFile(entry.fullPath))
 }

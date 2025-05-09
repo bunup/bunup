@@ -36,13 +36,6 @@ export class BunupWatchError extends BunupError {
 	}
 }
 
-export class BunupIsolatedDeclError extends BunupError {
-	constructor(message?: string) {
-		super(message)
-		this.name = 'BunupIsolatedDeclError'
-	}
-}
-
 export const parseErrorMessage = (error: unknown): string => {
 	if (error instanceof Error) {
 		return error.message
@@ -75,15 +68,9 @@ const KNOWN_ERRORS: KnownErrorSolution[] = [
 	},
 ]
 
-export function isIsolatedDeclError(error: unknown): boolean {
-	return error instanceof BunupIsolatedDeclError
-}
-
 export const handleError = (error: unknown, context?: string): void => {
 	const errorMessage = parseErrorMessage(error)
 	const contextPrefix = context ? `[${context}] ` : ''
-
-	const isIsolatedDeclarationError = isIsolatedDeclError(error)
 
 	let errorType = ''
 	if (error instanceof BunupBuildError) {
@@ -94,8 +81,6 @@ export const handleError = (error: unknown, context?: string): void => {
 		errorType = 'CLI ERROR'
 	} else if (error instanceof BunupWatchError) {
 		errorType = 'WATCH ERROR'
-	} else if (isIsolatedDeclarationError) {
-		errorType = 'ISOLATED DECL ERROR'
 	} else if (error instanceof BunupError) {
 		errorType = 'BUNUP ERROR'
 	}
@@ -106,7 +91,7 @@ export const handleError = (error: unknown, context?: string): void => {
 			(error.errorType === errorType || !error.errorType),
 	)
 
-	if (!knownError && !isIsolatedDeclarationError && errorType) {
+	if (!knownError && errorType) {
 		console.error(`${pc.red(errorType)} ${contextPrefix}${errorMessage}`)
 	}
 
@@ -114,7 +99,7 @@ export const handleError = (error: unknown, context?: string): void => {
 		console.log('\n')
 		knownError.logSolution(errorMessage)
 		console.log('\n')
-	} else if (!isIsolatedDeclarationError) {
+	} else {
 		console.error(
 			pc.dim(
 				pc.white(

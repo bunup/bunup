@@ -1,8 +1,7 @@
 import { dts } from 'bun-dts'
 import { BunupBuildError } from './errors'
 import {
-	filterTypeScriptEntries,
-	getNamingObject,
+	getResolvedNaming,
 	normalizeEntryToProcessableEntries,
 } from './helpers/entry'
 import { loadPackageJson } from './loaders'
@@ -78,14 +77,11 @@ export async function build(
 		...filterBunupBunPlugins(options.plugins).map((p) => p.plugin),
 	]
 
-	const dtsFiles: string[] = []
-
 	if (options.dts) {
-		const dtsEntry = (
-			typeof options.dts === 'object' && options.dts.entry
-				? normalizeEntryToProcessableEntries(options.dts.entry)
-				: filterTypeScriptEntries(processableEntries)
-		).map((entry) => `${rootDir}/${entry.fullPath}`)
+		const dtsEntry =
+			typeof options.dts === 'object' && 'entry' in options.dts
+				? options.dts.entry
+				: undefined
 
 		const dtsResolve =
 			typeof options.dts === 'object' && 'resolve' in options.dts
@@ -99,11 +95,14 @@ export async function build(
 				warnInsteadOfError: options.watch,
 				resolve: dtsResolve,
 				onDeclarationGenerated: (filePath) => {
-					dtsFiles.push(filePath)
 					const relativePathToRootDir = getRelativePathToRootDir(
 						filePath,
 						rootDir,
 					)
+					buildOutput.files.push({
+						fullPath: filePath,
+						relativePathToRootDir,
+					})
 					logger.progress('DTS', relativePathToRootDir, {
 						identifier: options.name,
 					})
@@ -125,7 +124,10 @@ export async function build(
 			const result = await Bun.build({
 				entrypoints: [`${rootDir}/${entry.fullPath}`],
 				format: fmt,
-				naming: getNamingObject(entry.customOutputBasePath, extension),
+				naming: getResolvedNaming(
+					entry.customOutputBasePath,
+					extension,
+				),
 				splitting: getResolvedSplitting(options.splitting, fmt),
 				bytecode: getResolvedBytecode(options.bytecode, fmt),
 				define: getResolvedDefine(
@@ -180,18 +182,6 @@ export async function build(
 					fullPath: file.path,
 					relativePathToRootDir,
 				})
-			}
-
-			if (options.dts) {
-				for (const file of dtsFiles) {
-					buildOutput.files.push({
-						fullPath: file,
-						relativePathToRootDir: getRelativePathToRootDir(
-							file,
-							rootDir,
-						),
-					})
-				}
 			}
 		}),
 	)

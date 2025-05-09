@@ -58,10 +58,12 @@ export default defineConfig({
 		main: 'src/index.ts',
 		cli: 'src/cli.ts',
 	},
+	outdir: "dist",
 	dts: {
 		entry: {
-			// Generate types.d.ts from index.ts
-			types: 'src/index.ts',
+			types: 'src/index.ts', // Outputs to dist/types.d.ts
+			api: 'src/api/v1/index.ts', // Outputs to dist/api.d.ts
+			'nested/types': 'src/types.ts', // Outputs to dist/nested/types.d.ts
 		},
 	},
 });

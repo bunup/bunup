@@ -32,18 +32,10 @@ export function getDefaultOutputExtension(
 	}
 }
 
-export function getDefaultDtsExtention(
-	format: Format,
-	packageType: string | undefined,
-): string {
-	switch (format) {
-		case 'esm':
-			return isModulePackage(packageType) ? '.d.ts' : '.d.mts'
-		case 'cjs':
-			return isModulePackage(packageType) ? '.d.cts' : '.d.ts'
-		case 'iife':
-			return '.d.ts'
-	}
+export function getEntryNameOnly(entry: string): string {
+	const filename = path.basename(entry)
+	const extension = path.extname(filename)
+	return extension ? filename.slice(0, -extension.length) : filename
 }
 
 export function isNodeCompatibleTarget(target: Target): boolean {
@@ -56,6 +48,10 @@ export function isModulePackage(packageType: string | undefined): boolean {
 
 export function formatTime(ms: number): string {
 	return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`
+}
+
+export function isTypeScriptSourceCodeFile(file: string): boolean {
+	return ['.ts', '.mts', '.cts', '.tsx'].some((ext) => file.endsWith(ext))
 }
 
 export function getPackageDeps(

@@ -168,63 +168,6 @@ describe('Build Process', () => {
 		).toBe(true)
 	})
 
-	it('should generate only DTS files when dtsOnly is enabled', async () => {
-		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: ['esm', 'cjs'],
-			dtsOnly: true,
-		})
-
-		expect(result.success).toBe(true)
-
-		expect(
-			validateBuildFiles(result, {
-				expectedFiles: ['index.d.mts', 'index.d.ts'],
-				notExpectedFiles: ['index.js', 'index.mjs', 'index.cjs'],
-			}),
-		).toBe(true)
-	})
-
-	it('should handle named entries with dtsOnly option', async () => {
-		const result = await runBuild({
-			entry: { main: 'src/index.ts' },
-			format: ['esm', 'cjs'],
-			dtsOnly: true,
-		})
-
-		expect(result.success).toBe(true)
-		expect(
-			validateBuildFiles(result, {
-				expectedFiles: ['main.d.mts', 'main.d.ts'],
-				notExpectedFiles: ['main.js', 'main.mjs', 'main.cjs'],
-			}),
-		).toBe(true)
-	})
-
-	it('should respect custom dts entry points when using dtsOnly', async () => {
-		createProject({
-			'src/index.ts': 'export const x = 1;',
-			'src/utils.ts': "export const util = () => 'utility';",
-		})
-
-		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: ['esm'],
-			dtsOnly: true,
-			dts: {
-				entry: 'src/utils.ts',
-			},
-		})
-
-		expect(result.success).toBe(true)
-		expect(
-			validateBuildFiles(result, {
-				expectedFiles: ['utils.d.mts'],
-				notExpectedFiles: ['utils.d.ts'],
-			}),
-		).toBe(true)
-	})
-
 	it('should handle all supported file extensions simultaneously with DTS generation', async () => {
 		createProject({
 			'package.json': JSON.stringify({

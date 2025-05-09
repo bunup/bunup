@@ -14,7 +14,7 @@
 				"noUselessElse": "off"
 			}
 		},
-		"ignore": ["**/dist", "benchmarks/src", "**/bun.lock"]
+		"ignore": ["**/dist", "**/bun.lock"]
 	},
 	"formatter": {
 		"enabled": true,

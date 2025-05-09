@@ -6,4 +6,5 @@ export default defineConfig({
 	format: ['esm', 'cjs'],
 	dts: true,
 	plugins: [report()],
+	splitting: false,
 })

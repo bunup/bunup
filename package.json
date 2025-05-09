@@ -40,15 +40,11 @@
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.10.1",
+		"bun-dts": "^0.1.9",
 		"chokidar": "^4.0.3",
 		"coffi": "^0.1.28",
-		"oxc-resolver": "^7.0.1",
-		"oxc-transform": "^0.67.0",
 		"package-manager-detector": "^1.2.0",
-		"rolldown": "1.0.0-beta.7",
-		"rolldown-plugin-dts": "^0.9.11",
-		"tinyexec": "^1.0.1",
-		"ts-import-resolver": "^0.1.16"
+		"tinyexec": "^1.0.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
@@ -67,7 +63,6 @@
 		}
 	},
 	"scripts": {
-		"benchmark": "bun run --cwd benchmarks benchmark",
 		"build": "bunx bunup@latest",
 		"build:docs": "bun run --cwd docs build",
 		"dev": "bunx bunup@latest --watch",
@@ -88,5 +83,5 @@
 		"*": "bun run format:fix && git add .",
 		"src/**/*.(m|c)?(j|t)s": "bun run tsc"
 	},
-	"workspaces": ["docs", "tests", "benchmarks"]
+	"workspaces": ["docs", "tests"]
 }

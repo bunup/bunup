@@ -85,7 +85,7 @@ export const handleError = (error: unknown, context?: string): void => {
 
 	const isIsolatedDeclarationError = isIsolatedDeclError(error)
 
-	let errorType = 'ERROR'
+	let errorType = ''
 	if (error instanceof BunupBuildError) {
 		errorType = 'BUILD ERROR'
 	} else if (error instanceof BunupDTSBuildError) {
@@ -106,7 +106,7 @@ export const handleError = (error: unknown, context?: string): void => {
 			(error.errorType === errorType || !error.errorType),
 	)
 
-	if (!knownError && !isIsolatedDeclarationError) {
+	if (!knownError && !isIsolatedDeclarationError && errorType) {
 		console.error(`${pc.red(errorType)} ${contextPrefix}${errorMessage}`)
 	}
 

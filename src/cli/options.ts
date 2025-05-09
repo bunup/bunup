@@ -158,7 +158,6 @@ const optionConfigs = {
 		flags: ['bc', 'bytecode'],
 		handler: booleanHandler('bytecode'),
 	},
-	dtsOnly: { flags: ['do', 'dts-only'], handler: booleanHandler('dtsOnly') },
 	silent: { flags: ['silent'], handler: booleanHandler('silent') },
 	config: { flags: ['config'], handler: stringHandler('config') },
 	publicPath: {

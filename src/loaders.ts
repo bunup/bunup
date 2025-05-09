@@ -54,20 +54,3 @@ export type TsConfigData = {
 	tsconfig: Record<string, unknown> | null
 	path: string | null
 }
-
-export async function loadTsconfig(
-	rootDir: string,
-	preferredTsconfigPath: string | undefined,
-): Promise<TsConfigData> {
-	const { config, filepath } = await loadConfig<Record<string, unknown>>({
-		name: 'tsconfig',
-		cwd: rootDir,
-		extensions: ['.json'],
-		preferredPath: preferredTsconfigPath,
-	})
-
-	return {
-		tsconfig: config,
-		path: filepath,
-	}
-}

@@ -164,22 +164,6 @@ export interface BuildOptions {
 	dts?: boolean | DtsOptions
 
 	/**
-	 * Generate only TypeScript declaration files (.d.ts) without any JavaScript output
-	 * When set to true, bunup will skip the JavaScript bundling process entirely
-	 * and only generate declaration files for the specified entry points
-	 *
-	 * This is useful when you want to use bunup's fast declaration file generation
-	 * but handle the JavaScript bundling separately or not at all.
-	 *
-	 * Note: When this option is true, the `dts` option is implicitly set to true
-	 * and other bundling-related options are ignored.
-	 *
-	 * @example
-	 * dtsOnly: true
-	 */
-	dtsOnly?: boolean
-
-	/**
 	 * Path to a preferred tsconfig.json file to use for declaration generation
 	 *
 	 * If not specified, the tsconfig.json in the project root will be used.

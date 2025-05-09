@@ -33,6 +33,7 @@ interface PluginOption {
 	label: string
 	hint?: string
 	configGenerator?: () => string
+	defaultEnabled?: boolean
 }
 
 async function pathExists(filePath: string): Promise<boolean> {
@@ -281,6 +282,7 @@ export async function init(): Promise<void> {
 			label: 'Report',
 			hint: 'Logs bundle size report after build',
 			configGenerator: () => 'report()',
+			defaultEnabled: true,
 		},
 	]
 
@@ -288,6 +290,9 @@ export async function init(): Promise<void> {
 		message: 'Select plugins to use (optional):',
 		options: availablePlugins,
 		required: false,
+		initialValues: availablePlugins
+			.filter((p) => p.defaultEnabled)
+			.map((p) => p.value),
 	})
 
 	if (isCancel(selectedPlugins)) {

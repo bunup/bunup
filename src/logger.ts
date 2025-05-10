@@ -35,7 +35,10 @@ class Logger {
 		DTS: pc.blue,
 	}
 
-	private progressBgColorMap: Record<string, (text: string) => string> = {
+	private progressIdentifierBgColorMap: Record<
+		string,
+		(text: string) => string
+	> = {
 		ESM: pc.bgYellow,
 		CJS: pc.bgGreen,
 		IIFE: pc.bgMagenta,
@@ -161,7 +164,9 @@ class Logger {
 	}
 
 	private getProgressBgColor(label: string): (text: string) => string {
-		for (const [key, colorFn] of Object.entries(this.progressBgColorMap)) {
+		for (const [key, colorFn] of Object.entries(
+			this.progressIdentifierBgColorMap,
+		)) {
 			if (label.includes(key)) return colorFn
 		}
 		return pc.bgWhite

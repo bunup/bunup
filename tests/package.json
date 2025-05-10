@@ -9,8 +9,8 @@
 		"zx-extra": "^4.0.5"
 	},
 	"scripts": {
-		"build": "bun run ../dist/cli.js",
-		"dev": "bun run ../dist/cli.js --watch"
+		"build": "bun run ../src/cli/index.ts",
+		"dev": "bun run ../src/cli/index.ts --watch"
 	},
 	"devDependencies": {
 		"ora": "^8.2.0",

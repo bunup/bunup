@@ -1,9 +1,6 @@
 import { dts } from 'bun-dts'
 import { BunupBuildError } from './errors'
-import {
-	getResolvedNaming,
-	normalizeEntryToProcessableEntries,
-} from './helpers/entry'
+import { getProcessableEntries, getResolvedNaming } from './helpers/entry'
 import { loadPackageJson } from './loaders'
 import { logger, setSilent } from './logger'
 import {
@@ -68,7 +65,7 @@ export async function build(
 
 	await runPluginBuildStartHooks(bunupPlugins, options)
 
-	const processableEntries = normalizeEntryToProcessableEntries(options.entry)
+	const processableEntries = getProcessableEntries(options)
 
 	const packageType = packageJson?.type as string | undefined
 
@@ -77,39 +74,10 @@ export async function build(
 		...filterBunupBunPlugins(options.plugins).map((p) => p.plugin),
 	]
 
-	if (options.dts) {
-		const dtsEntry =
-			typeof options.dts === 'object' && 'entry' in options.dts
-				? options.dts.entry
-				: undefined
-
-		const dtsResolve =
-			typeof options.dts === 'object' && 'resolve' in options.dts
-				? options.dts.resolve
-				: undefined
-
-		plugins.push(
-			dts({
-				entry: dtsEntry,
-				preferredTsConfigPath: options.preferredTsconfigPath,
-				warnInsteadOfError: options.watch,
-				resolve: dtsResolve,
-				onDeclarationGenerated: (filePath) => {
-					const relativePathToRootDir = getRelativePathToRootDir(
-						filePath,
-						rootDir,
-					)
-					buildOutput.files.push({
-						fullPath: filePath,
-						relativePathToRootDir,
-					})
-					logger.progress('DTS', relativePathToRootDir, {
-						identifier: options.name,
-					})
-				},
-			}),
-		)
-	}
+	const dtsResolve =
+		typeof options.dts === 'object' && 'resolve' in options.dts
+			? options.dts.resolve
+			: undefined
 
 	const buildPromises = options.format.flatMap((fmt) =>
 		processableEntries.map(async (entry) => {
@@ -148,6 +116,34 @@ export async function build(
 				env: getResolvedEnv(options.env),
 				plugins: [
 					...plugins,
+					...(entry.dts
+						? [
+								dts({
+									preferredTsConfigPath:
+										options.preferredTsconfigPath,
+									warnInsteadOfError: options.watch,
+									resolve: dtsResolve,
+									onDeclarationGenerated: (filePath) => {
+										const relativePathToRootDir =
+											getRelativePathToRootDir(
+												filePath,
+												rootDir,
+											)
+										buildOutput.files.push({
+											fullPath: filePath,
+											relativePathToRootDir,
+										})
+										logger.progress(
+											'DTS',
+											relativePathToRootDir,
+											{
+												identifier: options.name,
+											},
+										)
+									},
+								}),
+							]
+						: []),
 					injectShimsPlugin({
 						format: fmt,
 						target: options.target,

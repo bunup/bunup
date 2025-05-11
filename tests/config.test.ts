@@ -24,9 +24,9 @@ describe('Config', () => {
 					},
 				},
 			}),
-			'src/index.ts': "export * from '@/utils';",
-			'src/project/utils.ts':
-				"export const util = (): string => 'utility';",
+			'src/index.ts': "export * from '@/math';",
+			'src/project/math.ts':
+				'export const add = (a: number, b: number): number => a + b;',
 		})
 
 		const result = await runDtsBuild({
@@ -37,7 +37,7 @@ describe('Config', () => {
 
 		expect(result.success).toBe(true)
 		expect(result.files[0].content).toContain(
-			'declare const util: () => string',
+			'declare const add: (a: number, b: number) => number',
 		)
 	})
 })

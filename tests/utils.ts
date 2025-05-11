@@ -102,7 +102,13 @@ export async function runBuild(
 export async function runDtsBuild(
 	options: Omit<BuildOptions, 'outDir'>,
 ): Promise<BuildResult> {
-	return runBuild({ dts: true, ...options })
+	return runBuild({
+		dts: true,
+		// This is a workaround to prevent the bun build from failing
+		// when there are typescript alias imports, looks like a bug in bun only in test environment
+		external: [/.*/],
+		...options,
+	})
 }
 
 export function findFile(

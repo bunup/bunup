@@ -339,7 +339,7 @@ The file extensions are determined automatically based on the format and your pa
 | ------ | -------------------- | -------------------------------- |
 | esm    | `.js`                | `.d.ts`                          |
 | cjs    | `.cjs`               | `.d.cts`                         |
-| iife   | `.global.js`         | `.d.ts`                          |
+| iife   | `.global.js`         | `.global.d.ts`                   |
 
 **When package.json has `"type": "commonjs"` or is unspecified:**
 
@@ -347,7 +347,7 @@ The file extensions are determined automatically based on the format and your pa
 | ------ | -------------------- | -------------------------------- |
 | esm    | `.mjs`               | `.d.mts`                         |
 | cjs    | `.js`                | `.d.ts`                          |
-| iife   | `.global.js`         | `.d.ts`                          |
+| iife   | `.global.js`         | `.global.d.ts`                   |
 
 ### Customizing Output Extensions
 
@@ -358,9 +358,7 @@ export default defineConfig({
 	entry: ['src/index.ts'],
 	format: ['esm', 'cjs'],
 	outputExtension: ({ format, entry }) => ({
-		js: entry.outputBasePath === 'worker' ? '.worker.js' : `.${format}.js`
-		// The TypeScript declaration extension will be automatically derived from the js extension
-		// For example, if js is '.worker.js', the dts will be '.worker.d.ts'
+		js: entry.outputBasePath === 'worker' ? '.worker.js' : `.${format}.js`,
 	}),
 });
 ```
@@ -377,7 +375,9 @@ It should return an object with:
 - `js`: The JavaScript file extension (including the leading dot)
 
 The TypeScript declaration extension will be automatically derived from the JavaScript extension. For example:
+
 - If `js` is `.worker.js`, the dts will be `.worker.d.ts`
+- If `js` is `.utils.mjs`, the dts will be `.utils.d.mts`
 - If `js` is `.mjs`, the dts will be `.d.mts`
 - If `js` is `.cjs`, the dts will be `.d.cts`
 

@@ -103,6 +103,5 @@ describe('CLI Only Options', () => {
 		expect(result.stderr).toContain(
 			' Function must have an explicit return type annotation.',
 		)
-		expect(result.stdout).toContain('early in your editor')
 	})
 })

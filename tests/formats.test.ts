@@ -144,7 +144,7 @@ describe('Format Types and Output Extensions', () => {
 			expect(result.success).toBe(true)
 			expect(
 				validateBuildFiles(result, {
-					expectedFiles: ['index.global.js', 'index.d.ts'],
+					expectedFiles: ['index.global.js', 'index.global.d.ts'],
 				}),
 			).toBe(true)
 		})
@@ -164,7 +164,7 @@ describe('Format Types and Output Extensions', () => {
 			expect(result.success).toBe(true)
 			expect(
 				validateBuildFiles(result, {
-					expectedFiles: ['index.global.js', 'index.d.ts'],
+					expectedFiles: ['index.global.js', 'index.global.d.ts'],
 				}),
 			).toBe(true)
 		})
@@ -248,7 +248,6 @@ describe('Format Types and Output Extensions', () => {
 				dts: true,
 				outputExtension: ({ format }) => ({
 					js: `.${format}.js`,
-					dts: `.types.${format}.ts`,
 				}),
 			})
 
@@ -257,9 +256,9 @@ describe('Format Types and Output Extensions', () => {
 				validateBuildFiles(result, {
 					expectedFiles: [
 						'index.esm.js',
-						'index.types.esm.ts',
+						'index.esm.d.ts',
 						'index.cjs.js',
-						'index.types.cjs.ts',
+						'index.cjs.d.ts',
 					],
 				}),
 			).toBe(true)
@@ -283,10 +282,6 @@ describe('Format Types and Output Extensions', () => {
 						entry.outputBasePath === 'main'
 							? '.bundle.js'
 							: '.module.mjs',
-					dts:
-						entry.outputBasePath === 'main'
-							? '.bundle.d.ts'
-							: '.module.d.ts',
 				}),
 			})
 
@@ -297,7 +292,7 @@ describe('Format Types and Output Extensions', () => {
 						'main.bundle.js',
 						'main.bundle.d.ts',
 						'utils.module.mjs',
-						'utils.module.d.ts',
+						'utils.module.d.mts',
 					],
 				}),
 			).toBe(true)
@@ -443,14 +438,6 @@ describe('Complex Format Scenarios', () => {
 						: format === 'esm'
 							? '.mjs'
 							: '.js',
-				dts:
-					packageType === 'module'
-						? format === 'esm'
-							? '.d.ts'
-							: `.d.${format}`
-						: format === 'esm'
-							? '.d.mts'
-							: '.d.ts',
 			}),
 		})
 
@@ -461,7 +448,7 @@ describe('Complex Format Scenarios', () => {
 					'index.js',
 					'index.d.ts',
 					'index.cjs',
-					'index.d.cjs',
+					'index.d.cts',
 				],
 			}),
 		).toBe(true)

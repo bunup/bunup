@@ -102,7 +102,7 @@ export async function runBuild(
 export async function runDtsBuild(
 	options: Omit<BuildOptions, 'outDir'>,
 ): Promise<BuildResult> {
-	return runBuild({ ...options, dts: true })
+	return runBuild({ dts: true, ...options })
 }
 
 export function findFile(

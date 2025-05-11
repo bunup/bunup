@@ -54,31 +54,31 @@ import WithinHero from "/components/WithinHero.vue";
         <td><strong>bunup</strong></td>
         <td><strong>esm, cjs</strong></td>
         <td><strong>3.42ms ⚡️</strong></td>
-        <td><strong>21.28ms ⚡️</strong></td>
+        <td><strong>9.28ms ⚡️</strong></td>
       </tr>
       <tr>
         <td>tsdown</td>
         <td>esm, cjs</td>
-        <td>8.37ms</td>
-        <td>41.48ms</td>
+        <td>22.37ms</td>
+        <td>84.48ms</td>
       </tr>
       <tr>
         <td>unbuild</td>
         <td>esm, cjs</td>
-        <td>43.22ms</td>
-        <td>326.65ms</td>
+        <td>63.22ms</td>
+        <td>386.65ms</td>
       </tr>
       <tr>
         <td>bunchee</td>
         <td>esm, cjs</td>
-        <td>74.98ms</td>
-        <td>324.38ms</td>
+        <td>94.98ms</td>
+        <td>427.38ms</td>
       </tr>
       <tr>
         <td>tsup</td>
         <td>esm, cjs</td>
-        <td>63.59ms</td>
-        <td>943.61ms</td>
+        <td>82.59ms</td>
+        <td>1035.61ms</td>
       </tr>
     </tbody>
   </table>

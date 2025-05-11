@@ -92,10 +92,7 @@ export async function build(
 			const result = await Bun.build({
 				entrypoints: [`${rootDir}/${entry.fullPath}`],
 				format: fmt,
-				naming: getResolvedNaming(
-					entry.customOutputBasePath,
-					extension,
-				),
+				naming: getResolvedNaming(entry.outputBasePath, extension),
 				splitting: getResolvedSplitting(options.splitting, fmt),
 				bytecode: getResolvedBytecode(options.bytecode, fmt),
 				define: getResolvedDefine(
@@ -119,6 +116,7 @@ export async function build(
 					...(entry.dts
 						? [
 								dts({
+									cwd: rootDir,
 									preferredTsConfigPath:
 										options.preferredTsconfigPath,
 									warnInsteadOfError: options.watch,

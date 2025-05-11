@@ -10,7 +10,6 @@ import {
 	ensureArray,
 	formatFileSize,
 	formatTime,
-	getDefaultDtsExtention,
 	getDefaultOutputExtension,
 	getPackageDeps,
 	getShortFilePath,
@@ -57,21 +56,6 @@ describe('Utils', () => {
 			expect(getDefaultOutputExtension('iife', undefined)).toBe(
 				'.global.js',
 			)
-		})
-	})
-
-	describe('getDefaultDtsExtention', () => {
-		it('returns .d.mts for esm format', () => {
-			expect(getDefaultDtsExtention('esm', undefined)).toBe('.d.mts')
-		})
-		it('returns .d.cts for cjs format with module type', () => {
-			expect(getDefaultDtsExtention('cjs', 'module')).toBe('.d.cts')
-		})
-		it('returns .d.ts for cjs format with commonjs type', () => {
-			expect(getDefaultDtsExtention('cjs', 'commonjs')).toBe('.d.ts')
-		})
-		it('returns .d.ts for iife format', () => {
-			expect(getDefaultDtsExtention('iife', undefined)).toBe('.d.ts')
 		})
 	})
 

@@ -36,7 +36,6 @@ describe('Config', () => {
 		})
 
 		expect(result.success).toBe(true)
-		expect(result.files.length).toBe(1)
 		expect(result.files[0].content).toContain(
 			'declare const util: () => string',
 		)

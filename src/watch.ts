@@ -15,9 +15,9 @@ export async function watch(
 
 	const options = createBuildOptions(partialOptions)
 
-	const normalizedEntry = getProcessableEntries(options)
+	const processableEntries = getProcessableEntries(options)
 
-	for (const entry of normalizedEntry) {
+	for (const entry of processableEntries) {
 		const entryPath = path.resolve(rootDir, entry.fullPath)
 		const parentDir = path.dirname(entryPath)
 		watchPaths.add(parentDir)

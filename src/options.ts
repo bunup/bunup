@@ -342,14 +342,15 @@ export interface BuildOptions {
 	 * Plugins to extend the build process functionality
 	 *
 	 * The Plugin type uses a discriminated union pattern with the 'type' field
-	 * to support different plugin systems. Currently, only "bun" plugins are supported,
-	 * but in the future, this will be extended to include "bunup" plugins as well.
+	 * to support different plugin systems. Both "bun" and "bunup" plugins are supported.
 	 *
 	 * Each plugin type has its own specific plugin implementation:
 	 * - "bun": Uses Bun's native plugin system (BunPlugin)
-	 * - "bunup": Will use bunup's own plugin system (coming in future versions)
+	 * - "bunup": Uses bunup's own plugin system with lifecycle hooks
 	 *
 	 * This architecture allows for extensibility as more plugin systems are added.
+	 *
+	 * @see https://bunup.dev/docs/advanced/plugin-development for more information on plugins
 	 *
 	 * @example
 	 * plugins: [
@@ -357,11 +358,17 @@ export interface BuildOptions {
 	 *     type: "bun",
 	 *     plugin: myBunPlugin()
 	 *   },
-	 *   // In the future:
-	 *   // {
-	 *   //   type: "bunup",
-	 *   //   plugin: myBunupPlugin()
-	 *   // }
+	 *   {
+	 *     type: "bunup",
+	 *     hooks: {
+	 *       onBuildStart: (options) => {
+	 *         console.log('Build started with options:', options)
+	 *       },
+	 *       onBuildDone: ({ options, output }) => {
+	 *         console.log('Build completed with output:', output)
+	 *       }
+	 *     }
+	 *   }
 	 * ]
 	 */
 	plugins?: Plugin[]
@@ -369,12 +376,12 @@ export interface BuildOptions {
 	 * Customize the output file extension for each format.
 	 *
 	 * @param options Contains format, packageType, options, and entry information
-	 * @returns Object with js and dts extensions (including the leading dot)
+	 * @returns Object with js extension (including the leading dot). If dts is true, the dts file extension will be automatically derived from the js extension
 	 *
 	 * @example
 	 * outputExtension: ({ format, entry }) => ({
-	 *   js: entry.outputBasePath === 'worker' ? '.worker.js' : `.${format}.js`,
-	 *   dts: `.${format}.d.ts`
+	 *   js: entry.outputBasePath === 'worker' ? '.worker.js' : `.${format}.js`
+	 *   // For example, if js is '.worker.js', the dts will automatically be '.worker.d.ts'
 	 * })
 	 */
 	outputExtension?: (options: {
@@ -382,7 +389,7 @@ export interface BuildOptions {
 		packageType: string | undefined
 		options: BuildOptions
 		entry: ProcessableEntry
-	}) => { js: string; dts: string }
+	}) => { js: string }
 }
 
 const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {

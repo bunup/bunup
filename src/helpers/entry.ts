@@ -4,7 +4,7 @@ import type { BunBuildOptions } from '../types'
 
 export type ProcessableEntry = {
 	fullPath: string
-	customOutputBasePath: string | null
+	outputBasePath: string | null
 	dts: boolean
 }
 
@@ -28,7 +28,7 @@ export function getProcessableEntries(
 		entries = [
 			{
 				fullPath: options.entry,
-				customOutputBasePath: null,
+				outputBasePath: null,
 				dts: false,
 			},
 		]
@@ -38,18 +38,18 @@ export function getProcessableEntries(
 	) {
 		entries = Object.entries(options.entry).map(([name, path]) => ({
 			fullPath: path,
-			customOutputBasePath: name,
+			outputBasePath: name,
 			dts: false,
 		}))
 	} else {
 		entries = options.entry.map((entry) => ({
 			fullPath: entry,
-			customOutputBasePath: null,
+			outputBasePath: null,
 			dts: false,
 		}))
 	}
 
-	if (options.dts === true) {
+	if (typeof options.dts !== 'undefined' && !dtsEntry) {
 		entries = entries.map((entry) => ({
 			...entry,
 			dts: true,
@@ -61,20 +61,20 @@ export function getProcessableEntries(
 			dtsEntries = [
 				{
 					fullPath: dtsEntry,
-					customOutputBasePath: null,
+					outputBasePath: null,
 					dts: true,
 				},
 			]
 		} else if (typeof dtsEntry === 'object' && !Array.isArray(dtsEntry)) {
 			dtsEntries = Object.entries(dtsEntry).map(([name, path]) => ({
 				fullPath: path,
-				customOutputBasePath: name,
+				outputBasePath: name,
 				dts: true,
 			}))
 		} else {
 			dtsEntries = dtsEntry.map((entry) => ({
 				fullPath: entry,
-				customOutputBasePath: null,
+				outputBasePath: null,
 				dts: true,
 			}))
 		}
@@ -85,13 +85,10 @@ export function getProcessableEntries(
 			const shouldGenerateDts = dtsEntries.some(
 				(dtsEntry) =>
 					dtsEntry.fullPath === entry.fullPath &&
-					dtsEntry.customOutputBasePath ===
-						entry.customOutputBasePath,
+					dtsEntry.outputBasePath === entry.outputBasePath,
 			)
 			if (shouldGenerateDts) {
-				processedPaths.add(
-					`${entry.fullPath}:${entry.customOutputBasePath}`,
-				)
+				processedPaths.add(`${entry.fullPath}:${entry.outputBasePath}`)
 			}
 			return {
 				...entry,
@@ -102,7 +99,7 @@ export function getProcessableEntries(
 		for (const dtsEntry of dtsEntries) {
 			if (
 				!processedPaths.has(
-					`${dtsEntry.fullPath}:${dtsEntry.customOutputBasePath}`,
+					`${dtsEntry.fullPath}:${dtsEntry.outputBasePath}`,
 				)
 			) {
 				entries.push(dtsEntry)
@@ -114,12 +111,12 @@ export function getProcessableEntries(
 }
 
 export function getResolvedNaming(
-	customOutputBasePath: string | null,
+	outputBasePath: string | null,
 	extension: string,
 ): BunBuildOptions['naming'] {
 	return {
-		entry: `[dir]/${customOutputBasePath || '[name]'}${extension}`,
-		chunk: `${customOutputBasePath || '[name]'}-[hash].[ext]`,
-		asset: `${customOutputBasePath ? `${customOutputBasePath}-` : ''}[name]-[hash].[ext]`,
+		entry: `[dir]/${outputBasePath || '[name]'}${extension}`,
+		chunk: `${outputBasePath || '[name]'}-[hash].[ext]`,
+		asset: `${outputBasePath ? `${outputBasePath}-` : ''}[name]-[hash].[ext]`,
 	}
 }

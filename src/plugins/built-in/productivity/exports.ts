@@ -77,6 +77,8 @@ function generateExportsFields(files: BuildOutputFile[]): {
         }
     }
 
+    console.log(exportsField)
+
     return { exportsField, otherExports }
 }
 

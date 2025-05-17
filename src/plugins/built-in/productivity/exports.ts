@@ -1,8 +1,7 @@
 import { logger } from '../../../logger'
 import type { Format } from '../../../options'
-import { getJsonSpaceCount } from '../../../utils'
+import { getJsonSpaceCount, makePortablePath } from '../../../utils'
 import type { BuildOutputFile, BunupPlugin } from '../../types'
-import { normalize } from 'node:path'
 
 type ExportsField = Record<string, Record<string, string>>
 
@@ -64,7 +63,7 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
     for (const file of files) {
         const exportType = formatToExportField(file.format, file.dts)
-        const relativePath = `./${cleanExportPath(file.relativePathToRootDir)}`
+        const relativePath = `./${makePortablePath(file.relativePathToRootDir)}`
 
         const exportKey = getExportKey(file.outputBasePath)
 
@@ -77,8 +76,6 @@ function generateExportsFields(files: BuildOutputFile[]): {
             otherExports[field] = exportsField['.'][field]
         }
     }
-
-    console.log(exportsField)
 
     return { exportsField, otherExports }
 }
@@ -100,17 +97,4 @@ function getExportKey(outputBasePath: string): string {
 
 export function formatToExportField(format: Format, dts: boolean): string {
     return dts ? 'types' : format === 'esm' ? 'import' : 'require'
-}
-
-function cleanExportPath(path: string): string {
-    // Normalize and convert to POSIX slashes
-    let cleaned = normalize(path).replace(/\\/g, '/')
-
-    // Strip Windows drive letters if present (e.g., "D:/")
-    cleaned = cleaned.replace(/^[a-zA-Z]:\//, '')
-
-    // Remove accidental leading slashes
-    cleaned = cleaned.replace(/^\/+/, '')
-
-    return cleaned
 }

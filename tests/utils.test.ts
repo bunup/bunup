@@ -16,6 +16,7 @@ import {
     getPackageDeps,
     getShortFilePath,
     isModulePackage,
+    makePortablePath,
     removeExtension,
 } from '../src/utils'
 
@@ -271,6 +272,34 @@ describe('Utils', () => {
   "name": "test"
 }`
             expect(getJsonSpaceCount(json)).toBe(2)
+        })
+    })
+
+    describe('makePortablePath', () => {
+        it('converts backslashes to forward slashes', () => {
+            expect(makePortablePath('path\\to\\file.js')).toBe(
+                'path/to/file.js',
+            )
+        })
+
+        it('strips Windows drive letters', () => {
+            expect(makePortablePath('C:/path/to/file.js')).toBe(
+                'path/to/file.js',
+            )
+        })
+
+        it('removes leading slashes', () => {
+            expect(makePortablePath('/path/to/file.js')).toBe('path/to/file.js')
+        })
+
+        it('handles already normalized paths', () => {
+            expect(makePortablePath('path/to/file.js')).toBe('path/to/file.js')
+        })
+
+        it('handles complex paths with multiple transformations', () => {
+            expect(
+                makePortablePath('D:\\\\multiple\\//slashes//\\file.js'),
+            ).toBe('multiple/slashes/file.js')
         })
     })
 })

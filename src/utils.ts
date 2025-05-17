@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import path, { normalize } from 'node:path'
 
 import { BunupBuildError } from './errors'
 import type { Format } from './options'
@@ -101,4 +101,20 @@ export async function cleanOutDir(
         throw new BunupBuildError(`Failed to clean output directory: ${error}`)
     }
     await fs.mkdir(outDirPath, { recursive: true })
+}
+
+export function makePortablePath(path: string): string {
+    // First normalize and convert all backslashes to forward slashes
+    let cleaned = normalize(path).replace(/\\/g, '/')
+
+    // Remove Windows drive letter prefix
+    cleaned = cleaned.replace(/^[a-zA-Z]:\//, '')
+
+    // Remove any leading slashes
+    cleaned = cleaned.replace(/^\/+/, '')
+
+    // Remove any duplicate slashes
+    cleaned = cleaned.replace(/\/+/g, '/')
+
+    return cleaned
 }

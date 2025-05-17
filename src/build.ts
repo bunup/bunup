@@ -24,6 +24,7 @@ import {
 import type { BunPlugin } from './types'
 import {
     cleanOutDir,
+    cleanPath,
     getDefaultOutputExtension,
     getShortFilePath,
 } from './utils'
@@ -115,7 +116,9 @@ export async function build(
                                       options.preferredTsconfigPath,
                                   warnInsteadOfError: options.watch,
                                   resolve: dtsResolve,
-                                  onDeclarationGenerated: (filePath) => {
+                                  onDeclarationGenerated: (fp) => {
+                                      const filePath = cleanPath(fp)
+
                                       const relativePathToRootDir =
                                           getRelativePathToRootDir(
                                               filePath,
@@ -156,8 +159,9 @@ export async function build(
             }
 
             for (const file of result.outputs) {
+                const filePath = cleanPath(file.path)
                 const relativePathToRootDir = getRelativePathToRootDir(
-                    file.path,
+                    filePath,
                     rootDir,
                 )
                 if (file.kind === 'entry-point') {
@@ -166,7 +170,7 @@ export async function build(
                     })
                 }
                 buildOutput.files.push({
-                    fullPath: file.path,
+                    fullPath: filePath,
                     relativePathToRootDir,
                     dts: false,
                     entry,

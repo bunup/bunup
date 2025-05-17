@@ -63,13 +63,13 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
     for (const file of files) {
         const exportType = formatToExportField(file.format, file.dts)
-        const relativePath = `./${file.relativePathToRootDir}`
+        const relativePath = `./${makePortablePath(file.relativePathToRootDir)}`
 
         const exportKey = getExportKey(file.outputBasePath)
 
         exportsField[exportKey] = {
             ...exportsField[exportKey],
-            [exportType]: makePortablePath(relativePath),
+            [exportType]: relativePath,
         }
 
         for (const field of Object.keys(exportsField['.'] ?? {})) {

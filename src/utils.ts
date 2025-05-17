@@ -102,12 +102,3 @@ export async function cleanOutDir(
     }
     await fs.mkdir(outDirPath, { recursive: true })
 }
-
-export function makePortablePath(inputPath: string): string {
-    let normalized = path.normalize(inputPath)
-
-    normalized = normalized.replace(/^[a-zA-Z]:/, '')
-    normalized = normalized.replace(/\\/g, '/')
-
-    return normalized
-}

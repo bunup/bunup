@@ -102,3 +102,17 @@ export async function cleanOutDir(
     }
     await fs.mkdir(outDirPath, { recursive: true })
 }
+
+/**
+ * - Converts backslashes to forward slashes
+ * - Removes drive letter from Windows paths
+ * - Normalizes the path
+ */
+export function makePortablePath(inputPath: string): string {
+    let normalized = path.normalize(inputPath)
+
+    normalized = normalized.replace(/^[a-zA-Z]:/, '')
+    normalized = normalized.replace(/\\/g, '/')
+
+    return normalized
+}

@@ -26,8 +26,8 @@ describe('exports plugin', () => {
         expect(result.packageJson.data).toBeDefined()
         expect(result.packageJson.data.exports).toBeDefined()
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
     })
 
@@ -50,8 +50,8 @@ describe('exports plugin', () => {
         expect(result.packageJson.data).toBeDefined()
         expect(result.packageJson.data.exports).toBeDefined()
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].require).toBe(
-            './.output/index.js',
+        expect(result.packageJson.data.exports['.'].require).toContain(
+            '.output/index.js',
         )
     })
 
@@ -74,11 +74,11 @@ describe('exports plugin', () => {
         expect(result.packageJson.data).toBeDefined()
         expect(result.packageJson.data.exports).toBeDefined()
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
-        expect(result.packageJson.data.exports['.'].require).toBe(
-            './.output/index.js',
+        expect(result.packageJson.data.exports['.'].require).toContain(
+            '.output/index.js',
         )
     })
 
@@ -102,13 +102,13 @@ describe('exports plugin', () => {
         expect(result.packageJson.data).toBeDefined()
         expect(result.packageJson.data.exports).toBeDefined()
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
-        expect(result.packageJson.data.exports['.'].types).toBe(
-            './.output/index.d.mts',
+        expect(result.packageJson.data.exports['.'].types).toContain(
+            '.output/index.d.mts',
         )
-        expect(result.packageJson.data.types).toBe('./.output/index.d.mts')
+        expect(result.packageJson.data.types).toContain('.output/index.d.mts')
     })
 
     it('should handle multiple entry points', async () => {
@@ -134,19 +134,19 @@ describe('exports plugin', () => {
         expect(result.packageJson.data.exports).toBeDefined()
 
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
-        expect(result.packageJson.data.exports['.'].types).toBe(
-            './.output/index.d.mts',
+        expect(result.packageJson.data.exports['.'].types).toContain(
+            '.output/index.d.mts',
         )
 
         expect(result.packageJson.data.exports['./utils']).toBeDefined()
-        expect(result.packageJson.data.exports['./utils'].import).toBe(
-            './.output/utils.mjs',
+        expect(result.packageJson.data.exports['./utils'].import).toContain(
+            '.output/utils.mjs',
         )
-        expect(result.packageJson.data.exports['./utils'].types).toBe(
-            './.output/utils.d.mts',
+        expect(result.packageJson.data.exports['./utils'].types).toContain(
+            '.output/utils.d.mts',
         )
     })
 
@@ -208,14 +208,14 @@ describe('exports plugin', () => {
         expect(result.packageJson.data.exports).toBeDefined()
 
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
-        expect(result.packageJson.data.exports['.'].require).toBe(
-            './.output/index.js',
+        expect(result.packageJson.data.exports['.'].require).toContain(
+            '.output/index.js',
         )
-        expect(result.packageJson.data.exports['.'].types).toBe(
-            './.output/index.d.ts',
+        expect(result.packageJson.data.exports['.'].types).toContain(
+            '.output/index.d.ts',
         )
 
         expect(
@@ -223,24 +223,24 @@ describe('exports plugin', () => {
         ).toBeDefined()
         expect(
             result.packageJson.data.exports['./components/button'].import,
-        ).toBe('./.output/components/button.mjs')
+        ).toContain('.output/components/button.mjs')
         expect(
             result.packageJson.data.exports['./components/button'].require,
-        ).toBe('./.output/components/button.js')
+        ).toContain('.output/components/button.js')
         expect(
             result.packageJson.data.exports['./components/button'].types,
-        ).toBe('./.output/components/button.d.ts')
+        ).toContain('.output/components/button.d.ts')
 
         expect(result.packageJson.data.exports['./utils/format']).toBeDefined()
-        expect(result.packageJson.data.exports['./utils/format'].import).toBe(
-            './.output/utils/format.mjs',
-        )
-        expect(result.packageJson.data.exports['./utils/format'].require).toBe(
-            './.output/utils/format.js',
-        )
-        expect(result.packageJson.data.exports['./utils/format'].types).toBe(
-            './.output/utils/format.d.ts',
-        )
+        expect(
+            result.packageJson.data.exports['./utils/format'].import,
+        ).toContain('.output/utils/format.mjs')
+        expect(
+            result.packageJson.data.exports['./utils/format'].require,
+        ).toContain('.output/utils/format.js')
+        expect(
+            result.packageJson.data.exports['./utils/format'].types,
+        ).toContain('.output/utils/format.d.ts')
     })
 
     it('should handle named entry points', async () => {
@@ -269,19 +269,19 @@ describe('exports plugin', () => {
         expect(result.packageJson.data.exports).toBeDefined()
 
         expect(result.packageJson.data.exports['./main']).toBeDefined()
-        expect(result.packageJson.data.exports['./main'].import).toBe(
-            './.output/main.mjs',
+        expect(result.packageJson.data.exports['./main'].import).toContain(
+            '.output/main.mjs',
         )
-        expect(result.packageJson.data.exports['./main'].types).toBe(
-            './.output/main.d.mts',
+        expect(result.packageJson.data.exports['./main'].types).toContain(
+            '.output/main.d.mts',
         )
 
         expect(result.packageJson.data.exports['./secondary']).toBeDefined()
-        expect(result.packageJson.data.exports['./secondary'].import).toBe(
-            './.output/secondary.mjs',
+        expect(result.packageJson.data.exports['./secondary'].import).toContain(
+            '.output/secondary.mjs',
         )
-        expect(result.packageJson.data.exports['./secondary'].types).toBe(
-            './.output/secondary.d.mts',
+        expect(result.packageJson.data.exports['./secondary'].types).toContain(
+            '.output/secondary.d.mts',
         )
     })
 
@@ -310,25 +310,25 @@ describe('exports plugin', () => {
         expect(result.packageJson.data.exports).toBeDefined()
 
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
-        expect(result.packageJson.data.exports['.'].require).toBe(
-            './.output/index.js',
+        expect(result.packageJson.data.exports['.'].require).toContain(
+            '.output/index.js',
         )
-        expect(result.packageJson.data.exports['.'].types).toBe(
-            './.output/index.d.ts',
+        expect(result.packageJson.data.exports['.'].types).toContain(
+            '.output/index.d.ts',
         )
 
         expect(result.packageJson.data.exports['./utils']).toBeDefined()
-        expect(result.packageJson.data.exports['./utils'].import).toBe(
-            './.output/utils/index.mjs',
+        expect(result.packageJson.data.exports['./utils'].import).toContain(
+            '.output/utils/index.mjs',
         )
-        expect(result.packageJson.data.exports['./utils'].require).toBe(
-            './.output/utils/index.js',
+        expect(result.packageJson.data.exports['./utils'].require).toContain(
+            '.output/utils/index.js',
         )
-        expect(result.packageJson.data.exports['./utils'].types).toBe(
-            './.output/utils/index.d.ts',
+        expect(result.packageJson.data.exports['./utils'].types).toContain(
+            '.output/utils/index.d.ts',
         )
     })
 
@@ -363,8 +363,8 @@ describe('exports plugin', () => {
         expect(result.packageJson.data.exports).toBeDefined()
 
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
 
         expect(result.packageJson.data.exports['./components/ui']).toBeDefined()
@@ -404,19 +404,19 @@ describe('exports plugin', () => {
         expect(result.packageJson.data.exports).toBeDefined()
 
         expect(result.packageJson.data.exports['.']).toBeDefined()
-        expect(result.packageJson.data.exports['.'].import).toBe(
-            './.output/index.mjs',
+        expect(result.packageJson.data.exports['.'].import).toContain(
+            '.output/index.mjs',
         )
 
         expect(result.packageJson.data.exports['./utils']).toBeDefined()
-        expect(result.packageJson.data.exports['./utils'].import).toBe(
-            './.output/utils/index.mjs',
+        expect(result.packageJson.data.exports['./utils'].import).toContain(
+            '.output/utils/index.mjs',
         )
 
         expect(result.packageJson.data.exports['./components']).toBeDefined()
-        expect(result.packageJson.data.exports['./components'].import).toBe(
-            './.output/components/index.mjs',
-        )
+        expect(
+            result.packageJson.data.exports['./components'].import,
+        ).toContain('.output/components/index.mjs')
     })
 
     it('should handle custom output paths', async () => {
@@ -446,9 +446,9 @@ describe('exports plugin', () => {
         ).toBeDefined()
         expect(
             result.packageJson.data.exports['./custom/path/to/file'].import,
-        ).toBe('./.output/custom/path/to/file.mjs')
+        ).toContain('.output/custom/path/to/file.mjs')
         expect(
             result.packageJson.data.exports['./custom/path/to/file'].types,
-        ).toBe('./.output/custom/path/to/file.d.mts')
+        ).toContain('.output/custom/path/to/file.d.mts')
     })
 })

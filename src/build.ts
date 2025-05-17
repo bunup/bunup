@@ -160,7 +160,6 @@ export async function build(
                     file.path,
                     rootDir,
                 )
-                console.log('relativePathToRootDir', relativePathToRootDir)
                 if (file.kind === 'entry-point') {
                     logger.progress(fmt.toUpperCase(), relativePathToRootDir, {
                         identifier: options.name,

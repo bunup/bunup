@@ -1,6 +1,6 @@
 import { logger } from '../../../logger'
 import type { Format } from '../../../options'
-import { getJsonSpaceCount } from '../../../utils'
+import { getJsonSpaceCount, makePortablePath } from '../../../utils'
 import type { BuildOutputFile, BunupPlugin } from '../../types'
 
 type ExportsField = Record<string, Record<string, string>>
@@ -63,7 +63,7 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
     for (const file of files) {
         const exportType = formatToExportField(file.format, file.dts)
-        const relativePath = `./${file.relativePathToRootDir}`
+        const relativePath = `./${makePortablePath(file.relativePathToRootDir)}`
 
         const exportKey = getExportKey(file.outputBasePath)
 

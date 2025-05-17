@@ -61,6 +61,8 @@ function generateExportsFields(files: BuildOutputFile[]): {
     const exportsField: ExportsField = {}
     const otherExports: Record<string, string> = {}
 
+    console.log(files)
+
     for (const file of files) {
         const exportType = formatToExportField(file.format, file.dts)
         const relativePath = `./${makePortablePath(file.relativePathToRootDir)}`
@@ -76,8 +78,6 @@ function generateExportsFields(files: BuildOutputFile[]): {
             otherExports[field] = exportsField['.'][field]
         }
     }
-
-    console.log(exportsField)
 
     return { exportsField, otherExports }
 }

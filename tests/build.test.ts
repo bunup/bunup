@@ -88,6 +88,13 @@ export function Counter() {
         </button>
     );
 }`,
+            'package.json': JSON.stringify({
+                name: 'test-package',
+                version: '1.0.0',
+                dependencies: {
+                    react: '^19.0.0',
+                },
+            }),
         })
 
         const result = await runBuild({

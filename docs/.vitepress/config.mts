@@ -56,6 +56,7 @@ export default defineConfig({
                         link: '/docs/plugins/productivity',
                     },
                     { text: 'Node', link: '/docs/plugins/node' },
+                    { text: 'CSS', link: '/docs/plugins/css' },
                 ],
             },
             {

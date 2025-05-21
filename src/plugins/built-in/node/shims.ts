@@ -1,3 +1,4 @@
+import { JS_TS_RE } from '../../../constants/re'
 import type { Plugin } from '../../types'
 
 /**
@@ -28,47 +29,44 @@ export function shims(): Plugin {
                     }),
                 }
 
-                build.onLoad(
-                    { filter: /\.(js|ts|jsx|tsx|mts|cts)$/ },
-                    async ({ path }) => {
-                        const content = await Bun.file(path).text()
-                        let shimCode = ''
+                build.onLoad({ filter: JS_TS_RE }, async ({ path }) => {
+                    const content = await Bun.file(path).text()
+                    let shimCode = ''
 
-                        if (
-                            isEsm &&
-                            (/\b__dirname\b/.test(content) ||
-                                /\b__filename\b/.test(content))
-                        ) {
-                            shimCode = `import { fileURLToPath } from 'url';
+                    if (
+                        isEsm &&
+                        (/\b__dirname\b/.test(content) ||
+                            /\b__filename\b/.test(content))
+                    ) {
+                        shimCode = `import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 `
-                        }
+                    }
 
-                        if (isCjs && /\bimport\.meta\.url\b/.test(content)) {
-                            shimCode = `import { pathToFileURL } from 'url';
+                    if (isCjs && /\bimport\.meta\.url\b/.test(content)) {
+                        shimCode = `import { pathToFileURL } from 'url';
 
 const importMetaUrl = pathToFileURL(__filename).href;
 
 `
-                        }
+                    }
 
-                        if (!shimCode) return
+                    if (!shimCode) return
 
-                        const lines = content.split('\n')
-                        const firstLine = lines[0]
-                        const restLines = lines.slice(1)
+                    const lines = content.split('\n')
+                    const firstLine = lines[0]
+                    const restLines = lines.slice(1)
 
-                        return {
-                            contents: [firstLine, shimCode, ...restLines].join(
-                                '\n',
-                            ),
-                        }
-                    },
-                )
+                    return {
+                        contents: [firstLine, shimCode, ...restLines].join(
+                            '\n',
+                        ),
+                    }
+                })
             },
         },
     }

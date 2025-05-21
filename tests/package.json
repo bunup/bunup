@@ -2,13 +2,13 @@
     "name": "tests",
     "private": true,
     "files": ["dist"],
-    "module": "./dist/index.mjs",
+    "module": "./dist/index.js",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "exports": {
         "./package.json": "./package.json",
         ".": {
-            "import": "./dist/index.mjs",
+            "import": "./dist/index.js",
             "require": "./dist/index.js",
             "types": "./dist/index.d.ts"
         }

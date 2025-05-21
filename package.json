@@ -39,13 +39,18 @@
         "bumpp": "^10.1.0",
         "husky": "^9.1.7",
         "lint-staged": "^15.5.1",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "lightningcss": "^1.30.1"
     },
     "peerDependencies": {
-        "typescript": ">=4.5.0"
+        "typescript": ">=4.5.0",
+        "lightningcss": ">=1.17.0"
     },
     "peerDependenciesMeta": {
         "typescript": {
+            "optional": true
+        },
+        "lightningcss": {
             "optional": true
         }
     },

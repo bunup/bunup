@@ -1,3 +1,4 @@
+import { JS_DTS_RE } from '../../../constants/re'
 import { logger } from '../../../logger'
 import type { Format } from '../../../options'
 import { getUpdatedPackageJson, makePortablePath } from '../../../utils'
@@ -96,7 +97,7 @@ function generateExportsFields(files: BuildOutputFile[]): {
     const exportsField: ExportsField = {}
     const entryPoints: Partial<Record<EntryPoint, string>> = {}
 
-    for (const file of files) {
+    for (const file of filterJsDtsFiles(files)) {
         const exportType = formatToExportField(file.format, file.dts)
         const relativePath = `./${makePortablePath(file.relativePathToRootDir)}`
 
@@ -115,6 +116,10 @@ function generateExportsFields(files: BuildOutputFile[]): {
     }
 
     return { exportsField, entryPoints }
+}
+
+export function filterJsDtsFiles(files: BuildOutputFile[]): BuildOutputFile[] {
+    return files.filter((file) => JS_DTS_RE.test(file.fullPath))
 }
 
 function getExportKey(outputBasePath: string): string {

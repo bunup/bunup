@@ -6,24 +6,42 @@ import {
     transform,
 } from 'lightningcss'
 import { CSS_RE } from '../../../constants/re'
+import { logger } from '../../../logger'
 import type { MaybePromise } from '../../../types'
 import type { Plugin } from '../../types'
 
-type InjectStylePluginOptions = Omit<
+type InjectStylesPluginOptions = Pick<
     TransformOptions<CustomAtRules>,
-    'filename' | 'code'
+    | 'sourceMap'
+    | 'inputSourceMap'
+    | 'targets'
+    | 'nonStandard'
+    | 'minify'
+    | 'pseudoClasses'
+    | 'unusedSymbols'
+    | 'errorRecovery'
+    | 'visitor'
+    | 'customAtRules'
+    | 'include'
+    | 'exclude'
+    | 'drafts'
 > & {
     inject?: (css: string, filePath: string) => MaybePromise<string>
 }
 
-export function injectStyle(options?: InjectStylePluginOptions): Plugin {
+/**
+ * A plugin that injects styles into the document head.
+ *
+ * @see https://bunup.dev/docs/plugins/css#inject-styles
+ */
+export function injectStyles(options?: InjectStylesPluginOptions): Plugin {
     const { inject, ...transformOptions } = options ?? {}
 
     return {
         type: 'bun',
-        name: 'inject-style',
+        name: 'inject-styles',
         plugin: {
-            name: 'bunup:inject-style',
+            name: 'bunup:inject-styles',
             setup(build) {
                 build.onResolve({ filter: /^__inject-style$/ }, () => {
                     return {
@@ -59,7 +77,7 @@ export function injectStyle(options?: InjectStylePluginOptions): Plugin {
                 build.onLoad({ filter: CSS_RE }, async (args) => {
                     const source = await fs.promises.readFile(args.path, 'utf8')
 
-                    const { code } = transform({
+                    const { code, warnings } = transform({
                         ...transformOptions,
                         filename: path.basename(args.path),
                         code: Buffer.from(source),
@@ -69,6 +87,10 @@ export function injectStyle(options?: InjectStylePluginOptions): Plugin {
                                 (typeof build.config.minify === 'object' &&
                                     build.config.minify.whitespace)),
                     })
+
+                    for (const warning of warnings) {
+                        logger.warn(warning.message)
+                    }
 
                     const stringifiedCode = JSON.stringify(code.toString())
 

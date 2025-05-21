@@ -1,3 +1,20 @@
-button {
-    background-color: red;
+/* Custom properties */
+:root {
+    --primary-color: #3498db;
+}
+
+/* Media query */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+/* Nested selectors */
+.container {
+    color: var(--primary-color);
+
+    .title {
+        font-size: 24px;
+    }
 }

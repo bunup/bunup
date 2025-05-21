@@ -52,7 +52,7 @@ export function getResolvedNaming(
     extension: string,
 ): BunBuildOptions['naming'] {
     return {
-        entry: `[dir]/${outputBasePath}.[ext]`,
+        entry: `[dir]/${outputBasePath}${extension}`,
         chunk: `${outputBasePath}-[hash].[ext]`,
         asset: `${outputBasePath}-[name]-[hash].[ext]`,
     }

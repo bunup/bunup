@@ -1,0 +1,43 @@
+name: 📼 VHS
+
+on:
+  push:
+    paths:
+      - assets/tapes/*.tape
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vhs:
+    name: 📼 Create VHS
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'arshad-yaseen/bunup' }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      # This prevents bunx from downloading bunup in the video
+      - name: 📦 Pre-install bunup
+        run: bunx bunup --version
+
+      - name: 📹 Record VHS
+        uses: charmbracelet/vhs-action@v2.1.0
+        with:
+          path: assets/tapes/bunup-demo.tape
+
+      - name: 💾 Save recorded GIF
+        uses: stefanzweifel/git-auto-commit-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: 'chore(assets): 📼 update VHS tapes'
+          # https://github.com/charmbracelet/vhs#output
+          file_pattern: assets/*.gif

@@ -28,6 +28,9 @@ jobs:
       - name: 📦 Pre-install bunup
         run: bunx bunup --version
 
+      - name: 🔥 Warmup
+        run: bunx bunup
+
       - name: 📹 Record VHS
         uses: charmbracelet/vhs-action@v2.1.0
         with:

@@ -20,15 +20,15 @@ Set Theme { "name": "Carbonfox", "black": "#282828", "red": "#ee5396", "green": 
 Set FontSize 32
 
 # Terminal settings
-Set Shell "bash"
+Set Shell 'bash'
 
-# Terminal prompt. It looks like "● mycommand ..."
-Env PS1 "\e[0;32m●\e[0m "
+# Terminal prompt. It looks like '● mycommand ...'
+Env PS1 '\e[0;32m●\e[0m '
 
 # ===== Actions =====
 
 Sleep 2s
-Type@200ms "bunx bunup"
+Type@200ms 'bunx bunup'
 Sleep 3s
 Enter
 Sleep 10s

@@ -70,8 +70,6 @@ describe('exports plugin', () => {
 			plugins: [exports()],
 		})
 
-		console.log(result.packageJson.data)
-
 		expect(result.success).toBe(true)
 		expect(result.packageJson.data).toBeDefined()
 		expect(result.packageJson.data.exports).toBeDefined()
@@ -217,7 +215,7 @@ describe('exports plugin', () => {
 			'.output/index.js',
 		)
 		expect(result.packageJson.data.exports['.'].types).toContain(
-			'.output/index.d.ts',
+			'.output/index.d.mts',
 		)
 
 		expect(result.packageJson.data.exports['./components/button']).toBeDefined()

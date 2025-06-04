@@ -98,6 +98,8 @@ export async function build(
 							result.outputPath,
 						)
 
+						console.log(result)
+
 						if (buildConfig.format) {
 							buildOutput.files.push({
 								fullPath,

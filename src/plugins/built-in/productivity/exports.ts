@@ -82,11 +82,16 @@ function generateExportsFields(files: BuildOutputFile[]): {
 	const exportsField: ExportsField = {}
 	const entryPoints: Partial<Record<EntryPoint, string>> = {}
 
-	for (const file of filterFiles(files)) {
+	const filteredFiles = filterFiles(files)
+
+	for (const file of filteredFiles) {
 		const exportType = formatToExportField(file.format, file.dts)
 		const relativePath = `./${cleanPath(file.relativePathToRootDir)}`
 
-		const exportKey = getExportKey(cleanPath(file.relativePathToOutputDir))
+		const exportKey = getExportKey(
+			filteredFiles.length === 1,
+			cleanPath(file.relativePathToOutputDir),
+		)
 
 		exportsField[exportKey] = {
 			...exportsField[exportKey],
@@ -109,10 +114,11 @@ function filterFiles(files: BuildOutputFile[]): BuildOutputFile[] {
 	)
 }
 
-function getExportKey(relativePathToOutputDir: string): string {
+function getExportKey(
+	hasOnlyOneEntryPoint: boolean,
+	relativePathToOutputDir: string,
+): string {
 	const pathSegments = removeExtension(relativePathToOutputDir).split('/')
-
-	console.log(relativePathToOutputDir, pathSegments)
 
 	// index.ts -> .
 	// client/index.ts -> ./client
@@ -120,9 +126,8 @@ function getExportKey(relativePathToOutputDir: string): string {
 	// components/ui/button.ts -> ./components/ui/button
 
 	if (
-		pathSegments.length === 1 &&
-		(pathSegments[0].startsWith('index') ||
-			pathSegments[pathSegments.length - 1] === 'index')
+		(pathSegments.length === 1 && pathSegments[0].startsWith('index')) ||
+		hasOnlyOneEntryPoint
 	) {
 		return '.'
 	}

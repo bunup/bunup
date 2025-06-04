@@ -25,6 +25,7 @@ import {
 import type { BunPlugin } from './types'
 import {
 	cleanOutDir,
+	cleanPath,
 	ensureArray,
 	getFilesFromGlobs,
 	getShortFilePath,
@@ -151,7 +152,10 @@ export async function build(
 		}
 
 		for (const file of result.outputs) {
-			const relativePathToRootDir = getRelativePathToRootDir(file.path, rootDir)
+			const relativePathToRootDir = getRelativePathToRootDir(
+				cleanPath(file.path),
+				rootDir,
+			)
 			if (file.kind === 'entry-point') {
 				logger.progress(fmt.toUpperCase(), relativePathToRootDir, {
 					identifier: options.name,

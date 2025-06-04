@@ -235,7 +235,9 @@ describe('Utils', () => {
 			expect(cleanPath(removeExtension('path/to/file'))).toBe('path/to/file')
 		})
 		it('handles paths with multiple dots', () => {
-			expect(removeExtension('path/to/file.min.js')).toBe('path/to/file')
+			expect(cleanPath(removeExtension('path/to/file.min.js'))).toBe(
+				'path/to/file',
+			)
 		})
 	})
 

@@ -88,12 +88,6 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
 		const exportKey = getExportKey(cleanPath(file.relativePathToOutputDir))
 
-		console.log(
-			exportKey,
-			cleanPath(file.relativePathToOutputDir),
-			removeExtension(cleanPath(file.relativePathToOutputDir)),
-		)
-
 		exportsField[exportKey] = {
 			...exportsField[exportKey],
 			[exportType]: relativePath,
@@ -116,18 +110,22 @@ function filterFiles(files: BuildOutputFile[]): BuildOutputFile[] {
 }
 
 function getExportKey(relativePathToOutputDir: string): string {
-	const pathSegments = relativePathToOutputDir.split('/')
+	const pathSegments = removeExtension(relativePathToOutputDir).split('/')
 
 	// index.ts -> .
 	// client/index.ts -> ./client
 	// utils/index.ts -> ./utils
 	// components/ui/button.ts -> ./components/ui/button
 
-	if (pathSegments.length === 1 && pathSegments[0].startsWith('index')) {
+	if (
+		pathSegments.length === 1 &&
+		(pathSegments[0].startsWith('index') ||
+			pathSegments[pathSegments.length - 1] === 'index')
+	) {
 		return '.'
 	}
 
-	return `./${removeExtension(pathSegments.filter((p) => !p.startsWith('index')).join('/'))}`
+	return `./${pathSegments.filter((p) => !p.startsWith('index')).join('/')}`
 }
 
 function exportFieldToEntryPoint(exportField: ExportField): EntryPoint {

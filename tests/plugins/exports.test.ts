@@ -363,4 +363,39 @@ describe('exports plugin', () => {
 		expect(result.packageJson.data.types).toBeDefined()
 		expect(result.packageJson.data.types).toContain('.output/index.d')
 	})
+
+	it('should not add exports field for non-entry-point files', async () => {
+		createProject({
+			'package.json': JSON.stringify({
+				name: 'test-package',
+				version: '1.0.0',
+			}),
+			'src/shared-utils.ts': 'export const utils = "utils";',
+			'src/index.ts':
+				'import { utils } from "./shared-utils"; export const main: ReturnType<typeof utils> = "main";',
+			'src/math.ts':
+				'import { utils } from "./shared-utils"; export const math: ReturnType<typeof utils> = "math";',
+		})
+
+		const result = await runBuild({
+			entry: ['src/index.ts', 'src/math.ts'],
+			format: ['esm'],
+			plugins: [exports()],
+			splitting: true,
+			dts: true,
+		})
+
+		expect(result.success).toBe(true)
+		expect(result.packageJson.data).toBeDefined()
+		expect(result.packageJson.data.exports).toBeDefined()
+		expect(result.packageJson.data.exports['.']).toBeDefined()
+		expect(result.packageJson.data.exports['.'].import).toContain(
+			'.output/index.mjs',
+		)
+		expect(
+			!Object.keys(result.packageJson.data.exports).some((key) =>
+				key.includes('chunk'),
+			),
+		).toBe(true)
+	})
 })

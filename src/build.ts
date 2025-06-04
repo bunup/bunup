@@ -152,14 +152,18 @@ export async function build(
 		}
 
 		for (const file of result.outputs) {
-			const relativePathToRootDir = getRelativePathToRootDir(file.path, rootDir)
+			const cleanedBunOutputPath = cleanPath(file.path)
+			const relativePathToRootDir = getRelativePathToRootDir(
+				cleanedBunOutputPath,
+				rootDir,
+			)
 			if (file.kind === 'entry-point') {
 				logger.progress(fmt.toUpperCase(), relativePathToRootDir, {
 					identifier: options.name,
 				})
 			}
 			buildOutput.files.push({
-				fullPath: file.path,
+				fullPath: cleanedBunOutputPath,
 				relativePathToRootDir,
 				relativePathToOutputDir: getRelativePathToOutputDir(
 					relativePathToRootDir,
@@ -185,7 +189,7 @@ export async function build(
 }
 
 function getRelativePathToRootDir(filePath: string, rootDir: string) {
-	return cleanPath(filePath).replace(`${cleanPath(rootDir)}/`, '')
+	return filePath.replace(`${rootDir}/`, '')
 }
 
 function getRelativePathToOutputDir(

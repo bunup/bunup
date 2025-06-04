@@ -94,8 +94,6 @@ export function cleanPath(path: string): string {
 
 	cleaned = cleaned.replace(/^[a-zA-Z]:\//, '')
 
-	cleaned = cleaned.replace(/^\/+/, '')
-
 	cleaned = cleaned.replace(/\/+/g, '/')
 
 	return cleaned

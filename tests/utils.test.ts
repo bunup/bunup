@@ -248,8 +248,8 @@ describe('Utils', () => {
 			expect(cleanPath('C:/path/to/file.js')).toBe('path/to/file.js')
 		})
 
-		it('should not remove leading slashes', () => {
-			expect(cleanPath('/path/to/file.js')).toBe('/path/to/file.js')
+		it('removes leading slashes', () => {
+			expect(cleanPath('/path/to/file.js')).toBe('path/to/file.js')
 		})
 
 		it('handles already normalized paths', () => {
@@ -258,7 +258,7 @@ describe('Utils', () => {
 
 		it('handles complex paths with multiple transformations', () => {
 			expect(cleanPath('D:\\\\multiple\\//slashes//\\file.js')).toBe(
-				'/multiple/slashes/file.js',
+				'multiple/slashes/file.js',
 			)
 		})
 

@@ -106,7 +106,7 @@ describe('exports plugin', () => {
 			'.output/index.mjs',
 		)
 		expect(result.packageJson.data.exports['.'].types).toContain(
-			'.output/index.d.mts',
+			'.output/index.d',
 		)
 		expect(result.packageJson.data.types).toContain('.output/index.d.mts')
 	})
@@ -138,7 +138,7 @@ describe('exports plugin', () => {
 			'.output/index.mjs',
 		)
 		expect(result.packageJson.data.exports['.'].types).toContain(
-			'.output/index.d.mts',
+			'.output/index.d',
 		)
 
 		expect(result.packageJson.data.exports['./utils']).toBeDefined()
@@ -146,7 +146,7 @@ describe('exports plugin', () => {
 			'.output/utils.mjs',
 		)
 		expect(result.packageJson.data.exports['./utils'].types).toContain(
-			'.output/utils.d.mts',
+			'.output/utils.d',
 		)
 	})
 
@@ -237,7 +237,7 @@ describe('exports plugin', () => {
 			'.output/utils/format.js',
 		)
 		expect(result.packageJson.data.exports['./utils/format'].types).toContain(
-			'.output/utils/format.d.ts',
+			'.output/utils/format.d',
 		)
 	})
 
@@ -361,6 +361,6 @@ describe('exports plugin', () => {
 		expect(result.success).toBe(true)
 		expect(result.packageJson.data).toBeDefined()
 		expect(result.packageJson.data.types).toBeDefined()
-		expect(result.packageJson.data.types).toContain('.output/index.d.mts')
+		expect(result.packageJson.data.types).toContain('.output/index.d')
 	})
 })

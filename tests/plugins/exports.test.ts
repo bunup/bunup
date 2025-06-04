@@ -215,7 +215,7 @@ describe('exports plugin', () => {
 			'.output/index.js',
 		)
 		expect(result.packageJson.data.exports['.'].types).toContain(
-			'.output/index.d.mts',
+			'.output/index.d',
 		)
 
 		expect(result.packageJson.data.exports['./components/button']).toBeDefined()

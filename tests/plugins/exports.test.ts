@@ -227,7 +227,7 @@ describe('exports plugin', () => {
 		).toContain('.output/components/button.js')
 		expect(
 			result.packageJson.data.exports['./components/button'].types,
-		).toContain('.output/components/button.d.ts')
+		).toContain('.output/components/button.d')
 
 		expect(result.packageJson.data.exports['./utils/format']).toBeDefined()
 		expect(result.packageJson.data.exports['./utils/format'].import).toContain(

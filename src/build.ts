@@ -108,6 +108,7 @@ export async function build(
 								relativePathToOutputDir: result.outputPath,
 								dts: true,
 								format: buildConfig.format,
+								kind: result.kind,
 							})
 						}
 					}
@@ -165,6 +166,7 @@ export async function build(
 				),
 				dts: false,
 				format: fmt,
+				kind: file.kind,
 			})
 		}
 	})

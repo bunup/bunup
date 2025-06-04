@@ -82,18 +82,16 @@ function generateExportsFields(files: BuildOutputFile[]): {
 	const exportsField: ExportsField = {}
 	const entryPoints: Partial<Record<EntryPoint, string>> = {}
 
-	for (const file of filterJsDtsFiles(files)) {
+	for (const file of filterFiles(files)) {
 		const exportType = formatToExportField(file.format, file.dts)
 		const relativePath = `./${cleanPath(file.relativePathToRootDir)}`
 
 		const exportKey = getExportKey(cleanPath(file.relativePathToOutputDir))
 
 		console.log(
-			file.relativePathToOutputDir,
-			file.relativePathToRootDir,
-			relativePath,
 			exportKey,
 			cleanPath(file.relativePathToOutputDir),
+			removeExtension(cleanPath(file.relativePathToOutputDir)),
 		)
 
 		exportsField[exportKey] = {
@@ -111,8 +109,10 @@ function generateExportsFields(files: BuildOutputFile[]): {
 	return { exportsField, entryPoints }
 }
 
-function filterJsDtsFiles(files: BuildOutputFile[]): BuildOutputFile[] {
-	return files.filter((file) => JS_DTS_RE.test(file.fullPath))
+function filterFiles(files: BuildOutputFile[]): BuildOutputFile[] {
+	return files.filter(
+		(file) => JS_DTS_RE.test(file.fullPath) && file.kind === 'entry-point',
+	)
 }
 
 function getExportKey(relativePathToOutputDir: string): string {

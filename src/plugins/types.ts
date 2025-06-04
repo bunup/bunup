@@ -25,6 +25,8 @@ export type BuildMeta = {
 }
 
 export type BuildOutputFile = {
+	/** The kind of the file */
+	kind: 'entry-point' | 'chunk' | 'asset' | 'sourcemap' | 'bytecode'
 	/** Path to the generated file */
 	fullPath: string
 	/** Path to the generated file relative to the root directory */

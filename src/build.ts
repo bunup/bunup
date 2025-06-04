@@ -93,8 +93,10 @@ export async function build(
 							identifier: options.name,
 						})
 
-						const fullPath = cleanPath(
-							path.join(rootDir, options.outDir, result.outputPath),
+						const fullPath = path.join(
+							rootDir,
+							options.outDir,
+							result.outputPath,
 						)
 
 						if (buildConfig.format) {
@@ -157,7 +159,7 @@ export async function build(
 				})
 			}
 			buildOutput.files.push({
-				fullPath: cleanPath(file.path),
+				fullPath: file.path,
 				relativePathToRootDir,
 				relativePathToOutputDir: getRelativePathToOutputDir(
 					relativePathToRootDir,
@@ -190,5 +192,5 @@ function getRelativePathToOutputDir(
 	relativePathToRootDir: string,
 	outDir: string,
 ) {
-	return relativePathToRootDir.replace(`${outDir}/`, '')
+	return cleanPath(relativePathToRootDir).replace(`${cleanPath(outDir)}/`, '')
 }

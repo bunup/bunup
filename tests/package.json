@@ -16,28 +16,6 @@
 		"./server": {
 			"types": "./dist/server/index.d.mts",
 			"import": "./dist/server/index.mjs"
-		},
-		"./chunk-j13ke0sf.js": {
-			"require": "./dist/chunk-j13ke0sf.js"
-		},
-		"./chunk-6czjhedk.d.ts": {
-			"types": "./dist/chunk-6czjhedk.d.ts"
-		},
-		"./chunk-j13ke0sf": {
-			"require": "./dist/chunk-j13ke0sf.js"
-		},
-		"./client/server": {
-			"types": "./dist/client/server.d.ts",
-			"require": "./dist/client/server.js",
-			"import": "./dist/client/server.mjs"
-		},
-		"./utils": {
-			"types": "./dist/utils.d.mts",
-			"import": "./dist/utils.mjs",
-			"require": "./dist/utils.js"
-		},
-		"./chunk-6czjhedk": {
-			"types": "./dist/chunk-6czjhedk.d.ts"
 		}
 	},
 	"main": "./dist/index.js",

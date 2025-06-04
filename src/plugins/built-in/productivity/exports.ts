@@ -84,9 +84,13 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
 	const filteredFiles = filterFiles(files)
 
+	console.log(filteredFiles)
+
 	for (const file of filteredFiles) {
 		const exportType = formatToExportField(file.format, file.dts)
 		const relativePath = `./${cleanPath(file.relativePathToRootDir)}`
+
+		console.log(file.relativePathToOutputDir)
 
 		const exportKey = getExportKey(
 			filteredFiles.length === 1,

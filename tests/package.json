@@ -2,23 +2,19 @@
 	"name": "tests",
 	"private": true,
 	"files": ["dist"],
-	"types": "./dist/index.d.ts",
-	"main": "./dist/index.js",
+	"types": "./dist/index.d.mts",
 	"module": "./dist/index.mjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"require": "./dist/index.js",
+			"types": "./dist/index.d.mts",
 			"import": "./dist/index.mjs"
 		},
 		"./client": {
-			"types": "./dist/client/index.d.ts",
-			"require": "./dist/client/index.js",
+			"types": "./dist/client/index.d.mts",
 			"import": "./dist/client/index.mjs"
 		},
 		"./server": {
-			"types": "./dist/server/index.d.ts",
-			"require": "./dist/server/index.js",
+			"types": "./dist/server/index.d.mts",
 			"import": "./dist/server/index.mjs"
 		},
 		"./chunk-j13ke0sf.js": {
@@ -39,8 +35,12 @@
 			"types": "./dist/utils.d.mts",
 			"import": "./dist/utils.mjs",
 			"require": "./dist/utils.js"
+		},
+		"./chunk-6czjhedk": {
+			"types": "./dist/chunk-6czjhedk.d.ts"
 		}
 	},
+	"main": "./dist/index.js",
 	"dependencies": {
 		"chalk": "^5.4.1",
 		"lodash": "^4.17.21",

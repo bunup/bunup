@@ -88,6 +88,14 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
 		const exportKey = getExportKey(cleanPath(file.relativePathToOutputDir))
 
+		console.log(
+			file.relativePathToOutputDir,
+			file.relativePathToRootDir,
+			relativePath,
+			exportKey,
+			cleanPath(file.relativePathToOutputDir),
+		)
+
 		exportsField[exportKey] = {
 			...exportsField[exportKey],
 			[exportType]: relativePath,

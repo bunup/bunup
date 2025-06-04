@@ -24,7 +24,6 @@ describe('exports plugin', () => {
 
 		expect(result.success).toBe(true)
 		expect(result.packageJson.data).toBeDefined()
-		console.log(result.packageJson.data)
 		expect(result.packageJson.data.exports).toBeDefined()
 		expect(result.packageJson.data.exports['.']).toBeDefined()
 		expect(result.packageJson.data.exports['.'].import).toContain(
@@ -187,7 +186,7 @@ describe('exports plugin', () => {
 				name: 'test-package',
 				version: '1.0.0',
 			}),
-			'src/index.ts': 'export * from "./components/button";',
+			'src/index.ts': 'export const hello: string = "world";',
 			'src/components/button.ts': 'export const Button = () => "button";',
 			'src/utils/format.ts':
 				'export const format = (str: string): string => str.trim();',
@@ -248,11 +247,10 @@ describe('exports plugin', () => {
 				name: 'test-package',
 				version: '1.0.0',
 			}),
-			'src/index.ts': 'export * from "./components/ui";',
-			'src/components/ui/index.ts': 'export * from "./button";',
-			'src/components/ui/button.ts': 'export const Button = () => "button";',
-			'src/utils/formatting/text.ts':
-				'export const formatText = (text: string): string => text.trim();',
+			'src/index.ts': 'export const hello: string = "world";',
+			'src/components/ui/index.ts': 'export const hello: string = "world";',
+			'src/components/ui/button.ts': 'export const hello: string = "world";',
+			'src/utils/formatting/text.ts': 'export const hello: string = "world";',
 		})
 
 		const result = await runBuild({

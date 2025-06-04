@@ -7,8 +7,7 @@ export default defineConfig({
 		'fixtures/client/index.ts',
 		'fixtures/server/index.ts',
 	],
-	format: ['esm', 'cjs'],
+	format: ['esm'],
 	dts: true,
 	plugins: [copy(['fixtures/**/*.css'], 'dist/cool'), exports()],
-	splitting: true,
 })

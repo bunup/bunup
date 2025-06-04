@@ -40,7 +40,7 @@
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.10.1",
-		"bun-dts": "^0.1.52",
+		"bun-dts": "^0.1.54",
 		"chokidar": "^4.0.3",
 		"coffi": "^0.1.31",
 		"giget": "^2.0.0",

@@ -152,10 +152,7 @@ export async function build(
 		}
 
 		for (const file of result.outputs) {
-			const relativePathToRootDir = getRelativePathToRootDir(
-				cleanPath(file.path),
-				rootDir,
-			)
+			const relativePathToRootDir = getRelativePathToRootDir(file.path, rootDir)
 			if (file.kind === 'entry-point') {
 				logger.progress(fmt.toUpperCase(), relativePathToRootDir, {
 					identifier: options.name,
@@ -188,7 +185,7 @@ export async function build(
 }
 
 function getRelativePathToRootDir(filePath: string, rootDir: string) {
-	return filePath.replace(`${rootDir}/`, '')
+	return cleanPath(filePath).replace(`${cleanPath(rootDir)}/`, '')
 }
 
 function getRelativePathToOutputDir(

@@ -84,18 +84,11 @@ function generateExportsFields(files: BuildOutputFile[]): {
 
 	const filteredFiles = filterFiles(files)
 
-	console.log(filteredFiles)
-
 	for (const file of filteredFiles) {
 		const exportType = formatToExportField(file.format, file.dts)
 		const relativePath = `./${cleanPath(file.relativePathToRootDir)}`
 
-		console.log(file.relativePathToOutputDir)
-
-		const exportKey = getExportKey(
-			filteredFiles.length === 1,
-			cleanPath(file.relativePathToOutputDir),
-		)
+		const exportKey = getExportKey(cleanPath(file.relativePathToOutputDir))
 
 		exportsField[exportKey] = {
 			...exportsField[exportKey],
@@ -118,10 +111,7 @@ function filterFiles(files: BuildOutputFile[]): BuildOutputFile[] {
 	)
 }
 
-function getExportKey(
-	hasOnlyOneEntryPoint: boolean,
-	relativePathToOutputDir: string,
-): string {
+function getExportKey(relativePathToOutputDir: string): string {
 	const pathSegments = removeExtension(relativePathToOutputDir).split('/')
 
 	// index.ts -> .
@@ -129,10 +119,7 @@ function getExportKey(
 	// utils/index.ts -> ./utils
 	// components/ui/button.ts -> ./components/ui/button
 
-	if (
-		(pathSegments.length === 1 && pathSegments[0].startsWith('index')) ||
-		hasOnlyOneEntryPoint
-	) {
+	if (pathSegments.length === 1 && pathSegments[0].startsWith('index')) {
 		return '.'
 	}
 

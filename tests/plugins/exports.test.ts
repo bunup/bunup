@@ -46,8 +46,6 @@ describe('exports plugin', () => {
 			plugins: [exports()],
 		})
 
-		console.log(result.packageJson.data)
-
 		expect(result.success).toBe(true)
 		expect(result.packageJson.data).toBeDefined()
 		expect(result.packageJson.data.exports).toBeDefined()
@@ -71,6 +69,8 @@ describe('exports plugin', () => {
 			format: ['esm', 'cjs'],
 			plugins: [exports()],
 		})
+
+		console.log(result.packageJson.data)
 
 		expect(result.success).toBe(true)
 		expect(result.packageJson.data).toBeDefined()

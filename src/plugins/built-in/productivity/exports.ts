@@ -112,6 +112,8 @@ function filterFiles(files: BuildOutputFile[]): BuildOutputFile[] {
 function getExportKey(relativePathToOutputDir: string): string {
 	const pathSegments = removeExtension(relativePathToOutputDir).split('/')
 
+	console.log(relativePathToOutputDir, pathSegments)
+
 	// index.ts -> .
 	// client/index.ts -> ./client
 	// utils/index.ts -> ./utils

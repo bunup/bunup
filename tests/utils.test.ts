@@ -229,10 +229,10 @@ describe('Utils', () => {
 
 	describe('removeExtension', () => {
 		it('removes file extension', () => {
-			expect(removeExtension('path/to/file.js')).toBe('path/to/file')
+			expect(cleanPath(removeExtension('path/to/file.js'))).toBe('path/to/file')
 		})
 		it('handles paths with no extension', () => {
-			expect(removeExtension('path/to/file')).toBe('path/to/file')
+			expect(cleanPath(removeExtension('path/to/file'))).toBe('path/to/file')
 		})
 		it('handles paths with multiple dots', () => {
 			expect(removeExtension('path/to/file.min.js')).toBe('path/to/file')

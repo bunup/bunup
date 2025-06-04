@@ -24,6 +24,7 @@ describe('exports plugin', () => {
 
 		expect(result.success).toBe(true)
 		expect(result.packageJson.data).toBeDefined()
+		console.log(result.packageJson.data)
 		expect(result.packageJson.data.exports).toBeDefined()
 		expect(result.packageJson.data.exports['.']).toBeDefined()
 		expect(result.packageJson.data.exports['.'].import).toContain(

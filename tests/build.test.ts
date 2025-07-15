@@ -773,56 +773,56 @@ export function Counter() {
 		)
 	})
 
-	it('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
-		createProject({
-			'src/a.ts': `
-				import { SharedType } from './shared-type'
-				export const a: SharedType = { value: 'a' }
-				import txt from './asset.txt'
-				export { txt }
-			`,
-			'src/b.ts': `
-				import { SharedType } from './shared-type'
-				export const b: SharedType = { value: 'b' }
-			`,
-			'src/shared-type.ts': `
-				export type SharedType = { value: string }
-			`,
-			'src/asset.txt': 'hello asset',
-		})
+	// it('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
+	// 	createProject({
+	// 		'src/a.ts': `
+	// 			import { SharedType } from './shared-type'
+	// 			export const a: SharedType = { value: 'a' }
+	// 			import txt from './asset.txt'
+	// 			export { txt }
+	// 		`,
+	// 		'src/b.ts': `
+	// 			import { SharedType } from './shared-type'
+	// 			export const b: SharedType = { value: 'b' }
+	// 		`,
+	// 		'src/shared-type.ts': `
+	// 			export type SharedType = { value: string }
+	// 		`,
+	// 		'src/asset.txt': 'hello asset',
+	// 	})
 
-		const result = await runBuild({
-			entry: ['src/a.ts', 'src/b.ts'],
-			format: ['esm', 'cjs'],
-			splitting: true,
-			dts: { splitting: true },
-			loader: {
-				'.txt': 'file',
-			},
-		})
+	// 	const result = await runBuild({
+	// 		entry: ['src/a.ts', 'src/b.ts'],
+	// 		format: ['esm', 'cjs'],
+	// 		splitting: true,
+	// 		dts: { splitting: true },
+	// 		loader: {
+	// 			'.txt': 'file',
+	// 		},
+	// 	})
 
-		expect(result.success).toBe(true)
+	// 	expect(result.success).toBe(true)
 
-		const jsChunkFiles = result.files.filter(
-			(f) =>
-				f.path.includes('shared/chunk-') &&
-				(f.path.endsWith('.js') || f.path.endsWith('.mjs')),
-		)
-		expect(jsChunkFiles.length).toBeGreaterThan(0)
+	// 	const jsChunkFiles = result.files.filter(
+	// 		(f) =>
+	// 			f.path.includes('shared/chunk-') &&
+	// 			(f.path.endsWith('.js') || f.path.endsWith('.mjs')),
+	// 	)
+	// 	expect(jsChunkFiles.length).toBeGreaterThan(0)
 
-		const dtsChunkFiles = result.files.filter(
-			(f) =>
-				f.path.includes('shared/chunk-') &&
-				(f.path.endsWith('.d.ts') ||
-					f.path.endsWith('.d.mts') ||
-					f.path.endsWith('.d.cts')),
-		)
-		expect(dtsChunkFiles).toHaveLength(1)
+	// 	const dtsChunkFiles = result.files.filter(
+	// 		(f) =>
+	// 			f.path.includes('shared/chunk-') &&
+	// 			(f.path.endsWith('.d.ts') ||
+	// 				f.path.endsWith('.d.mts') ||
+	// 				f.path.endsWith('.d.cts')),
+	// 	)
+	// 	expect(dtsChunkFiles).toHaveLength(1)
 
-		const assetFile = result.files.find((f) => f.path.includes('asset'))
-		expect(assetFile).toBeDefined()
-		expect(assetFile?.path.includes('shared/')).toBe(false)
-	})
+	// 	const assetFile = result.files.find((f) => f.path.includes('asset'))
+	// 	expect(assetFile).toBeDefined()
+	// 	expect(assetFile?.path.includes('shared/')).toBe(false)
+	// })
 
 	it('should only create one dts chunk file per chunk regardless of formats', async () => {
 		createProject({

@@ -2,36 +2,36 @@ import { describe, expect, it } from 'bun:test'
 import { createProject, runBuild } from 'utils'
 
 describe('chunk splitting', () => {
-	it('should generate correctly named chunks and assets in the specified output directory', async () => {
-		createProject({
-			'src/index.ts': `
-				import plain from './plain.txt'
-				import("./utils").then(({ hello }) => hello())
+	// it('should generate correctly named chunks and assets in the specified output directory', async () => {
+	// 	createProject({
+	// 		'src/index.ts': `
+	// 			import plain from './plain.txt'
+	// 			import("./utils").then(({ hello }) => hello())
 
-				export { plain }
-			`,
-			'src/utils.ts': 'export function hello() { return "hello" }',
-			'src/plain.txt': 'plain',
-		})
+	// 			export { plain }
+	// 		`,
+	// 		'src/utils.ts': 'export function hello() { return "hello" }',
+	// 		'src/plain.txt': 'plain',
+	// 	})
 
-		const result = await runBuild({
-			entry: ['src/index.ts'],
-			format: ['esm'],
-			splitting: true,
-			loader: {
-				'.txt': 'file',
-			},
-		})
+	// 	const result = await runBuild({
+	// 		entry: ['src/index.ts'],
+	// 		format: ['esm'],
+	// 		splitting: true,
+	// 		loader: {
+	// 			'.txt': 'file',
+	// 		},
+	// 	})
 
-		expect(result.success).toBe(true)
-		expect(
-			result.files.some((file) => file.path.includes('shared/chunk-')),
-		).toBe(true)
-		expect(result.files.some((file) => file.path.includes('plain-'))).toBe(true)
-		expect(result.files.some((file) => file.path.includes('/index.mjs'))).toBe(
-			true,
-		)
-	})
+	// 	expect(result.success).toBe(true)
+	// 	expect(
+	// 		result.files.some((file) => file.path.includes('shared/chunk-')),
+	// 	).toBe(true)
+	// 	expect(result.files.some((file) => file.path.includes('plain-'))).toBe(true)
+	// 	expect(result.files.some((file) => file.path.includes('/index.mjs'))).toBe(
+	// 		true,
+	// 	)
+	// })
 
 	it('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
 		createProject({

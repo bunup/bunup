@@ -261,3 +261,7 @@ function getPackageJson(rootDir: string): PackageJson {
 		}
 	}
 }
+
+export function isCI() {
+	return process.env.GITHUB_ACTIONS === 'true'
+}

@@ -36,7 +36,7 @@ const TEMPLATES: Template[] = [
 	{
 		type: 'typescript',
 		defaultName: 'my-ts-lib',
-		name: 'Typescript Library',
+		name: 'TypeScript Library',
 		dir: 'ts-lib',
 		monorepoDir: 'ts-lib-monorepo',
 	},

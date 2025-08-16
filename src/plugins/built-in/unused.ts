@@ -1,6 +1,10 @@
 import pc from 'picocolors'
 import { logger, loggerSymbols } from '../../logger'
-import { formatListWithAnd, getShortFilePath } from '../../utils'
+import {
+	formatListWithAnd,
+	getShortFilePath,
+	isTypeScriptFile,
+} from '../../utils'
 import type { Plugin } from '../types'
 
 interface UnusedOptions {
@@ -114,50 +118,19 @@ export function unused(options: UnusedOptions = {}): Plugin[] {
 		},
 		{
 			type: 'bun',
-			name: 'unused-exports',
+			name: 'unused-exports-files-collector',
 			runOnce: true,
 			plugin: {
 				name: 'bunup:unused-exports',
 				setup(build) {
-					const transpiler = new Bun.Transpiler({
-						loader: 'ts',
-					})
-
-					let allText = ''
-
-					build.onResolve({ filter: /.*/ }, (args) => {
-						if (
-							allText.includes(`export * from '${args.path}'`) ||
-							allText.includes(`export * from "${args.path}"`)
-						) {
-							return {
-								path: args.path,
-								external: true,
-							}
+					build.onLoad({ filter: /.*/ }, async ({ path }) => {
+						if (!isTypeScriptFile(path)) {
+							return
 						}
 
-						return null
-					})
-
-					build.onLoad({ filter: /.*/ }, async ({ path }) => {
 						const code = await Bun.file(path).text()
 
-						const exports = await getExports(path, transpiler)
-
-						for (const exp of exports) {
-							if (isIndexFile(path)) {
-								continue
-							}
-
-							if (!allText.includes(exp)) {
-								if (!unusedExports.has(path)) {
-									unusedExports.set(path, [])
-								}
-								unusedExports.get(path)?.push(exp)
-							}
-						}
-
-						allText += code
+						files.set(path, code)
 					})
 				},
 			},
@@ -167,28 +140,61 @@ export function unused(options: UnusedOptions = {}): Plugin[] {
 		// Track upstream: https://github.com/oven-sh/bun/issues/2771
 		{
 			type: 'bunup',
-			name: 'log-unused-exports',
+			name: 'unused-exports',
 			hooks: {
 				onBuildDone: async () => {
+					const transpiler = new Bun.Transpiler({
+						loader: 'ts',
+					})
+
+					const unusedExports = new Map<string, Set<string>>()
+
+					for (const [path] of files.entries()) {
+						const exports = await getExports(path, transpiler)
+
+						for (const exp of exports) {
+							if (
+								!Array.from(files)
+									.filter(([p]) => path !== p)
+									.some(([, code]) => code.includes(exp))
+							) {
+								if (!unusedExports.has(path)) {
+									unusedExports.set(path, new Set())
+								}
+								unusedExports.get(path)?.add(exp)
+							}
+						}
+					}
+
 					if (unusedExports.size > 0) {
 						logger.space()
+						const padExports = Array.from(unusedExports.entries()).reduce(
+							(max, [path]) => Math.max(max, getShortFilePath(path).length),
+							0,
+						)
+
 						logger.tree(
 							'Unused exports:',
 							Array.from(unusedExports.entries()).map(
 								([path, exports]) =>
-									`${getShortFilePath(path)} ${loggerSymbols.arrowRight} ${pc.yellow(formatListWithAnd(exports))}`,
+									`${getShortFilePath(path).padEnd(padExports)} ${loggerSymbols.arrowRight} ${Array.from(
+										exports,
+									)
+										.map((exp) => pc.yellow(exp))
+										.join(', ')}`,
 							),
 						)
 					}
 
 					unusedExports.clear()
+					files.clear()
 				},
 			},
 		},
 	]
 }
 
-const unusedExports = new Map<string, string[]>()
+const files = new Map<string, string>()
 
 function isIndexFile(path: string) {
 	return path.endsWith('index.ts')

@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path, { normalize } from 'node:path'
-import { TS_RE } from './constants/re'
+import { CSS_RE, TS_RE } from './constants/re'
 import { BunupBuildError } from './errors'
 import type { Format } from './options'
 
@@ -147,4 +147,9 @@ export async function getFilesFromGlobs(
 export function isTypeScriptFile(path: string | null): boolean {
 	if (!path) return false
 	return TS_RE.test(path)
+}
+
+export function isCssFile(path: string | null): boolean {
+	if (!path) return false
+	return CSS_RE.test(path)
 }

@@ -73,3 +73,7 @@ export async function getPackageForPlugin<T>(
 
 	return pkg
 }
+
+export function unusedUtils() {
+	return 's'
+}

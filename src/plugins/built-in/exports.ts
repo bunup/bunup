@@ -1,5 +1,4 @@
 import path from 'node:path'
-import equal from 'fast-deep-equal'
 import { JS_DTS_RE } from '../../constants/re'
 import { logger } from '../../logger'
 import { cleanPath } from '../../utils'
@@ -89,7 +88,7 @@ async function processPackageJsonExports(
 			updatedFiles,
 		)
 
-		if (equal(newPackageJson, meta.packageJson.data)) {
+		if (Bun.deepEquals(newPackageJson, meta.packageJson.data)) {
 			return
 		}
 

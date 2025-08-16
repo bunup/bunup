@@ -159,6 +159,20 @@ export class Logger {
 			console.log(...args)
 		}
 	}
+
+	public tree(label: string, items: string[]): void {
+		if (silent) return
+
+		const coloredLabel = pc.bold(label)
+		console.log(`${coloredLabel}\n`)
+
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i]
+			const isLast = i === items.length - 1
+			const prefix = isLast ? pc.gray('└─ ') : pc.gray('├─ ')
+			console.log(`  ${prefix}${item}`)
+		}
+	}
 }
 
 export interface TableColumn {
@@ -219,6 +233,10 @@ export function logTable(
 			.join(pc.gray(' | '))
 		console.log(footerRow)
 	}
+}
+
+export const loggerSymbols: Record<string, string> = {
+	arrowRight: pc.gray('→'),
 }
 
 export const link = (url: string, label?: string): string => {

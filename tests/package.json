@@ -17,6 +17,16 @@
 				"types": "./dist/index.d.ts",
 				"default": "./dist/index.js"
 			}
+		},
+		"./client": {
+			"import": {
+				"types": "./dist/client/index.d.mts",
+				"default": "./dist/client/index.mjs"
+			},
+			"require": {
+				"types": "./dist/client/index.d.ts",
+				"default": "./dist/client/index.js"
+			}
 		}
 	},
 	"dependencies": {

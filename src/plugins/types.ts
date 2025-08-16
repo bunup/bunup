@@ -13,6 +13,8 @@ export type BunupBunPlugin = {
 	name?: string
 	/** The actual Bun plugin implementation */
 	plugin: BunPlugin
+	/** If true, the plugin will be run only once and not for each format */
+	runOnce?: boolean
 }
 
 /**

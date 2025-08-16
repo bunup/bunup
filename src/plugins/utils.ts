@@ -10,17 +10,23 @@ import type {
 } from './types'
 
 export function filterBunupBunPlugins(
-	plugins: Plugin[] | undefined,
+	plugins: (Plugin | Plugin[])[] | undefined,
+	options?: {
+		excludeRunOncePlugins?: boolean
+	},
 ): BunupBunPlugin[] {
 	if (!plugins) return []
-	return plugins.filter((p): p is BunupBunPlugin => p.type === 'bun')
+	return plugins
+		.flat()
+		.filter((p): p is BunupBunPlugin => p.type === 'bun')
+		.filter((p) => !options?.excludeRunOncePlugins || !p.runOnce)
 }
 
 export function filterBunupPlugins(
-	plugins: Plugin[] | undefined,
+	plugins: (Plugin | Plugin[])[] | undefined,
 ): BunupPlugin[] {
 	if (!plugins) return []
-	return plugins.filter((p): p is BunupPlugin => p.type === 'bunup')
+	return plugins.flat().filter((p): p is BunupPlugin => p.type === 'bunup')
 }
 
 export async function runPluginBuildStartHooks(

@@ -1,5 +1,4 @@
 import path from 'node:path'
-import type { BunPlugin } from 'bun'
 import pc from 'picocolors'
 import { generateDts, logIsolatedDeclarationErrors } from 'typeroll'
 import {
@@ -87,11 +86,6 @@ export async function build(
 
 	const packageType = packageJson.data?.type as string | undefined
 
-	const plugins: BunPlugin[] = [
-		externalOptionPlugin(options, packageJson.data),
-		...filterBunupBunPlugins(options.plugins).map((p) => p.plugin),
-	]
-
 	const entrypoints = await getFilesFromGlobs(
 		ensureArray(options.entry),
 		rootDir,
@@ -103,7 +97,7 @@ export async function build(
 		)
 	}
 
-	const buildPromises = options.format.flatMap(async (fmt) => {
+	const buildPromises = options.format.flatMap(async (fmt, index) => {
 		const result = await Bun.build({
 			entrypoints: entrypoints.map((file) => `${rootDir}/${file}`),
 			format: fmt,
@@ -124,7 +118,12 @@ export async function build(
 			ignoreDCEAnnotations: options.ignoreDCEAnnotations,
 			emitDCEAnnotations: options.emitDCEAnnotations,
 			throw: false,
-			plugins,
+			plugins: [
+				externalOptionPlugin(options, packageJson.data),
+				...filterBunupBunPlugins(options.plugins, {
+					excludeRunOncePlugins: index > 0,
+				}).map((p) => p.plugin),
+			],
 		})
 
 		for (const log of result.logs) {

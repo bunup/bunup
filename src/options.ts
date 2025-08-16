@@ -382,7 +382,7 @@ export interface BuildOptions {
 	 *   }
 	 * ]
 	 */
-	plugins?: Plugin[]
+	plugins?: (Plugin | Plugin[])[]
 }
 
 const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {

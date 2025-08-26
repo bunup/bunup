@@ -75,6 +75,8 @@ export function injectStyles(options?: InjectStylesPluginOptions): Plugin {
 				)
 
 				build.onLoad({ filter: CSS_RE }, async (args) => {
+					await args.defer()
+
 					const source = await Bun.file(args.path).text()
 
 					const { code, warnings } = lightningcss.transform({

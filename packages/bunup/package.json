@@ -1,0 +1,68 @@
+{
+	"name": "bunup",
+	"description": "⚡ A blazing-fast build tool for your libraries built with Bun.",
+	"version": "0.11.14",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./plugins": {
+			"import": {
+				"types": "./dist/plugins.d.ts",
+				"default": "./dist/plugins.js"
+			}
+		}
+	},
+	"license": "MIT",
+	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "m@arshadyaseen.com",
+			"url": "https://arshadyaseen.com"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bunup/bunup.git"
+	},
+	"funding": "https://github.com/sponsors/arshad-yaseen",
+	"homepage": "https://bunup.dev",
+	"keywords": [
+		"bun",
+		"bunup",
+		"bun-bundler"
+	],
+	"bin": {
+		"bunup": "dist/cli/index.js"
+	},
+	"dependencies": {
+		"chokidar": "^4.0.3",
+		"coffi": "^0.1.35",
+		"picocolors": "^1.1.1",
+		"tinyexec": "^1.0.1",
+		"tree-kill": "^1.2.2",
+		"typeroll": "^0.7.5"
+	},
+	"peerDependencies": {
+		"typescript": ">=4.5.0",
+		"lightningcss": ">=1.17.0"
+	},
+	"peerDependenciesMeta": {
+		"typescript": {
+			"optional": true
+		},
+		"lightningcss": {
+			"optional": true
+		}
+	}
+}

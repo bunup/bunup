@@ -1,88 +1,22 @@
 {
-	"name": "bunup",
-	"description": "⚡ A blazing-fast build tool for your libraries built with Bun.",
-	"version": "0.11.14",
-	"type": "module",
-	"files": [
-		"dist"
-	],
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
-		},
-		"./plugins": {
-			"import": {
-				"types": "./dist/plugins.d.ts",
-				"default": "./dist/plugins.js"
-			}
-		}
-	},
-	"license": "MIT",
-	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
-	"maintainers": [
-		{
-			"name": "Arshad Yaseen",
-			"email": "m@arshadyaseen.com",
-			"url": "https://arshadyaseen.com"
-		}
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bunup/bunup.git"
-	},
-	"funding": "https://github.com/sponsors/arshad-yaseen",
-	"homepage": "https://bunup.dev",
-	"keywords": [
-		"bun",
-		"bunup",
-		"bun-bundler"
-	],
-	"bin": {
-		"bunup": "dist/cli/index.js"
-	},
-	"dependencies": {
-		"chokidar": "^4.0.3",
-		"coffi": "^0.1.35",
-		"picocolors": "^1.1.1",
-		"tinyexec": "^1.0.1",
-		"tree-kill": "^1.2.2",
-		"typeroll": "^0.7.5"
-	},
+	"name": "bunup-monorepo",
 	"devDependencies": {
 		"@biomejs/biome": "2.2.0",
-		"@types/bun": "^1.2.20",
+		"@types/bun": "^1.2.21",
 		"bumpp": "^10.2.3",
-		"lightningcss": "^1.30.1",
-		"simple-git-hooks": "^2.13.1",
-		"typescript": "^5.9.2"
-	},
-	"peerDependencies": {
-		"typescript": ">=4.5.0",
-		"lightningcss": ">=1.17.0"
-	},
-	"peerDependenciesMeta": {
-		"typescript": {
-			"optional": true
-		},
-		"lightningcss": {
-			"optional": true
-		}
+		"simple-git-hooks": "^2.13.1"
 	},
 	"scripts": {
-		"build": "bun run src/cli/index.ts",
+		"build": "bunx bunup@latest",
 		"build:docs": "bun run --cwd docs build",
-		"dev": "bun run src/cli/index.ts --watch",
+		"dev": "bunx bunup@latest --watch",
 		"dev:docs": "bun run --cwd docs dev",
 		"format": "biome format .",
 		"format:fix": "biome format --write .",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"test": "bun test",
+		"test:build": "bun run --cwd packages/bunup/test build",
 		"tsc": "tsc --noEmit",
 		"release": "bumpp -r --commit --push --tag",
 		"prepare": "simple-git-hooks"
@@ -92,7 +26,7 @@
 	},
 	"workspaces": [
 		"docs",
-		"tests",
-		"examples/**"
+		"examples/**",
+		"packages/**"
 	]
 }

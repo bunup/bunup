@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { createProject, isCI, runBuild } from 'utils'
+import { createProject, isCI, runBuild } from '../utils'
 
 describe.skipIf(isCI())('chunk splitting', () => {
 	it('should generate correctly named chunks and assets in the specified output directory', async () => {

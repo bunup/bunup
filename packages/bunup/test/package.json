@@ -21,10 +21,7 @@
 		"zx-extra": "^4.0.11"
 	},
 	"scripts": {
-		"build": "bun run ../src/cli/index.ts",
-		"dev": "bun run ../src/cli/index.ts --watch",
-		"new": "bun run ../src/cli/index.ts --new",
-		"init": "bun run ../src/cli/index.ts --init"
+		"build": "bun run ../src/cli/index.ts"
 	},
 	"devDependencies": {
 		"ora": "^8.2.0",

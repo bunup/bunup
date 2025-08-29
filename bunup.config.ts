@@ -1,4 +1,4 @@
-import { exports, unused } from './src/plugins'
+import { exports, unused } from './packages/bunup/src/plugins'
 
 export default {
 	target: 'bun',

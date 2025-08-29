@@ -49,7 +49,7 @@ node_modules/
 .output
 
 # Test files
-tests/.project
+packages/*/test/.project
 
 # Coverage directory
 coverage/

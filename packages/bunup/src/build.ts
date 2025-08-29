@@ -108,6 +108,7 @@ export async function build(
 		const result = await Bun.build({
 			entrypoints: entrypoints.map((file) => `${rootDir}/${file}`),
 			format: fmt,
+			// @ts-expect-error - seems like BuildConfig type from bun don't have splitting property
 			splitting: getResolvedSplitting(options.splitting, fmt),
 			define: getResolvedDefine(options.define, options.env),
 			minify: getResolvedMinify(options),

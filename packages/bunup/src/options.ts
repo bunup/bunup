@@ -1,5 +1,5 @@
+import type { GenerateDtsOptions } from '@bunup/dts'
 import type { BuildConfig, BunPlugin } from 'bun'
-import type { GenerateDtsOptions } from 'typeroll'
 import { report } from './plugins/internal/report'
 import { useClient } from './plugins/internal/use-client'
 import type { BunupPlugin } from './plugins/types'

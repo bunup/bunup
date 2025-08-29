@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path'
 import { type GenerateDtsOptions, generateDts } from '../src'
 import type { GenerateDtsResultFile } from '../src/options'
 
-const PROJECT_DIR = 'packages/bunup/test/.project'
+const PROJECT_DIR = 'packages/dts/test/.project'
 
 interface ProjectTree {
 	[key: string]: string

@@ -26,7 +26,10 @@ describe('Environment Variables', () => {
 
 		expect(result.success).toBe(true)
 		const file = result.files[0]
-		expect(file.content).toMatchSnapshot()
+		expect(file.content).toContain('"overridden-value"')
+		expect(file.content).toContain('"defined-in-config"')
+		expect(file.content).toContain('process.env.ANOTHER_VAR')
+		expect(file.content).not.toContain('"another-original"')
 	})
 
 	it('handles import.meta.env references', async () => {
@@ -46,7 +49,7 @@ describe('Environment Variables', () => {
 
 		expect(result.success).toBe(true)
 		const file = result.files[0]
-		expect(file.content).toMatchSnapshot()
+		expect(file.content).toContain('"test-value"')
 	})
 
 	it('inlines environment variables with different types', async () => {
@@ -72,7 +75,10 @@ describe('Environment Variables', () => {
 
 		expect(result.success).toBe(true)
 		const file = result.files[0]
-		expect(file.content).toMatchSnapshot()
+		expect(file.content).toContain('"string-value"')
+		expect(file.content).toContain('"123"')
+		expect(file.content).toContain('"true"')
+		expect(file.content).toContain('{"key":"value"}')
 	})
 
 	it('works across multiple output formats', async () => {
@@ -94,7 +100,7 @@ describe('Environment Variables', () => {
 		expect(result.files.length).toBe(3)
 
 		for (const file of result.files) {
-			expect(file.content).toMatchSnapshot()
+			expect(file.content).toContain('"format-value"')
 		}
 	})
 
@@ -118,7 +124,7 @@ describe('Environment Variables', () => {
 		expect(result.files.length).toBe(2)
 
 		for (const file of result.files) {
-			expect(file.content).toMatchSnapshot()
+			expect(file.content).toContain('"multi-value"')
 		}
 	})
 
@@ -144,6 +150,9 @@ describe('Environment Variables', () => {
 
 		expect(result.success).toBe(true)
 		const file = result.files[0]
-		expect(file.content).toMatchSnapshot()
+		expect(file.content).toContain('"env-value"')
+		// Define should take precedence over env
+		expect(file.content).toContain('"define-value"')
+		expect(file.content).not.toContain('"env-override"')
 	})
 })

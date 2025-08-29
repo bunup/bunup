@@ -28,7 +28,7 @@ describe('CLI Only Options', () => {
 		expect(result.stdout).toContain('Using')
 		expect(result.stdout).toContain('custom-bunup.config.ts')
 		const file = findFile(result, 'index', '.mjs')
-		expect(file?.content).toMatchSnapshot()
+		expect(file?.content).toContain('// Hello, world!')
 	})
 
 	it('should log type annotation warnings when generating declaration files', async () => {

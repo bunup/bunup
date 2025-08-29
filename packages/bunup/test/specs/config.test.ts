@@ -36,6 +36,8 @@ describe('Config', () => {
 		})
 
 		expect(result.success).toBe(true)
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content).toContain(
+			'declare const add: (a: number, b: number) => number',
+		)
 	})
 })

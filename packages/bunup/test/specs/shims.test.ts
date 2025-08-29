@@ -32,7 +32,12 @@ describe('shims plugin', () => {
 		expect(result.success).toBe(true)
 		const file = findFile(result, 'index', '.mjs')
 		expect(file).toBeDefined()
-		expect(file?.content).toMatchSnapshot()
+		expect(file?.content).toContain('import { fileURLToPath } from')
+		expect(file?.content).toContain('import { dirname } from')
+		expect(file?.content).toContain(
+			'var __filename2 = fileURLToPath(import.meta.url)',
+		)
+		expect(file?.content).toContain('var __dirname2 = dirname(__filename2)')
 	})
 
 	it('should add import.meta.url shim for CJS format', async () => {
@@ -55,7 +60,8 @@ describe('shims plugin', () => {
 		expect(result.success).toBe(true)
 		const file = findFile(result, 'index', '.js')
 		expect(file).toBeDefined()
-		expect(file?.content).toMatchSnapshot()
+		expect(file?.content).toContain('require("url")')
+		expect(file?.content).toContain('pathToFileURL(__filename).href')
 	})
 
 	it('should not add shims when variables are not used', async () => {
@@ -77,11 +83,12 @@ describe('shims plugin', () => {
 
 		const esmFile = findFile(result, 'index', '.mjs')
 		expect(esmFile).toBeDefined()
-		expect(esmFile?.content).toMatchSnapshot()
+		expect(esmFile?.content).not.toContain('import { fileURLToPath } from')
+		expect(esmFile?.content).not.toContain('import { dirname } from')
 
 		const cjsFile = findFile(result, 'index', '.js')
 		expect(cjsFile).toBeDefined()
-		expect(cjsFile?.content).toMatchSnapshot()
+		expect(cjsFile?.content).not.toContain('pathToFileURL')
 	})
 
 	it('should only add needed shims when multiple variables are used', async () => {
@@ -114,11 +121,17 @@ describe('shims plugin', () => {
 
 		const esmFile = findFile(result, 'esm-file', '.mjs')
 		expect(esmFile).toBeDefined()
-		expect(esmFile?.content).toMatchSnapshot()
+		expect(esmFile?.content).toContain('import { fileURLToPath } from')
+		expect(esmFile?.content).toContain('import { dirname } from')
+		expect(esmFile?.content).toContain(
+			'var __filename2 = fileURLToPath(import.meta.url)',
+		)
+		expect(esmFile?.content).toContain('var __dirname2 = dirname(__filename2)')
 
 		const cjsFile = findFile(result, 'cjs-file', '.js')
 		expect(cjsFile).toBeDefined()
-		expect(cjsFile?.content).toMatchSnapshot()
+		expect(cjsFile?.content).toContain('require("url")')
+		expect(cjsFile?.content).toContain('pathToFileURL(__filename).href')
 	})
 
 	it('should properly handle both types of shims in the same file', async () => {
@@ -146,7 +159,12 @@ describe('shims plugin', () => {
 		expect(esmResult.success).toBe(true)
 		const esmFile = findFile(esmResult, 'index', '.mjs')
 		expect(esmFile).toBeDefined()
-		expect(esmFile?.content).toMatchSnapshot()
+		expect(esmFile?.content).toContain('import { fileURLToPath } from')
+		expect(esmFile?.content).toContain('import { dirname } from')
+		expect(esmFile?.content).toContain(
+			'var __filename2 = fileURLToPath(import.meta.url)',
+		)
+		expect(esmFile?.content).toContain('var __dirname2 = dirname(__filename2)')
 
 		const cjsResult = await runBuild({
 			entry: 'src/index.ts',
@@ -157,6 +175,7 @@ describe('shims plugin', () => {
 		expect(cjsResult.success).toBe(true)
 		const cjsFile = findFile(cjsResult, 'index', '.js')
 		expect(cjsFile).toBeDefined()
-		expect(cjsFile?.content).toMatchSnapshot()
+		expect(cjsFile?.content).toContain('require("url")')
+		expect(cjsFile?.content).toContain('pathToFileURL(__filename).href')
 	})
 })

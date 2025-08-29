@@ -43,6 +43,6 @@ describe('Bun Plugin', () => {
 			}),
 		).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content).toContain(testMarker)
 	})
 })

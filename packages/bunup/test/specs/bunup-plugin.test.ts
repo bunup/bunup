@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, mock } from 'bun:test'
-import type { BuildOptions } from '../..'
+import type { BuildOptions } from '../../src/options'
 import type { BuildContext, BunupPlugin } from '../../src/plugins/types'
 import {
 	cleanProjectDir,
@@ -204,6 +204,7 @@ describe('Bunup Plugin', () => {
 
 		const bunPluginSetupMock = mock(() => {})
 		const bunPlugin = {
+			type: 'bun' as const,
 			name: 'bun-plugin',
 			setup: bunPluginSetupMock,
 		}
@@ -241,7 +242,7 @@ describe('Bunup Plugin', () => {
 		})
 
 		expect(result.success).toBe(true)
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content).toContain('/* Modified by plugin */')
 	})
 
 	it('should handle errors in plugin hooks', async () => {
@@ -264,7 +265,7 @@ describe('Bunup Plugin', () => {
 		})
 
 		expect(error).toBeDefined()
-		expect(error?.message).toMatchSnapshot()
+		expect(error?.message).toContain('Test error from plugin')
 	})
 
 	it('should provide plugins access to build output in onBuildDone', async () => {

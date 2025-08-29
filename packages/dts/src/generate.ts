@@ -139,6 +139,7 @@ export async function generateDts(
 		format: 'esm',
 		target: 'node',
 		naming,
+		// @ts-expect-error - seems like BuildConfig type from bun don't have splitting property
 		splitting: options.splitting,
 		plugins: [fakeJsPlugin],
 		packages: 'external',

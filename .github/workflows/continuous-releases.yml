@@ -25,4 +25,4 @@ jobs:
       - name: Build
         run: bun run build
 
-      - run: bunx pkg-pr-new publish --compact
+      - run: bunx pkg-pr-new publish './packages/bunup' --compact

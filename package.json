@@ -17,6 +17,7 @@
 		"lint:fix": "biome check --write .",
 		"test": "bun test",
 		"test:build": "bun run --cwd packages/bunup/test build",
+		"test:dts": "bun run --cwd packages/dts generate",
 		"tsc": "tsc --noEmit",
 		"release": "bumpp -r --commit --push --tag",
 		"prepare": "simple-git-hooks"

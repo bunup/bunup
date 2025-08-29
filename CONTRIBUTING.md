@@ -32,7 +32,7 @@ Thank you for your interest in contributing to our project! This guide will help
 There are two main ways to test your changes:
 
 ### 1. Unit Tests
-Add tests in `tests/specs/` and run:
+Add tests in `packages/bunup/test/specs/` and run:
 ```bash
 bun run test
 ```
@@ -40,16 +40,16 @@ bun run test
 ### 2. Manual Testing with Test Build
 For more comprehensive testing, you can use the test fixtures:
 
-1. **Basic testing**: Modify, add, or remove files in `tests/fixtures/` - the entrypoint is `tests/fixtures/index.ts`
+1. **Basic testing**: Modify, add, or remove files in `packages/bunup/test/fixtures/` - the entrypoint is `tests/fixtures/index.ts`
 2. **Run test build**:
    ```bash
-   cd tests && bun run build
+   bun run test:build
    ```
    This runs a test build using your changes on the fixtures
 
-3. **Configure test build**: Check `tests/bunup.config.ts` to see or modify the build configuration used for test builds
+3. **Configure test build**: Check `packages/bunup/test/bunup.config.ts` to see or modify the build configuration used for test builds
 
-The `tests/fixtures/` directory serves as a sandbox where you can create any file structure to test your changes. The test build will process these fixtures using your modifications to Bunup, allowing you to verify that your changes work as expected. The `tests/bunup.config.ts` file contains the build configuration used for this rough testing of the fixtures.
+The `packages/bunup/test/fixtures/` directory serves as a sandbox where you can create any file structure to test your changes. The test build will process these fixtures using your modifications to Bunup, allowing you to verify that your changes work as expected. The `packages/bunup/test/bunup.config.ts` file contains the build configuration used for this rough testing of the fixtures.
 
 ## Commit Message Conventions
 
@@ -92,11 +92,14 @@ Bunup focuses on speed. When contributing:
 
 Here's a brief overview of the project structure:
 
-- `src/` - Source code
-  - `cli/` - Command-line interface
-  - `build.ts` - Core build functionality
-  - `watch.ts` - Watch mode functionality
-  - `plugins/` - Bundler plugins
+- `packages/bunup/` - Core bundler package
+  - `src/` - Source code
+    - `build.ts` - Core build functionality
+    - `watch.ts` - Watch mode functionality
+    - `plugins/` - Bundler plugins
+- `packages/cli/` - Command-line interface package
+- `packages/dts/` - DTS bundler used by Bunup
+- `packages/plugin-*/` - Official Bunup plugins
 
 ## Pull Request Guidelines
 

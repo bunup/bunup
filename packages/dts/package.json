@@ -1,0 +1,69 @@
+{
+	"name": "@bunup/dts",
+	"description": "An extremely fast TypeScript declaration file generator and bundler that outputs to a single file.",
+	"version": "0.7.7",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"module": "./dist/index.js",
+	"main": "./dist/index.cjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			}
+		}
+	},
+	"scripts": {
+		"generate": "bun run ./test/generate.ts"
+	},
+	"dependencies": {
+		"@babel/parser": "^7.28.0",
+		"@babel/types": "^7.28.1",
+		"coffi": "^0.1.31",
+		"oxc-minify": "^0.77.2",
+		"oxc-resolver": "^8.0.0",
+		"oxc-transform": "^0.67.0",
+		"picocolors": "^1.1.1",
+		"std-env": "^3.9.0",
+		"ts-import-resolver": "^0.1.23"
+	},
+	"license": "MIT",
+	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "m@arshadyaseen.com",
+			"url": "https://arshadyaseen.com"
+		}
+	],
+	"keywords": [
+		"typescript",
+		"dts",
+		"declaration",
+		"declaration generation",
+		"bun",
+		"bun dts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bunup/bunup.git"
+	},
+	"funding": "https://github.com/sponsors/arshad-yaseen",
+	"homepage": "https://bunup.dev",
+	"peerDependencies": {
+		"typescript": ">=4.5.0"
+	},
+	"peerDependenciesMeta": {
+		"typescript": {
+			"optional": true
+		}
+	}
+}

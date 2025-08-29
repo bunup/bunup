@@ -51,7 +51,7 @@
 		"picocolors": "^1.1.1",
 		"tinyexec": "^1.0.1",
 		"tree-kill": "^1.2.2",
-		"typeroll": "^0.7.5"
+		"@bunup/dts": "workspace:*"
 	},
 	"peerDependencies": {
 		"typescript": ">=4.5.0",

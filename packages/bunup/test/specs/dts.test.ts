@@ -891,7 +891,7 @@ describe('dts', () => {
 		})
 
 		expect(result.files[0].content).toMatchInlineSnapshot(
-			`"interface _{label:string;onClick:()=>void;className?:string;}declare function e(props:_): null;export{_ as ButtonProps,e as Button};"`,
+			`"interface n{label:string;onClick:()=>void;className?:string;}declare function t(props:n): null;export{n as ButtonProps,t as Button};"`,
 		)
 	})
 

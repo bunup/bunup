@@ -1,0 +1,52 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Complex Format Scenarios should allow format-specific configurations through multiple build configs 1`] = `
+"// ESM Build
+// packages/bunup/test/.project/src/index.ts
+var x = 1;
+export {
+  x
+};
+"
+`;
+
+exports[`Complex Format Scenarios should allow format-specific configurations through multiple build configs 2`] = `
+"// CJS Build
+var import_node_module = require("node:module");
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __moduleCache = /* @__PURE__ */ new WeakMap;
+var __toCommonJS = (from) => {
+  var entry = __moduleCache.get(from), desc;
+  if (entry)
+    return entry;
+  entry = __defProp({}, "__esModule", { value: true });
+  if (from && typeof from === "object" || typeof from === "function")
+    __getOwnPropNames(from).map((key) => !__hasOwnProp.call(entry, key) && __defProp(entry, key, {
+      get: () => from[key],
+      enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+    }));
+  __moduleCache.set(from, entry);
+  return entry;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, {
+      get: all[name],
+      enumerable: true,
+      configurable: true,
+      set: (newValue) => all[name] = () => newValue
+    });
+};
+
+// packages/bunup/test/.project/src/lib.ts
+var exports_lib = {};
+__export(exports_lib, {
+  lib: () => lib
+});
+module.exports = __toCommonJS(exports_lib);
+var lib = "library";
+"
+`;

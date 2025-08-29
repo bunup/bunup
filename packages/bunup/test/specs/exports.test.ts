@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'bun:test'
-import { exports } from '../../../src/plugins'
-import type { BuildContext } from '../../../src/plugins/types'
-import { cleanProjectDir, createProject, runBuild } from '../../utils'
+import { exports } from '../../src/plugins'
+import type { BuildContext } from '../../src/plugins/types'
+import { cleanProjectDir, createProject, runBuild } from '../utils'
 
 describe('exports plugin', () => {
 	beforeEach(() => {

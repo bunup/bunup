@@ -96,9 +96,7 @@ export function Counter() {
 		)
 		expect(outputFile).toBeDefined()
 
-		expect(outputFile.content.trimStart().startsWith('"use client";')).toBe(
-			true,
-		)
+		expect(outputFile.content).toMatchSnapshot()
 
 		const clientDirectivePos = outputFile.content.indexOf('"use client";')
 		const importPos = outputFile.content.indexOf('import')
@@ -122,8 +120,7 @@ export function Counter() {
 			footer: '// Footer',
 		})
 		const file = result.files[0]
-		expect(file.content).toContain('// Banner')
-		expect(file.content).toContain('// Footer')
+		expect(file.content).toMatchSnapshot()
 	})
 
 	it('respects external', async () => {
@@ -133,7 +130,7 @@ export function Counter() {
 			format: 'esm',
 			external: ['chalk'],
 		})
-		expect(result.files[0].content).toContain('chalk')
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should clean the output directory before building when the clean option is true', async () => {
@@ -285,10 +282,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toContain('chalk')
-		expect(result.files[0].content).toMatch(
-			/import\s+.*\s+from\s+["']chalk["']/,
-		)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should treat peerDependencies as external by default', async () => {
@@ -312,8 +306,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toContain('ora')
-		expect(result.files[0].content).toMatch(/import\s+.*\s+from\s+["']ora["']/)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should not treat devDependencies as external by default', async () => {
@@ -332,9 +325,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).not.toMatch(
-			/import\s+.*\s+from\s+["']picocolors["']/,
-		)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should bundle dependencies specified in noExternal option', async () => {
@@ -356,13 +347,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).not.toMatch(
-			/import\s+.*\s+from\s+["']ora["']/,
-		)
-
-		expect(result.files[0].content).toMatch(
-			/import\s+.*\s+from\s+["']chalk["']/,
-		)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should consider sub-modules as external when parent module is in external option', async () => {
@@ -387,15 +372,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatch(
-			/import\s+.*\s+from\s+["']lodash\/array["']/,
-		)
-		expect(result.files[0].content).toMatch(
-			/import\s+.*\s+from\s+["']lodash\/object["']/,
-		)
-		expect(result.files[0].content).toMatch(
-			/import\s+.*\s+from\s+["']chalk["']/,
-		)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should call onSuccess callback after successful build', async () => {
@@ -497,13 +474,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatch(
-			/import\s+.*\s+from\s+["']uvu-expect["']/,
-		)
-
-		expect(result.files[0].content).not.toMatch(
-			/import\s+.*\s+from\s+["']uvu["']/,
-		)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should handle regex noExternal patterns, only matching hyphenated packages', async () => {
@@ -526,11 +497,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatch(/import\s+.*\s+from\s+["']zx["']/)
-
-		expect(result.files[0].content).not.toMatch(
-			/import\s+.*\s+from\s+["']zx-extra["']/,
-		)
+		expect(result.files[0].content).toMatchSnapshot()
 	})
 
 	it('should handle naming conflicts in normal builds', async () => {

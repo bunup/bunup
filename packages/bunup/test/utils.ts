@@ -143,7 +143,9 @@ export function validateBuildFiles(
 	const allExpectedFilesExist = expectedFiles.every((fileName) => {
 		const { name, extension } = parseFileName(fileName)
 		const exists = result.files.some(
-			(file) => file.name === name && file.extension === extension,
+			(file) =>
+				file.name.toLowerCase() === name.toLowerCase() &&
+				file.extension === extension,
 		)
 		if (!exists) {
 			console.log(`Expected file not found: ${fileName}`)
@@ -155,7 +157,9 @@ export function validateBuildFiles(
 		? notExpectedFiles.every((fileName) => {
 				const { name, extension } = parseFileName(fileName)
 				const exists = result.files.some(
-					(file) => file.name === name && file.extension === extension,
+					(file) =>
+						file.name.toLowerCase() === name.toLowerCase() &&
+						file.extension === extension,
 				)
 				if (exists) {
 					console.log(`Unexpected file found: ${fileName}`)

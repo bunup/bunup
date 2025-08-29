@@ -319,7 +319,7 @@ describe('Complex Format Scenarios', () => {
 		).toBe(true)
 
 		const esmFile = findFile(esmResult, 'index', '.mjs')
-		expect(esmFile?.content).toContain('// ESM Build')
+		expect(esmFile?.content).toMatchSnapshot()
 
 		expect(cjsResult.success).toBe(true)
 		expect(
@@ -329,6 +329,6 @@ describe('Complex Format Scenarios', () => {
 		).toBe(true)
 
 		const cjsFile = findFile(cjsResult, 'lib', '.js')
-		expect(cjsFile?.content).toContain('// CJS Build')
+		expect(cjsFile?.content).toMatchSnapshot()
 	})
 })

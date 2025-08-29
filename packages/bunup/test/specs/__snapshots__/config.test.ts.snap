@@ -1,0 +1,7 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Config should use preferred tsconfig when provided 1`] = `
+"declare const add: (a: number, b: number) => number;
+export { add };
+"
+`;

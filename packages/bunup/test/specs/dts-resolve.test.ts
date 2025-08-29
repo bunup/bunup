@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'bun:test'
-import { createProject, findFile, runDtsBuild } from '../utils'
+import { beforeEach, describe, expect, it } from 'bun:test'
+import { cleanProjectDir, createProject, findFile, runDtsBuild } from '../utils'
 
 describe('dts-resolve', () => {
+	beforeEach(() => {
+		cleanProjectDir()
+	})
+
 	it('should respect custom dts.resolve configuration', async () => {
 		createProject({
 			'package.json': JSON.stringify({
@@ -37,9 +41,7 @@ describe('dts-resolve', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function process')
-		expect(dtsFile?.content).toContain('interface SomeType')
-		expect(dtsFile?.content).toContain('value')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should only resolve specified external packages in dts files', async () => {
@@ -92,15 +94,7 @@ describe('dts-resolve', () => {
 
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-
-		expect(dtsFile?.content).not.toContain(`from "date-fns"`)
-
-		expect(dtsFile?.content).not.toContain(`from "uuid"`)
-
-		expect(dtsFile?.content).toContain(`from "chalk"`)
-
-		expect(dtsFile?.content).toContain('type UUID')
-		expect(dtsFile?.content).toContain('type DateFormat')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should prefer declaration files over source code files', async () => {
@@ -149,12 +143,7 @@ describe('dts-resolve', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function createComponent')
-		expect(dtsFile?.content).toContain('interface Component')
-		expect(dtsFile?.content).toContain('id: number')
-		expect(dtsFile?.content).toContain('name: string')
-		expect(dtsFile?.content).not.toContain('unusedSourceProp')
-		expect(dtsFile?.content).not.toContain(`from "source-lib"`)
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should resolve types from dependencies listed in package.json when specified in dts.resolve', async () => {
@@ -207,12 +196,7 @@ describe('dts-resolve', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-
-		expect(dtsFile?.content).toContain('interface DepType')
-		expect(dtsFile?.content).not.toContain(`from "dep-lib"`)
-
-		expect(dtsFile?.content).not.toContain('interface PeerType')
-		expect(dtsFile?.content).toContain(`from "peer-lib"`)
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should resolve types from packages specified in both external and dts.resolve', async () => {
@@ -260,12 +244,7 @@ describe('dts-resolve', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-
-		expect(dtsFile?.content).toContain('interface ExternalType')
-		expect(dtsFile?.content).not.toContain(`from "external-pkg"`)
-
-		expect(dtsFile?.content).not.toContain('interface InternalType')
-		expect(dtsFile?.content).toContain(`from "internal-pkg"`)
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should resolve all external types when dts.resolve is true', async () => {
@@ -324,14 +303,7 @@ describe('dts-resolve', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-
-		expect(dtsFile?.content).toContain('interface TypeA')
-		expect(dtsFile?.content).toContain('interface TypeB')
-		expect(dtsFile?.content).toContain('interface TypeC')
-
-		expect(dtsFile?.content).not.toContain(`from "lib-a"`)
-		expect(dtsFile?.content).not.toContain(`from "lib-b"`)
-		expect(dtsFile?.content).not.toContain(`from "lib-c"`)
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should respect noExternal when resolving types', async () => {
@@ -381,11 +353,6 @@ describe('dts-resolve', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-
-		expect(dtsFile?.content).toContain('interface IncludedType')
-		expect(dtsFile?.content).not.toContain(`from "included-lib"`)
-
-		expect(dtsFile?.content).not.toContain('interface ExternalType')
-		expect(dtsFile?.content).toContain(`from "external-lib"`)
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 })

@@ -1,0 +1,13 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Bunup Plugin should allow plugin to modify build options during onBuildStart 1`] = `
+"/* Modified by plugin */
+// packages/bunup/test/.project/src/index.ts
+var x = 1;
+export {
+  x
+};
+"
+`;
+
+exports[`Bunup Plugin should handle errors in plugin hooks 1`] = `"Test error from plugin"`;

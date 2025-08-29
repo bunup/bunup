@@ -28,8 +28,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface User')
-		expect(dtsFile?.content).toContain('function getUserName')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle imports and exports between multiple files', async () => {
@@ -67,15 +66,11 @@ describe('dts', () => {
 
 		const esmDtsFile = findFile(result, 'index', '.d.mts')
 		expect(esmDtsFile).toBeDefined()
-		expect(esmDtsFile?.content).toContain('interface User')
-		expect(esmDtsFile?.content).toContain('class UserService')
-		expect(esmDtsFile?.content).toContain('function formatId')
+		expect(esmDtsFile?.content).toMatchSnapshot()
 
 		const cjsDtsFile = findFile(result, 'index', '.d.ts')
 		expect(cjsDtsFile).toBeDefined()
-		expect(cjsDtsFile?.content).toContain('interface User')
-		expect(cjsDtsFile?.content).toContain('class UserService')
-		expect(cjsDtsFile?.content).toContain('function formatId')
+		expect(cjsDtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle path aliases in tsconfig', async () => {
@@ -122,11 +117,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface Product')
-		expect(dtsFile?.content).toContain('declare function displayProduct')
-		expect(dtsFile?.content).toContain(
-			'export { formatPrice, displayProduct, Product }',
-		)
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle circular dependencies', async () => {
@@ -171,10 +162,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface A')
-		expect(dtsFile?.content).toContain('interface B')
-		expect(dtsFile?.content).toContain('function createA')
-		expect(dtsFile?.content).toContain('function createB')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle type-only imports and exports', async () => {
@@ -207,12 +195,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain(
-			'declare function initialize(config: Config)',
-		)
-		expect(dtsFile?.content).toContain('type ConfigKey = keyof Config')
-		expect(dtsFile?.content).toContain('interface Config')
-		expect(dtsFile?.content).not.toContain('export type { Config, ConfigKey }')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle triple-slash directives', async () => {
@@ -251,10 +234,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.cts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function loadConfig')
-		// TODO: uncomment these expectations after rolldown-plugin-dts solves this issue: https://github.com/sxzz/rolldown-plugin-dts/issues/5
-		// expect(dtsFile?.content).toContain("interface Config");
-		// expect(dtsFile?.content).toContain("appName");
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle dynamic imports', async () => {
@@ -296,7 +276,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.ts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function loadFeature')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle import statements with relative paths properly', async () => {
@@ -332,9 +312,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function processData')
-		expect(dtsFile?.content).toContain('interface Helper')
-		expect(dtsFile?.content).toContain('helper: (data: string) => string')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle project with nested barrel files', async () => {
@@ -395,10 +373,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface Credentials')
-		expect(dtsFile?.content).toContain('class AuthService')
-		expect(dtsFile?.content).toContain('interface User')
-		expect(dtsFile?.content).toContain('class UserService')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle project with custom baseUrl and multiple path mappings', async () => {
@@ -475,10 +450,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface AppConfig')
-		expect(dtsFile?.content).toContain('type AppTypes')
-		expect(dtsFile?.content).toContain('interface UserProfile')
-		expect(dtsFile?.content).toContain('declare function HelperFunction')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle project with monorepo structure', async () => {
@@ -537,10 +509,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function enhancedFeature')
-		expect(dtsFile?.content).toContain('class CoreFeature')
-		expect(dtsFile?.content).toContain('declare function formatText')
-		expect(dtsFile?.content).toContain('declare function formatNumber')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle project with multiple entry points', async () => {
@@ -605,15 +574,11 @@ describe('dts', () => {
 
 		const mainDtsFile = findFile(result, 'main', '.d.mts')
 		expect(mainDtsFile).toBeDefined()
-		expect(mainDtsFile?.content).toContain('declare function bootstrap')
-		expect(mainDtsFile?.content).toContain('interface AppConfig')
-		expect(mainDtsFile?.content).toContain('class ApiClient')
+		expect(mainDtsFile?.content).toMatchSnapshot()
 
 		const cliDtsFile = findFile(result, 'cli', '.d.mts')
 		expect(cliDtsFile).toBeDefined()
-		expect(cliDtsFile?.content).toContain('declare function run')
-		expect(cliDtsFile?.content).toContain('declare class Command')
-		expect(cliDtsFile?.content).toContain('execute(args: string[])')
+		expect(cliDtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle projects with nested tsconfig files', async () => {
@@ -670,9 +635,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface RootFeature')
-		expect(dtsFile?.content).toContain('interface Button')
-		expect(dtsFile?.content).toContain('interface Input')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle project references', async () => {
@@ -745,11 +708,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface CoreModule')
-		expect(dtsFile?.content).toContain('class Core')
-		expect(dtsFile?.content).toContain('interface Logger')
-		expect(dtsFile?.content).toContain('class ConsoleLogger')
-		expect(dtsFile?.content).toContain('interface AppConfig')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle tsconfig paths with complex wildcards', async () => {
@@ -816,11 +775,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface Button')
-		expect(dtsFile?.content).toContain('declare function formatDate')
-		expect(dtsFile?.content).toContain('interface User')
-		expect(dtsFile?.content).toContain('declare function fetchUsers')
-		expect(dtsFile?.content).toContain('declare function initApp(): void')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle non-standard file extensions (.tsx)', async () => {
@@ -861,10 +816,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('interface ButtonProps')
-		expect(dtsFile?.content).toContain('declare function Button')
-		expect(dtsFile?.content).toContain('interface InputProps')
-		expect(dtsFile?.content).toContain('declare function Input')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should minify dts', async () => {
@@ -980,15 +932,7 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('class ServiceA')
-		expect(dtsFile?.content).toContain('class ServiceB')
-		expect(dtsFile?.content).toContain('class UtilA')
-		expect(dtsFile?.content).toContain('declare function helperFunction')
-		expect(dtsFile?.content).toContain('interface ComponentAProps')
-		expect(dtsFile?.content).toContain('class ComponentA')
-		expect(dtsFile?.content).toContain('interface ComponentBProps')
-		expect(dtsFile?.content).toContain('class ComponentB')
-		expect(dtsFile?.content).toContain('declare function appInit(): void')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 
 	it('should handle index resolution in deep nested structures', async () => {
@@ -1072,11 +1016,6 @@ describe('dts', () => {
 		expect(result.success).toBe(true)
 		const dtsFile = findFile(result, 'index', '.d.mts')
 		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('class Feature')
-		expect(dtsFile?.content).toContain('class FeatureA')
-		expect(dtsFile?.content).toContain('class FeatureB')
-		expect(dtsFile?.content).toContain('interface SubFeatureOptions')
-		expect(dtsFile?.content).toContain('class SubFeature')
-		expect(dtsFile?.content).toContain('declare function initializeApp()')
+		expect(dtsFile?.content).toMatchSnapshot()
 	})
 })

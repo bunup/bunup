@@ -7,18 +7,18 @@ export default [
 		config: {
 			target: 'bun',
 			entry: ['src/index.ts', 'src/plugins.ts', 'src/cli/index.ts'],
-		},
-		plugins: [exports(), unused()],
-		dts: {
-			splitting: true,
+			plugins: [exports(), unused()],
+			dts: {
+				splitting: true,
+			},
 		},
 	},
 	{
 		name: '@bunup/dts',
 		root: 'packages/dts',
-		plugins: [exports(), unused()],
 		config: {
 			entry: ['src/index.ts'],
+			plugins: [exports(), unused()],
 		},
 	},
 ]

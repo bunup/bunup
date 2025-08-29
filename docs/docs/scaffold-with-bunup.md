@@ -1,6 +1,6 @@
 # Scaffold with Bunup
 
-Quickly scaffold modern TypeScript and React libraries in just 10 seconds with Bun. Powered by Bunup - the fastest library bundler available.
+Quickly scaffold modern TypeScript and React libraries in just 10 seconds with Bunup.
 
 - 🚀 **Instant Setup**: Scaffold, code, edit README, and publish with a single command - with nothing to rename or configure
 - 📦 **Modern**: ESM by default, TypeScript declarations, and optional monorepo support

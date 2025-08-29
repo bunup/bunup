@@ -68,6 +68,9 @@
         "tinyexec": "^1.0.1",
         "tree-kill": "^1.2.2",
       },
+      "devDependencies": {
+        "@types/bun": "^1.2.21",
+      },
       "peerDependencies": {
         "lightningcss": ">=1.17.0",
         "typescript": ">=4.5.0",

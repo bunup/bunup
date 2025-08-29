@@ -64,5 +64,8 @@
 		"lightningcss": {
 			"optional": true
 		}
+	},
+	"devDependencies": {
+		"@types/bun": "^1.2.21"
 	}
 }

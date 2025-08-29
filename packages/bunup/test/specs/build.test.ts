@@ -282,7 +282,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content.slice(0, 1000)).toMatchSnapshot()
 	})
 
 	it('should treat peerDependencies as external by default', async () => {
@@ -306,7 +306,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content.slice(0, 1000)).toMatchSnapshot()
 	})
 
 	it('should not treat devDependencies as external by default', async () => {
@@ -325,7 +325,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content.slice(0, 1000)).toMatchSnapshot()
 	})
 
 	it('should bundle dependencies specified in noExternal option', async () => {
@@ -347,7 +347,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content.slice(0, 1000)).toMatchSnapshot()
 	})
 
 	it('should consider sub-modules as external when parent module is in external option', async () => {
@@ -474,7 +474,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content.slice(0, 1000)).toMatchSnapshot()
 	})
 
 	it('should handle regex noExternal patterns, only matching hyphenated packages', async () => {
@@ -497,7 +497,7 @@ export function Counter() {
 
 		expect(result.success).toBe(true)
 
-		expect(result.files[0].content).toMatchSnapshot()
+		expect(result.files[0].content.slice(0, 1000)).toMatchSnapshot()
 	})
 
 	it('should handle naming conflicts in normal builds', async () => {

@@ -48,6 +48,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Build package
+        run: bun run build
+
       - name: Lint
         run: |
           bun run tsc
@@ -74,9 +77,6 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
-
-      - name: Build package
-        run: bun run build
 
       - name: Run tests
         run: bun run test

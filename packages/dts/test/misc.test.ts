@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { createProject, runGenerateDts } from '../utils'
+import { createProject, runGenerateDts } from './utils'
 
 describe('DTS Misc', () => {
 	test('should generate dts for typescript file with module declarations containing special characters', async () => {

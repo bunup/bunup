@@ -16,9 +16,6 @@
 			}
 		}
 	},
-	"scripts": {
-		"generate": "bun run ./test/generate.ts"
-	},
 	"dependencies": {
 		"@babel/parser": "^7.28.0",
 		"coffi": "^0.1.31",

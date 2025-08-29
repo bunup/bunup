@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'bun:test'
-import { cleanProjectDir, createProject, runGenerateDts } from '../utils'
+import { cleanProjectDir, createProject, runGenerateDts } from './utils'
 
 describe('Code Splitting Tests', () => {
 	beforeEach(() => {

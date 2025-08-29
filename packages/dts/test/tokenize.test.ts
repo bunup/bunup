@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { createProject, runGenerateDts } from '../utils'
+import { createProject, runGenerateDts } from './utils'
 
 describe('Tokenize', () => {
 	test('should tokenize newlines and tabs properly', async () => {

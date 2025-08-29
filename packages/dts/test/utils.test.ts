@@ -4,7 +4,7 @@ import {
 	getDeclarationExtensionFromJsExtension,
 	getExtension,
 	replaceExtension,
-} from '../../src/utils'
+} from '../src/utils'
 
 describe('utils', () => {
 	describe('getDeclarationExtensionFromJsExtension', () => {

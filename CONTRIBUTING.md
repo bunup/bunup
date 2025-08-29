@@ -49,7 +49,13 @@ For more comprehensive testing, you can use the test fixtures:
 
 3. **Configure test build**: Check `packages/bunup/test/bunup.config.ts` to see or modify the build configuration used for test builds
 
+4. **Check test build output**: The output of the test build can be found in `packages/bunup/test/dist/` directory
+
 The `packages/bunup/test/fixtures/` directory serves as a sandbox where you can create any file structure to test your changes. The test build will process these fixtures using your modifications to Bunup, allowing you to verify that your changes work as expected. The `packages/bunup/test/bunup.config.ts` file contains the build configuration used for this rough testing of the fixtures.
+
+### 3. Testing DTS Bundler Changes
+
+If you make changes to the DTS bundler (located in `packages/dts`), you can test them directly in the bunup test playground since the packages are linked. Any modifications to the DTS bundler will be automatically available when running test builds in the bunup package if you've started development mode with `bun run dev`. Otherwise, you'll need to run `bun run build` to make your changes available for testing.
 
 ## Commit Message Conventions
 

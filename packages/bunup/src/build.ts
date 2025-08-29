@@ -1,7 +1,7 @@
 import path from 'node:path'
+import { generateDts, logIsolatedDeclarationErrors } from '@bunup/dts'
 import type { BunPlugin } from 'bun'
 import pc from 'picocolors'
-import { generateDts, logIsolatedDeclarationErrors } from 'typeroll'
 import {
 	BunupBuildError,
 	BunupDTSBuildError,

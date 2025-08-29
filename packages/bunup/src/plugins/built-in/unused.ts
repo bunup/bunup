@@ -101,7 +101,7 @@ export function unused(options: UnusedOptions = {}): BunupPlugin {
 					)
 
 					const message = [
-						`\nYour project has ${count} unused ${depText}: ${coloredDeps}.`,
+						`\nYour project${buildOptions.name ? ` ${buildOptions.name}` : ''} has ${count} unused ${depText}: ${coloredDeps}.`,
 						`You can remove ${count === 1 ? 'it' : 'them'} with ${removeCommand}`,
 					].join(' ')
 

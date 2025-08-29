@@ -100,7 +100,6 @@
       "version": "0.7.7",
       "dependencies": {
         "@babel/parser": "^7.28.0",
-        "@babel/types": "^7.28.1",
         "coffi": "^0.1.31",
         "oxc-minify": "^0.77.2",
         "oxc-resolver": "^8.0.0",
@@ -108,6 +107,9 @@
         "picocolors": "^1.1.1",
         "std-env": "^3.9.0",
         "ts-import-resolver": "^0.1.23",
+      },
+      "devDependencies": {
+        "@babel/types": "^7.28.2",
       },
       "peerDependencies": {
         "typescript": ">=4.5.0",

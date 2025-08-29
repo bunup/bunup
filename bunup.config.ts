@@ -11,6 +11,13 @@ export default defineWorkspace(
 				entry: ['src/index.ts', 'src/plugins.ts', 'src/cli/index.ts'],
 			},
 		},
+		{
+			name: '@bunup/dts',
+			root: 'packages/dts',
+			config: {
+				entry: ['src/index.ts'],
+			},
+		},
 	],
 	{
 		plugins: [exports(), unused()],

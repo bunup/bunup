@@ -62,7 +62,7 @@ For more control, you can specify custom entry points for declarations:
 
 ```typescript
 export default defineConfig({
-	entry: ['src/index.ts', 'src/cli.ts'],
+	entry: ['src/index.ts', 'src/utils.ts'],
 	dts: {
 		// Only generate declarations for index.ts
 		entry: ['src/index.ts'],
@@ -106,16 +106,16 @@ export default defineConfig({
 
 ```
 dist/
-├── index.d.ts         # ~45KB
-└── cli.d.ts           # ~40KB
+├── index.d.ts           # ~45KB
+└── utils.d.ts           # ~40KB
 ```
 
 **With splitting:**
 
 ```
 dist/
-├── index.d.ts         		  # ~15KB, imports from shared chunk
-├── cli.d.ts           		  # ~10KB, imports from shared chunk
+├── index.d.ts         		    # ~15KB, imports from shared chunk
+├── utils.d.ts           		  # ~10KB, imports from shared chunk
 └── shared/chunk-abc123.d.ts  # ~30KB, shared types
 ```
 
@@ -138,7 +138,7 @@ export default defineConfig({
 });
 ```
 
-When enabled, minification preserves public (exported) API names while minifying internal type names and removes documentation comments. This significantly reduces file size when bundle size is a priority and JSDoc comments aren't essential.
+When enabled, minification preserves public (exported) API names while minifying internal type names and removes documentation comments. This provides significant size reduction especially for large declaration files, making it valuable when bundle size is a priority and JSDoc comments aren't essential.
 
 ### Example
 

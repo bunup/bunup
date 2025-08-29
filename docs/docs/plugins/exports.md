@@ -70,25 +70,15 @@ export default defineConfig({
 
 The `exclude` option allows you to prevent specific entry points from being included in the exports field. You can provide either an array of glob patterns or exact entry point names, or a function that returns such an array.
 
-**Note:** CLI files are excluded by default using these patterns:
-- `**/cli.{js,mjs,cjs,ts}`
-- `**/cli/index.{js,mjs,cjs,ts}`
-- `cli.{js,mjs,cjs,ts}`
-- `cli/index.{js,mjs,cjs,ts}`
-- `src/cli.{js,mjs,cjs,ts}`
-- `src/cli/index.{js,mjs,cjs,ts}`
-
-Any additional patterns you provide will be merged with these defaults.
-
 ```ts [bunup.config.ts]
 import { defineConfig } from 'bunup';
 import { exports } from 'bunup/plugins';
 
 export default defineConfig({
-	entry: ['src/index.ts', 'src/cli.ts', 'src/plugins.ts'],
+	entry: ['src/index.ts', 'src/cli.ts', 'src/utils.ts'],
 	plugins: [
 		exports({
-			exclude: ['src/cli.ts']
+			exclude: ['src/utils.ts']
 		})
 	],
 });
@@ -117,13 +107,13 @@ import { defineConfig } from 'bunup';
 import { exports } from 'bunup/plugins';
 
 export default defineConfig({
-	entry: ['src/index.ts', 'src/cli.ts', 'src/plugins.ts'],
+	entry: ['src/index.ts', 'src/cli.ts', 'src/utils.ts'],
 	plugins: [
 		exports({
 			exclude: (ctx) => {
 				// Access build context information
 				const { options, output, meta } = ctx;
-				return ['src/cli.ts'];
+				return ['src/utils.ts'];
 			}
 		})
 	],
@@ -132,7 +122,7 @@ export default defineConfig({
 
 ### `excludeCss`
 
-When you use CSS files and import them in your JavaScript files, Bun will bundle the CSS and include it in the build output. As a result, these CSS files will be automatically added to the exports field with appropriate export keys. 
+When you use CSS files and import them in your JavaScript files, Bun will bundle the CSS and include it in the build output. As a result, these CSS files will be automatically added to the exports field with appropriate export keys.
 
 The `excludeCss` option allows you to prevent CSS files from being included in the exports field if you prefer to handle CSS distribution manually or don't want to expose CSS files as part of your package's public API.
 

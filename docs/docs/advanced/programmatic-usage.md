@@ -61,9 +61,11 @@ import { injectStyles } from 'bunup/plugins';
 
 await build({
   entry: 'src/index.ts',
-  plugins: [injectStyles({
-    minify: true,
-    targets: { chrome: 95 }
-  })]
+  plugins: [
+  	injectStyles({
+    	minify: true,
+     	targets: { chrome: 95 }
+   	})
+  ]
 });
 ```

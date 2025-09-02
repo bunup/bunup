@@ -1,0 +1,48 @@
+{
+	"name": "@bunup/plugin-tailwind",
+	"description": "A Bunup plugin that provides seamless integration with Tailwind CSS",
+	"version": "0.11.22",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"license": "MIT",
+	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "m@arshadyaseen.com",
+			"url": "https://arshadyaseen.com"
+		}
+	],
+	"keywords": [
+		"bunup",
+		"plugin",
+		"tailwind",
+		"tailwindcss"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bunup/bunup.git"
+	},
+	"funding": "https://github.com/sponsors/arshad-yaseen",
+	"homepage": "https://bunup.dev",
+	"peerDependencies": {
+		"typescript": ">=4.5.0"
+	},
+	"peerDependenciesMeta": {
+		"typescript": {
+			"optional": true
+		}
+	}
+}

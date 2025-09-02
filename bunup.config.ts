@@ -21,4 +21,12 @@ export default [
 			plugins: [exports(), unused()],
 		},
 	},
+	{
+		name: '@bunup/plugin-tailwind',
+		root: 'packages/plugin-tailwind',
+		config: {
+			entry: ['src/index.ts'],
+			plugins: [exports(), unused()],
+		},
+	},
 ]

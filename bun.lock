@@ -20,7 +20,7 @@
     },
     "examples/basic": {
       "name": "basic",
-      "version": "0.11.18",
+      "version": "0.11.22",
       "devDependencies": {
         "@types/bun": "^1.2.20",
         "bunup": "^0.8.72",
@@ -35,7 +35,7 @@
     },
     "examples/react": {
       "name": "react",
-      "version": "0.11.18",
+      "version": "0.11.22",
       "devDependencies": {
         "@types/bun": "^1.2.20",
         "@types/react": "^19.1.10",
@@ -57,7 +57,7 @@
     },
     "packages/bunup": {
       "name": "bunup",
-      "version": "0.11.18",
+      "version": "0.11.22",
       "bin": {
         "bunup": "dist/cli/index.js",
       },
@@ -101,7 +101,7 @@
     },
     "packages/dts": {
       "name": "@bunup/dts",
-      "version": "0.11.18",
+      "version": "0.11.22",
       "dependencies": {
         "@babel/parser": "^7.28.0",
         "coffi": "^0.1.31",
@@ -115,6 +115,16 @@
       "devDependencies": {
         "@babel/types": "^7.28.2",
       },
+      "peerDependencies": {
+        "typescript": ">=4.5.0",
+      },
+      "optionalPeers": [
+        "typescript",
+      ],
+    },
+    "packages/plugin-tailwind": {
+      "name": "@bunup/plugin-tailwind",
+      "version": "0.11.22",
       "peerDependencies": {
         "typescript": ">=4.5.0",
       },
@@ -191,6 +201,8 @@
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.2.0", "", { "os": "win32", "cpu": "x64" }, "sha512-Nawu5nHjP/zPKTIryh2AavzTc/KEg4um/MxWdXW0A6P/RZOyIpa7+QSjeXwAwX/utJGaCoXRPWtF3m5U/bB3Ww=="],
 
     "@bunup/dts": ["@bunup/dts@workspace:packages/dts"],
+
+    "@bunup/plugin-tailwind": ["@bunup/plugin-tailwind@workspace:packages/plugin-tailwind"],
 
     "@clack/core": ["@clack/core@0.4.2", "", { "dependencies": { "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-NYQfcEy8MWIxrT5Fj8nIVchfRFA26yYKJcvBS7WlUIlw2OmQOY9DhGGXMovyI5J5PpxrCPGkgUi207EBrjpBvg=="],
 

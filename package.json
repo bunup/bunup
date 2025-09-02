@@ -7,9 +7,9 @@
 		"simple-git-hooks": "^2.13.1"
 	},
 	"scripts": {
-		"build": "bunx bunup@latest",
+		"build": "bun run packages/bunup/src/cli/index.ts",
 		"build:docs": "bun run --cwd docs build",
-		"dev": "bunx bunup@latest --watch",
+		"dev": "bun run packages/bunup/src/cli/index.ts --watch",
 		"dev:docs": "bun run --cwd docs dev",
 		"format": "biome format .",
 		"format:fix": "biome format --write .",

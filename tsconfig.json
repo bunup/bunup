@@ -4,7 +4,7 @@
 		"module": "esnext",
 		"strict": true,
 		"esModuleInterop": true,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"noUnusedLocals": true,
 		"noImplicitAny": true,
 		"noEmit": true,

@@ -1,5 +1,5 @@
 {
-	"name": "@bunup/plugin-tailwind",
+	"name": "@bunup/plugin-tailwindcss",
 	"description": "A Bunup plugin that provides seamless integration with Tailwind CSS",
 	"version": "0.11.22",
 	"type": "module",
@@ -44,5 +44,9 @@
 		"typescript": {
 			"optional": true
 		}
+	},
+	"dependencies": {
+		"@tailwindcss/postcss": "^4.1.12",
+		"postcss": "^8.5.6"
 	}
 }

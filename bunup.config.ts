@@ -21,8 +21,8 @@ export default [
 		},
 	},
 	{
-		name: '@bunup/plugin-tailwind',
-		root: 'packages/plugin-tailwind',
+		name: '@bunup/plugin-tailwindcss',
+		root: 'packages/plugin-tailwindcss',
 		config: {
 			entry: ['src/index.ts'],
 			plugins: [exports(), unused()],

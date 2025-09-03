@@ -24,7 +24,7 @@ export default function tailwindcss(
 			const { prefix = 'bunup' } = options
 			const rewriter = new HTMLRewriter()
 
-			build.onLoad({ filter: /\.tsx$/ }, async (args) => {
+			build.onLoad({ filter: /\.(tsx|jsx)$/ }, async (args) => {
 				const source = await Bun.file(args.path).text()
 
 				rewriter.on('*', {
@@ -41,7 +41,7 @@ export default function tailwindcss(
 				const result = rewriter.transform(source)
 
 				return {
-					loader: 'tsx',
+					loader: args.path.endsWith('.tsx') ? 'tsx' : 'jsx',
 					contents: result,
 				}
 			})

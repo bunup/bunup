@@ -10,6 +10,7 @@ export default [
 			dts: {
 				splitting: true,
 			},
+			plugins: [exports(), unused()],
 		},
 	},
 	{

@@ -266,15 +266,15 @@ function processTokenElement(element: any): string | null {
 // https://github.com/bunup/bunup/issues/63
 function escapeNewlinesAndTabs(text: string): string {
 	return text
-		.replace(/\n/g, '__typeroll_intermediate_new__line__')
-		.replace(/\t/g, '__typeroll_intermediate__tab__')
+		.replace(/\n/g, '__bunup_dts_intermediate_new__line__')
+		.replace(/\t/g, '__bunup_dts_intermediate__tab__')
 }
 
 // unescapes previously escaped newlines and tabs back to actual characters.
 function unescapeNewlinesAndTabs(text: string): string {
 	return text
-		.replace(/__typeroll_intermediate_new__line__/g, '\n')
-		.replace(/__typeroll_intermediate__tab__/g, '\t')
+		.replace(/__bunup_dts_intermediate_new__line__/g, '\n')
+		.replace(/__bunup_dts_intermediate__tab__/g, '\t')
 }
 
 function handleNamespace(stmt: ExpressionStatement): string | null {

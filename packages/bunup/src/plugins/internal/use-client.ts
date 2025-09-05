@@ -13,7 +13,6 @@ import type { BunupPlugin } from '../types'
  */
 export function useClient(): BunupPlugin {
 	return {
-		type: 'bunup',
 		name: 'use-client',
 		hooks: {
 			onBuildDone: async ({ output }) => {

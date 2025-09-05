@@ -4,7 +4,6 @@ import { isolatedDeclaration } from 'oxc-transform'
 import { resolveTsImportPath } from 'ts-import-resolver'
 
 import { EMPTY_EXPORT } from './constants'
-import { TyperollError } from './errors'
 import { dtsToFakeJs, fakeJsToDts } from './fake-js'
 import type { IsolatedDeclarationError } from './isolated-decl-logger'
 import type {
@@ -54,7 +53,7 @@ export async function generateDts(
 		!filterTypescriptFiles([...resolvedEntrypoints, ...absoluteEntrypoints])
 			.length
 	) {
-		throw new TyperollError(
+		throw new Error(
 			'One or more of the entrypoints you provided do not exist. Please check that each entrypoint points to a valid file.',
 		)
 	}
@@ -148,7 +147,7 @@ export async function generateDts(
 	})
 
 	if (!result.success) {
-		throw new TyperollError(`DTS bundling failed: ${result.logs}`)
+		throw new Error(`DTS bundling failed: ${result.logs}`)
 	}
 
 	const outputs = result.outputs.filter(
@@ -192,7 +191,7 @@ export async function generateDts(
 		}
 
 		if (treeshakedDts.errors.length && !treeshakedDts.code) {
-			throw new TyperollError(
+			throw new Error(
 				`DTS treeshaking failed for ${entrypoint || outputPath}\n\n${JSON.stringify(treeshakedDts.errors, null, 2)}`,
 			)
 		}

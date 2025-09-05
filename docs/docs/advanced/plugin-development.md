@@ -60,7 +60,6 @@ import type { BunupPlugin, BuildOptions, BuildContext } from "bunup";
 
 export function myBunupPlugin(): BunupPlugin {
   return {
-    type: "bunup",
     name: "my-bunup-plugin",
     hooks: {
       onBuildStart: async (options: BuildOptions) => {
@@ -205,7 +204,6 @@ Plugins should handle errors gracefully. If a plugin hook throws an error, the b
 ```ts
 export function robustPlugin(): BunupPlugin {
   return {
-    type: "bunup",
     name: "robust-plugin",
     hooks: {
       onBuildDone: async ({ output }) => {
@@ -226,7 +224,6 @@ export function robustPlugin(): BunupPlugin {
 ```ts
 export function bundleSizeReporter(maxSize?: number): BunupPlugin {
   return {
-    type: "bunup",
     name: "bundle-size-reporter",
     hooks: {
       onBuildDone: async ({ output }) => {

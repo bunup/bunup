@@ -103,7 +103,6 @@ Here's a brief overview of the project structure:
     - `build.ts` - Core build functionality
     - `watch.ts` - Watch mode functionality
     - `plugins/` - Bundler plugins
-- `packages/cli/` - Command-line interface package
 - `packages/dts/` - DTS bundler used by Bunup
 - `packages/plugin-*/` - Official Bunup plugins
 

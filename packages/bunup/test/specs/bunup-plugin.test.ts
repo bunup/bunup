@@ -19,7 +19,6 @@ describe('Bunup Plugin', () => {
 		const onBuildStartMock = mock(() => {})
 
 		const testPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'test-start-plugin',
 			hooks: {
 				onBuildStart: onBuildStartMock,
@@ -48,7 +47,6 @@ describe('Bunup Plugin', () => {
 		const onBuildDoneMock = mock(() => {})
 
 		const testPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'test-done-plugin',
 			hooks: {
 				onBuildDone: onBuildDoneMock,
@@ -83,7 +81,6 @@ describe('Bunup Plugin', () => {
 		const callOrder: string[] = []
 
 		const testPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'test-both-hooks-plugin',
 			hooks: {
 				onBuildStart: mock(() => {
@@ -111,7 +108,6 @@ describe('Bunup Plugin', () => {
 		const callOrder: string[] = []
 
 		const firstPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'first-plugin',
 			hooks: {
 				onBuildStart: mock(() => {
@@ -124,7 +120,6 @@ describe('Bunup Plugin', () => {
 		}
 
 		const secondPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'second-plugin',
 			hooks: {
 				onBuildStart: mock(() => {
@@ -157,7 +152,6 @@ describe('Bunup Plugin', () => {
 		const callOrder: string[] = []
 
 		const testPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'async-plugin',
 			hooks: {
 				onBuildStart: mock(async () => {
@@ -194,7 +188,6 @@ describe('Bunup Plugin', () => {
 		const bunupHookCalled = mock(() => {})
 
 		const bunupPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'bunup-specific-plugin',
 			hooks: {
 				onBuildStart: bunupHookCalled,
@@ -204,7 +197,6 @@ describe('Bunup Plugin', () => {
 
 		const bunPluginSetupMock = mock(() => {})
 		const bunPlugin = {
-			type: 'bun' as const,
 			name: 'bun-plugin',
 			setup: bunPluginSetupMock,
 		}
@@ -226,7 +218,6 @@ describe('Bunup Plugin', () => {
 		})
 
 		const testPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'options-modifier-plugin',
 			hooks: {
 				onBuildStart: mock((options: BuildOptions) => {
@@ -249,7 +240,6 @@ describe('Bunup Plugin', () => {
 		createProject({ 'src/index.ts': 'export const x = 1;' })
 
 		const errorPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'error-plugin',
 			hooks: {
 				onBuildStart: mock(() => {
@@ -274,7 +264,6 @@ describe('Bunup Plugin', () => {
 		let outputFiles: string[] = []
 
 		const outputAccessPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'output-access-plugin',
 			hooks: {
 				onBuildDone: mock((ctx: BuildContext) => {
@@ -298,7 +287,6 @@ describe('Bunup Plugin', () => {
 		createProject({ 'src/index.ts': 'export const x = 1;' })
 
 		const emptyPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'empty-plugin',
 			hooks: {},
 		}
@@ -321,7 +309,6 @@ describe('Bunup Plugin', () => {
 		let buildContext: BuildContext | undefined
 
 		const entrypointCheckPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'entrypoint-check-plugin',
 			hooks: {
 				onBuildDone: mock((ctx: BuildContext) => {
@@ -357,7 +344,6 @@ describe('Bunup Plugin', () => {
 		let buildContext: BuildContext | undefined
 
 		const multiEntrypointPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'multi-entrypoint-plugin',
 			hooks: {
 				onBuildDone: mock((ctx: BuildContext) => {
@@ -404,7 +390,6 @@ describe('Bunup Plugin', () => {
 		let buildContext: BuildContext | undefined
 
 		const chunkCheckPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'chunk-check-plugin',
 			hooks: {
 				onBuildDone: mock((ctx: BuildContext) => {
@@ -456,7 +441,6 @@ describe('Bunup Plugin', () => {
 		let buildContext: BuildContext | undefined
 
 		const dtsChunkPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'dts-chunk-plugin',
 			hooks: {
 				onBuildDone: mock((ctx: BuildContext) => {
@@ -585,7 +569,6 @@ describe('Bunup Plugin', () => {
 		let buildContext: BuildContext | undefined
 
 		const complexProjectPlugin: BunupPlugin = {
-			type: 'bunup',
 			name: 'complex-project-plugin',
 			hooks: {
 				onBuildDone: mock((ctx: BuildContext) => {

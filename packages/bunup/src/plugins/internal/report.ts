@@ -8,7 +8,6 @@ import type { BunupPlugin } from '../types'
  */
 export function report(): BunupPlugin {
 	return {
-		type: 'bunup',
 		name: 'report',
 		hooks: {
 			onBuildDone: async ({ options, output }) => {

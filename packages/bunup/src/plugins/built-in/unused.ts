@@ -25,7 +25,6 @@ export function unused(options: UnusedOptions = {}): BunupPlugin {
 	const { level = 'warn', ignore = [] } = options
 
 	return {
-		type: 'bunup',
 		name: 'unused',
 		hooks: {
 			onBuildDone: async (ctx) => {

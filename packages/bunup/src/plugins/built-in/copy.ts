@@ -14,7 +14,6 @@ export function copy(
 	outPath?: string,
 ): BunupPlugin {
 	return {
-		type: 'bunup',
 		name: 'copy',
 		hooks: {
 			onBuildDone: async ({ options, meta }) => {

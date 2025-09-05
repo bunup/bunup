@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { CSS_RE, JS_DTS_RE } from '../../constants/re'
 import { logger } from '../../logger'
-import { cleanPath } from '../../utils'
+import { cleanPath, detectFileFormatting } from '../../utils'
 import type { BuildContext, BuildOutputFile, BunupPlugin } from '../types'
 
 type ExportField = 'require' | 'import' | 'types'
@@ -38,6 +38,13 @@ interface ExportsPluginOptions {
 	 * @default false
 	 */
 	excludeCss?: boolean
+	/**
+	 * Whether to include "./package.json": "./package.json" in the exports field
+	 *
+	 * @default true
+	 * @see https://bunup.dev/docs/plugins/exports#includepackagejson
+	 */
+	includePackageJson?: boolean
 }
 
 interface FileEntry {
@@ -52,7 +59,6 @@ interface FileEntry {
  */
 export function exports(options: ExportsPluginOptions = {}): BunupPlugin {
 	return {
-		type: 'bunup',
 		name: 'exports',
 		hooks: {
 			onBuildDone: async (ctx) => {
@@ -91,10 +97,15 @@ async function processPackageJsonExports(
 			ctx,
 		)
 
+		const finalExports = addPackageJsonExport(
+			mergedExports,
+			options.includePackageJson,
+		)
+
 		const newPackageJson = createUpdatedPackageJson(
 			meta.packageJson.data,
 			entryPoints,
-			mergedExports,
+			finalExports,
 			updatedFiles,
 		)
 
@@ -102,10 +113,19 @@ async function processPackageJsonExports(
 			return
 		}
 
-		await Bun.write(
-			meta.packageJson.path,
-			JSON.stringify(newPackageJson, null, 2),
+		const formatting = await detectFileFormatting(meta.packageJson.path)
+
+		let jsonContent = JSON.stringify(
+			newPackageJson,
+			null,
+			formatting.indentation,
 		)
+
+		if (formatting.hasTrailingNewline) {
+			jsonContent += '\n'
+		}
+
+		await Bun.write(meta.packageJson.path, jsonContent)
 	} catch {
 		logger.error('Failed to update package.json')
 	}
@@ -468,6 +488,23 @@ function getCssExportKey(pathRelativeToOutdir: string): string {
 		// e.g., button.css -> ./button.css, components/button.css -> ./components/button.css
 		return `./${pathSegments.join('/')}.css`
 	}
+}
+
+function addPackageJsonExport(
+	exports: CustomExports,
+	includePackageJson?: boolean,
+): CustomExports {
+	if (includePackageJson === false) {
+		return exports
+	}
+
+	// Add package.json export at the end if not already present
+	const finalExports = { ...exports }
+	if (!finalExports['./package.json']) {
+		finalExports['./package.json'] = './package.json'
+	}
+
+	return finalExports
 }
 
 function exportFieldToEntryPoint(exportField: ExportField): EntryPoint {

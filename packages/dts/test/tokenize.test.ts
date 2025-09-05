@@ -52,12 +52,9 @@ export type GenerateDtsOptions = {
 						 *
 						 * @example
 						 * plugins: [
+						 *   myBunPlugin(),
 						 *   {
-						 *     type: "bun",
-						 *     plugin: myBunPlugin()
-						 *   },
-						 *   {
-						 *     type: "bunup",
+						 *     name: "my-bunup-plugin",
 						 *     hooks: {
 						 *       onBuildStart: (options) => {
 						 *         console.log('Build started with options:', options)
@@ -125,12 +122,9 @@ export type GenerateDtsOptions = {
 		  	*
 		  	* @example
 		  	* plugins: [
+		  	*   myBunPlugin(),
 		  	*   {
-		  	*     type: "bun",
-		  	*     plugin: myBunPlugin()
-		  	*   },
-		  	*   {
-		  	*     type: "bunup",
+		  	*     name: "my-bunup-plugin",
 		  	*     hooks: {
 		  	*       onBuildStart: (options) => {
 		  	*         console.log('Build started with options:', options)

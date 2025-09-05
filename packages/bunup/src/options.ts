@@ -359,12 +359,9 @@ export interface BuildOptions {
 	 *
 	 * @example
 	 * plugins: [
+	 * 	myBunPlugin(),
 	 *   {
-	 *     type: "bun",
-	 *     plugin: myBunPlugin()
-	 *   },
-	 *   {
-	 *     type: "bunup",
+	 *     name: "my-bunup-plugin",
 	 *     hooks: {
 	 *       onBuildStart: (options) => {
 	 *         console.log('Build started with options:', options)

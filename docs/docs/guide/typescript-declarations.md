@@ -4,26 +4,21 @@ Bunup automatically generates TypeScript declaration files (`.d.ts`, `.d.mts`, o
 
 ## Isolated Declarations
 
-Make your library lightning-fast and future-ready. TypeScript 5.5 introduced [`isolatedDeclarations`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html#isolated-declarations) to solve slow declaration file generation. With isolated declarations, Bunup generates your `.d.ts` files in parallel at blazing speed, reducing build times from seconds to milliseconds while ensuring compatibility with all modern tools.
+Make your library lightning-fast and future-ready. TypeScript 5.5's [`isolatedDeclarations`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html#isolated-declarations) generates `.d.ts` files in parallel at blazing speed, reducing build times from seconds to milliseconds.
 
 ### Why This Matters
 
-Traditional declaration generation required analyzing entire projects and complex cross-file type inference, creating build bottlenecks that prevented faster tools like Bun, and other modern tools from implementing TypeScript tooling. They didn't want to implement the full TypeScript compiler just for this, which made the process slow.
+Traditional declaration generation required analyzing entire projects, creating bottlenecks. With `isolatedDeclarations`, tools can generate declarations extremely quickly without the full TypeScript compiler. **This is the future** - Bun and other modern tools are adopting this for extremely fast declarations generation.
 
-With `isolatedDeclarations`, every tool can now generate declarations extremely quickly without needing the full TypeScript compiler. This breakthrough enables parallel, super-fast generation that works reliably across the ecosystem. **This is the future** - modern and future tools are moving this way because of the significant performance benefits. Bun is already going to add support for super-fast TypeScript declaration generation because of this.
+### Benefits
 
-By adopting isolated declarations now, your codebase becomes early-compatible with this future ecosystem, ensuring it works seamlessly with every modern tool and bundler that's adopting this approach.
-
-### Benefits for Your Library
-
-Enable `isolatedDeclarations` and join the modern TypeScript ecosystem with:
 - **Dramatically faster builds**
-- **Universal compatibility** with cutting-edge tools and bundlers
-- **Future-proofing** - your codebase is ready for when this becomes the standard
+- **Universal compatibility** with cutting-edge tools
+- **Future-proofing** for the modern ecosystem
 
 ### How It Works
 
-Simplly add explicit return types to your public exports only. Internal code stays unchanged. Think of it as clearly labeling your library's public interface - which is a good practice that makes your API predictable for tools and developers.
+Add explicit types to public exports only. Internal code stays unchanged.
 
 ```typescript [src/index.ts]
 // Before: TypeScript infers
@@ -39,9 +34,7 @@ export function createUser(name: string): User {
 
 ### Enable It Now
 
-Add to your `tsconfig.json`:
-
-```json  [tsconfig.json] {4}
+```json [tsconfig.json] {4}
 {
   "compilerOptions": {
     "declaration": true,
@@ -50,7 +43,7 @@ Add to your `tsconfig.json`:
 }
 ```
 
-TypeScript will guide you through adding any missing return types. Your library is now future-ready and will build significantly faster with perfect ecosystem compatibility.
+TypeScript will guide you through adding missing types on exports. Your library is now future-ready with perfect ecosystem compatibility.
 
 ## Basic
 

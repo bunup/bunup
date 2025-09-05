@@ -74,8 +74,6 @@ type BunupPluginHooks = {
  * Represents a Bunup-specific plugin
  */
 export type BunupPlugin = {
-	/** Identifies this as a Bunup-specific plugin */
-	type: 'bunup'
 	/** Optional name for the plugin */
 	name?: string
 	/** The hooks implemented by this plugin */

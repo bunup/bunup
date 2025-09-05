@@ -181,3 +181,31 @@ export function replaceExtension(
 	const nameWithoutExtension = filename.substring(0, lastDotIndex)
 	return directory + nameWithoutExtension + normalizedExtension
 }
+
+export async function detectFileFormatting(filePath: string): Promise<{
+	indentation: string
+	hasTrailingNewline: boolean
+}> {
+	try {
+		const content = await Bun.file(filePath).text()
+
+		const hasTrailingNewline = content.endsWith('\n')
+
+		const lines = content.split('\n')
+
+		for (const line of lines) {
+			const match = line.match(/^(\s+)/)
+			if (match) {
+				const indent = match[1]
+				if (indent.startsWith('\t')) {
+					return { indentation: '\t', hasTrailingNewline }
+				}
+				return { indentation: indent, hasTrailingNewline }
+			}
+		}
+
+		return { indentation: '  ', hasTrailingNewline }
+	} catch {
+		return { indentation: '  ', hasTrailingNewline: true }
+	}
+}

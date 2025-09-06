@@ -176,6 +176,11 @@ async function fakeJsToDts(fakeJsContent: string): Promise<string> {
 	return resultParts.join('\n')
 }
 
+// converts typescript import/export statements to javascript equivalents
+// - "import type { Foo } from 'bar'" -> "import { Foo } from 'bar'"
+// - "export type { Baz }" -> "export { Baz }"
+// - "import { type A, B } from 'mod'" -> "import { A, B } from 'mod'"
+// - "import Def, { type Named } from 'lib'" -> "import Def, { Named } from 'lib'"
 function jsifyImportExport(text: string): string {
 	let result = text
 		.replace(IMPORT_TYPE_RE, 'import ')

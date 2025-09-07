@@ -1,6 +1,6 @@
 # Inject Styles
 
-The `injectStyles` plugin transforms CSS imports (like `import "./styles.css"`) into JavaScript code that automatically injects styles into the document head at runtime. This is particularly useful for component libraries where styles should be automatically applied without requiring users to manually include CSS files.
+The `injectStyles` plugin transforms CSS imports (like `import "./styles.css"`) or CSS entries into JavaScript code that automatically injects styles into the document head at runtime. This is particularly useful for component libraries where styles should be automatically applied without requiring users to manually include CSS files.
 
 ## Installation
 
@@ -33,13 +33,44 @@ import "./components/button.css";
 export { Button } from "./components/Button";
 ```
 
-Instead of bundling separate CSS files, the styles will be embedded as JavaScript code that creates `<style>` tags in the document head.
+Instead of bundling CSS files to build output, the styles will be embedded as JavaScript code that creates `<style>` tags in the document head.
 
-## Options
+## Custom Injection
 
-The plugin passes options directly to LightningCSS. Available options include:
+By default, bunup uses its own `injectStyle` function that creates a `<style>` tag and appends it to the document head. You can provide your own injection logic using the `inject` option to customize how styles are applied to the document.
 
-- `minify`: Controls whether the CSS should be minified (enabled by default if minify option is enabled in build config)
+The `inject` function receives the processed CSS string (already JSON stringified) and the original file path, and should return JavaScript code that will inject the styles when executed.
+
+```ts [bunup.config.ts]
+import { defineConfig } from 'bunup';
+import { injectStyles } from 'bunup/plugins';
+
+export default defineConfig({
+  entry: 'src/index.ts',
+  plugins: [
+    injectStyles({
+      inject: (css, filePath) => {
+        return `
+          const style = document.createElement('style');
+          style.setAttribute('data-source', '${filePath}');
+          style.textContent = ${css};
+          document.head.appendChild(style);
+        `;
+      }
+    })
+  ],
+});
+```
+
+:::info
+The above example is basic. The default injection handles cases like when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
+:::
+
+## Other Options
+
+The plugin also passes options directly to LightningCSS. Available options include:
+
+- `minify`: Controls whether the CSS should be minified (enabled by default)
 - `targets`: Specifies browser targets for CSS feature compatibility
 
-For a complete list of options, refer to the [Lightning CSS documentation](https://lightningcss.dev/docs.html).
+For a complete list of LightningCSS options, refer to the [Lightning CSS documentation](https://lightningcss.dev/docs.html).

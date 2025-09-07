@@ -8,6 +8,8 @@ import postcss from 'postcss'
 type TailwindCSSOptions = {
 	/** CSS class prefix to apply for scoping. Defaults to 'bunup' */
 	prefix?: string
+	/** Whether to inject CSS styles dynamically into the document head instead of bundling them to the build output. Defaults to false */
+	inject?: boolean
 }
 
 /**
@@ -21,8 +23,41 @@ export default function tailwindcss(
 	return {
 		name: 'bunup:tailwindcss',
 		setup: (build) => {
-			const { prefix = 'bunup' } = options
+			const { prefix = 'bunup', inject } = options
 			const rewriter = new HTMLRewriter()
+
+			if (inject) {
+				build.onResolve({ filter: /^__inject-style$/ }, () => {
+					return {
+						path: '__inject-style',
+						namespace: '__inject-style',
+					}
+				})
+
+				build.onLoad(
+					{ filter: /^__inject-style$/, namespace: '__inject-style' },
+					() => {
+						return {
+							contents: `
+                      export default function injectStyle(css) {
+                        if (!css || typeof document === 'undefined') return
+
+                        const head = document.head || document.getElementsByTagName('head')[0]
+                        const style = document.createElement('style')
+                        head.appendChild(style)
+
+                        if (style.styleSheet) {
+                          style.styleSheet.cssText = css
+                        } else {
+                          style.appendChild(document.createTextNode(css))
+                        }
+                      }
+                      `,
+							loader: 'js',
+						}
+					},
+				)
+			}
 
 			build.onLoad({ filter: /\.(tsx|jsx)$/ }, async (args) => {
 				const source = await Bun.file(args.path).text()
@@ -46,7 +81,6 @@ export default function tailwindcss(
 				}
 			})
 
-			// Handle CSS files - process with TailwindCSS and add prefix to selectors
 			build.onLoad({ filter: /\.css$/ }, async (args) => {
 				const source = await Bun.file(args.path).text()
 
@@ -69,6 +103,13 @@ export default function tailwindcss(
 				]).process(source, {
 					from: args.path,
 				})
+
+				if (inject) {
+					return {
+						contents: `import injectStyle from '__inject-style';injectStyle(${JSON.stringify(result.css)})`,
+						loader: 'js',
+					}
+				}
 
 				return {
 					contents: result.css,

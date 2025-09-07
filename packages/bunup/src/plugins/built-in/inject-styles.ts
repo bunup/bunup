@@ -18,15 +18,39 @@ type InjectStylesPluginOptions = Pick<
 	| 'exclude'
 	| 'drafts'
 > & {
-	inject?: (css: string, filePath: string) => MaybePromise<string>
-	/** Whether to minify the CSS.
-	 * @default true
+	/**
+	 * Custom function to inject CSS into the document head.
+	 *
+	 * By default, bunup uses its own `injectStyle` function that creates a `<style>`
+	 * tag and appends it to the document head. You can provide your own injection
+	 * logic to customize how styles are applied to the document.
+	 *
+	 * @param css - The processed CSS string (already JSON stringified)
+	 * @param filePath - The original file path of the CSS file being processed
+	 * @returns JavaScript code that will inject the styles when executed
+	 *
+	 * @example
+	 * ```ts
+	 * injectStyles({
+	 *   inject: (css, filePath) => {
+	 *     return `
+	 *       const style = document.createElement('style');
+	 *       style.setAttribute('data-source', '${filePath}');
+	 *       style.textContent = ${css};
+	 *       document.head.appendChild(style);
+	 *     `;
+	 *   }
+	 * })
+	 * ```
+	 *
+	 * The default injection handles cases like when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
 	 */
+	inject?: (css: string, filePath: string) => MaybePromise<string>
 	minify?: boolean
 }
 
 /**
- * A plugin that injects styles into the document head.
+ * A plugin that injects styles into the document head at runtime instead of bundling them to the build output.
  *
  * @see https://bunup.dev/docs/plugins/inject-styles
  */

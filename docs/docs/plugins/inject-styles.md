@@ -1,8 +1,43 @@
 # Inject Styles
 
-The `injectStyles` plugin transforms CSS imports (like `import "./styles.css"`) or CSS entries into JavaScript code that automatically injects styles into the document head at runtime. This is particularly useful for component libraries where styles should be automatically applied without requiring users to manually include CSS files.
+## What does it do?
 
-## Installation
+The `injectStyles` plugin automatically includes your CSS styles in your JavaScript bundle, so users don't need to manually import CSS files. Instead of creating separate `.css` files, your styles become part of your JavaScript code.
+
+## How it works
+
+Instead of creating separate CSS files, `injectStyles` converts your CSS into JavaScript code that creates `<style>` tags in the browser. When someone imports your library, the styles are automatically injected into the page.
+
+## Before vs After
+
+### Without `injectStyles`
+Your build creates separate files:
+```
+dist/
+├── index.js          ← Your JavaScript
+└── index.css         ← Your CSS (separate file)
+```
+
+Users must import both:
+```javascript
+import { Button } from 'my-library';
+import 'my-library/dist/index.css'; // ← Required but easy to forget
+```
+
+### With `injectStyles`
+Your build creates only JavaScript:
+```
+dist/
+└── index.js          ← Your JavaScript + CSS combined
+```
+
+Users only import JavaScript:
+```javascript
+import { Button } from 'my-library';
+// CSS is automatically included! ✨
+```
+
+## Usage
 
 The plugin uses LightningCSS under the hood. Install it as a dev dependency:
 
@@ -10,7 +45,7 @@ The plugin uses LightningCSS under the hood. Install it as a dev dependency:
 bun add --dev lightningcss
 ```
 
-## Usage
+Then add the plugin to your config:
 
 ```ts [bunup.config.ts]
 import { defineConfig } from 'bunup';
@@ -22,20 +57,11 @@ export default defineConfig({
 });
 ```
 
-CSS imports in your code will be automatically processed:
+That's it! Your CSS will be automatically included in your JavaScript bundle.
 
-```ts [src/index.ts]
-// These CSS imports will be transformed into JavaScript code
-// that injects the styles into <head> at runtime
-import "./styles.css";
-import "./components/button.css";
+## Advanced
 
-export { Button } from "./components/Button";
-```
-
-Instead of bundling CSS files to build output, the styles will be embedded as JavaScript code that creates `<style>` tags in the document head.
-
-## Custom Injection
+### Custom Injection
 
 By default, bunup uses its own `injectStyle` function that creates a `<style>` tag and appends it to the document head. You can provide your own injection logic using the `inject` option to customize how styles are applied to the document.
 
@@ -66,7 +92,7 @@ export default defineConfig({
 The above example is basic. The default injection handles cases like when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
 :::
 
-## Other Options
+### LightningCSS Options
 
 The plugin also passes options directly to LightningCSS. Available options include:
 

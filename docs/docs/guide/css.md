@@ -1,8 +1,12 @@
 # CSS
 
-Bunup supports CSS out of the box with powerful bundling capabilities. You can provide CSS files as entry points or import CSS files in your JavaScript/TypeScript files. All CSS files encountered during the build process are bundled together into a single cross-browser compatible CSS file in the build output with vendor prefixing and syntax lowering.
+Bunup supports CSS out of the box with powerful bundling capabilities.
 
 ## Usage
+
+You can provide CSS files as entry points or import CSS files in your JavaScript/TypeScript files. 
+
+All CSS files encountered during the build process are bundled into cross-browser compatible CSS files in the build output with vendor prefixing and syntax lowering.
 
 ### CSS Entry Points
 
@@ -12,9 +16,11 @@ You can specify CSS files as entry points in your configuration:
 import { defineConfig } from 'bunup';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/styles.css'],
+  entry: ['src/index.ts', 'src/components/button.css', 'src/components/alert.css'],
 });
 ```
+
+Specifying CSS files as entry points will create separate CSS files in the build output for each entry point. In this example, `dist/components/button.css`, and `dist/components/alert.css` will be created.
 
 ### Importing CSS in JavaScript/TypeScript
 
@@ -40,6 +46,8 @@ export { Button };
   background-color: #0056b3;
 }
 ```
+
+Unlike specifying CSS files as entry points, if you import CSS files in your JavaScript/TypeScript files, Bunup will bundle them together into a single CSS file named `index.css` in the build output.
 
 ## CSS Modules
 
@@ -172,7 +180,7 @@ When you include CSS files as entry points, they are bundled and available for c
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./styles.css": "./dist/styles.css" // [!code ++]
+    "./styles.css": "./dist/index.css" // [!code ++]
   }
 }
 ```

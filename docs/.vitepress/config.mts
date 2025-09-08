@@ -44,6 +44,7 @@ export default defineConfig({
 						text: 'TypeScript Declarations',
 						link: '/docs/guide/typescript-declarations',
 					},
+					{ text: 'CSS', link: '/docs/guide/css' },
 					{ text: 'Workspaces', link: '/docs/guide/workspaces' },
 					{ text: 'CLI Options', link: '/docs/guide/cli-options' },
 				],
@@ -51,6 +52,7 @@ export default defineConfig({
 			{
 				text: 'Plugins',
 				items: [
+					{ text: 'Tailwind CSS', link: '/docs/plugins/tailwindcss' },
 					{ text: 'Shims', link: '/docs/plugins/shims' },
 					{ text: 'Exports', link: '/docs/plugins/exports' },
 					{ text: 'Copy', link: '/docs/plugins/copy' },

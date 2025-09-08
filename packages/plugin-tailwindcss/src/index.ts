@@ -8,9 +8,11 @@ import postcss from 'postcss'
 type TailwindCSSOptions = {
 	/** CSS class prefix to apply for scoping. Defaults to 'bunup' */
 	prefix?: string
-	/** Whether to inject CSS styles dynamically into the document head instead of bundling them to the build output. Defaults to false */
+	/** Whether to inject CSS styles dynamically into the document head at runtime instead of bundling them to the build output. Defaults to false */
 	inject?: boolean
 }
+
+const DEFAULT_PREFIX = `bunup-${generateRandomPrefix()}`
 
 /**
  * A plugin for Bunup that provides seamless integration with Tailwind CSS.
@@ -23,7 +25,7 @@ export default function tailwindcss(
 	return {
 		name: 'bunup:tailwindcss',
 		setup: (build) => {
-			const { prefix = 'bunup', inject } = options
+			const { prefix = DEFAULT_PREFIX, inject } = options
 			const rewriter = new HTMLRewriter()
 
 			if (inject) {
@@ -118,4 +120,13 @@ export default function tailwindcss(
 			})
 		},
 	}
+}
+
+function generateRandomPrefix(): string {
+	const letters = 'abcdefghijklmnopqrstuvwxyz'
+	let result = ''
+	for (let i = 0; i < 8; i++) {
+		result += letters.charAt(Math.floor(Math.random() * letters.length))
+	}
+	return result
 }

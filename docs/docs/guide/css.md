@@ -16,11 +16,25 @@ You can specify CSS files as entry points in your configuration:
 import { defineConfig } from 'bunup';
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/components/button.css', 'src/components/alert.css'],
+  entry: [
+    'src/index.ts', 
+    'src/components/button.css', 
+    'src/components/alert.css'
+  ],
 });
 ```
 
-Specifying CSS files as entry points will create separate CSS files in the build output for each entry point. In this example, `dist/components/button.css`, and `dist/components/alert.css` will be created.
+Specifying CSS files as entry points will create separate CSS files in the build output for each entry point. 
+
+In this example:
+
+```plaintext
+dist/
+├── index.js
+├── components/
+│   ├── button.css
+│   └── alert.css
+```
 
 ### Importing CSS in JavaScript/TypeScript
 
@@ -47,7 +61,13 @@ export { Button };
 }
 ```
 
-Unlike specifying CSS files as entry points, if you import CSS files in your JavaScript/TypeScript files, Bunup will bundle them together into a single CSS file named `index.css` in the build output.
+Unlike specifying CSS files as entry points, if you import CSS files in your JavaScript/TypeScript files, Bunup will bundle them together into a single CSS file named `index.css` in the build output:
+
+```plaintext
+dist/
+├── index.js
+└── index.css
+```
 
 ## CSS Modules
 
@@ -57,71 +77,61 @@ Bunup supports CSS modules out of the box with zero configuration. CSS modules a
 
 Create a CSS file with the `.module.css` extension:
 
-```css [styles.module.css]
-.button {
-  color: red;
+```css [Button.module.css]
+.primary {
+  background-color: #007bff;
+  color: white;
   padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
 }
-```
 
-```css [other-styles.module.css]
-.button {
-  color: blue;
-  padding: 12px 20px;
+.secondary {
+  background-color: transparent;
+  color: #007bff;
+  padding: 8px 16px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
 }
 ```
 
 Import and use the CSS module in your component:
 
 ```tsx [src/components/Button.tsx]
-import styles from "./styles.module.css";
-import otherStyles from "./other-styles.module.css";
+import styles from "./Button.module.css";
 
-export function Button() {
+export function Button({ variant = "primary", children }) {
   return (
-    <>
-      <button className={styles.button}>Red button!</button>
-      <button className={otherStyles.button}>Blue button!</button>
-    </>
+    <button className={styles[variant]}>
+      {children}
+    </button>
   );
 }
-```
-
-The imported styles object contains unique identifiers for each class:
-
-```javascript
-console.log(styles);
-// Output: { button: "button_123" }
-
-console.log(otherStyles);
-// Output: { button: "button_456" }
 ```
 
 ### Composition
 
 CSS modules support the `composes` property to reuse style rules across multiple classes:
 
-```css [styles.module.css]
-.button {
-  composes: background;
-  color: red;
+```css [Button.module.css]
+.base {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.background {
-  background-color: blue;
-}
-```
-
-This is equivalent to:
-
-```css
-.button {
-  background-color: blue;
-  color: red;
+.primary {
+  composes: base;
+  background-color: #007bff;
+  color: white;
 }
 
-.background {
-  background-color: blue;
+.secondary {
+  composes: base;
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
 }
 ```
 
@@ -152,16 +162,20 @@ This is equivalent to:
 
 You can compose classes from separate CSS module files:
 
-```css [background.module.css]
-.background {
-  background-color: blue;
+```css [shared.module.css]
+.base {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 ```
 
-```css [styles.module.css]
-.button {
-  composes: background from "./background.module.css";
-  color: red;
+```css [Button.module.css]
+.primary {
+  composes: base from "./shared.module.css";
+  background-color: #007bff;
+  color: white;
+  border: none;
 }
 ```
 
@@ -205,7 +219,7 @@ Bunup automatically handles browser compatibility by:
   - Chrome 87+
   - Safari 14+
 
-## TypeScript
+## CSS Modules and TypeScript
 
 When using CSS modules with TypeScript, you may encounter import errors. To resolve this, create a global type declaration file:
 
@@ -213,6 +227,17 @@ When using CSS modules with TypeScript, you may encounter import errors. To reso
 declare module '*.module.css' {
   const classes: { [key: string]: string };
   export default classes;
+}
+```
+
+Make sure to include this file in your TypeScript configuration:
+
+```json [tsconfig.json]
+{
+  "include": [
+    "src/**/*",
+    "global.d.ts"
+  ]
 }
 ```
 

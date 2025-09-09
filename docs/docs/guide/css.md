@@ -207,6 +207,8 @@ import 'your-package/styles.css';
 
 When using the [exports plugin](/docs/plugins/exports), CSS entry points are automatically added to your package's exports field.
 
+Alternatively, you can use the [inject styles plugin](/docs/plugins/inject-styles) to automatically include CSS in your JavaScript bundle, eliminating the need for consumers to manually import CSS files.
+
 ## Browser Compatibility
 
 Bunup automatically handles browser compatibility by:

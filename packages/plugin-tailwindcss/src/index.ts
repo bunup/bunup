@@ -1,18 +1,18 @@
 import tailwindPostcss from '@tailwindcss/postcss'
+import browserslist from 'browserslist'
 import type { BunPlugin } from 'bun'
+import { browserslistToTargets, transform } from 'lightningcss'
 import postcss from 'postcss'
 
 /**
  * Configuration options for the TailwindCSS plugin
  */
 type TailwindCSSOptions = {
-	/** CSS class prefix to apply for scoping. Defaults to 'bunup' */
-	prefix?: string
 	/** Whether to inject CSS styles dynamically into the document head at runtime instead of bundling them to the build output. Defaults to false */
 	inject?: boolean
 }
 
-const DEFAULT_PREFIX = `bunup-${generateRandomPrefix()}`
+const randomPrefix = generateRandomPrefix()
 
 /**
  * A plugin for Bunup that provides seamless integration with Tailwind CSS.
@@ -20,13 +20,16 @@ const DEFAULT_PREFIX = `bunup-${generateRandomPrefix()}`
  * @see https://bunup.dev/docs/recipes/tailwindcss
  */
 export default function tailwindcss(
+	name: string,
 	options: TailwindCSSOptions = {},
 ): BunPlugin {
 	return {
 		name: 'bunup:tailwindcss',
 		setup: (build) => {
-			const { prefix = DEFAULT_PREFIX, inject } = options
+			const { inject } = options
 			const rewriter = new HTMLRewriter()
+
+			const prefix = `${name}-${randomPrefix}`
 
 			if (inject) {
 				build.onResolve({ filter: /^__inject-style$/ }, () => {
@@ -64,6 +67,7 @@ export default function tailwindcss(
 			build.onLoad({ filter: /\.(tsx|jsx)$/ }, async (args) => {
 				const source = await Bun.file(args.path).text()
 
+				// scope classes by prefixing
 				rewriter.on('*', {
 					element(elem) {
 						const currentClassName = elem.getAttribute('className')
@@ -86,35 +90,38 @@ export default function tailwindcss(
 			build.onLoad({ filter: /\.css$/ }, async (args) => {
 				const source = await Bun.file(args.path).text()
 
-				const result = await postcss([
-					tailwindPostcss({
-						base: build.config.root,
-						transformAssetUrls: false,
-					}),
-					{
-						postcssPlugin: 'scoping',
-						Rule(rule) {
-							rule.selector = rule.selector.replace(
-								/\.([\w-\\/]+)/g,
-								(_, cls) => {
-									return `.${prefix}-${cls}`
-								},
-							)
-						},
+				const cssFromTailwind = (
+					await postcss([
+						tailwindPostcss({
+							base: build.config.root,
+							transformAssetUrls: false,
+						}),
+					]).process(source, {
+						from: args.path,
+					})
+				).css
+
+				const css = transform({
+					filename: args.path,
+					code: Buffer.from(cssFromTailwind),
+					targets: browserslistToTargets(browserslist('>= 0.25%')),
+					// scope selectors and variables
+					cssModules: {
+						dashedIdents: true,
+						pattern: `${prefix}-[local]`,
 					},
-				]).process(source, {
-					from: args.path,
-				})
+					minify: true,
+				}).code.toString()
 
 				if (inject) {
 					return {
-						contents: `import injectStyle from '__inject-style';injectStyle(${JSON.stringify(result.css)})`,
+						contents: `import injectStyle from '__inject-style';injectStyle(${JSON.stringify(css)})`,
 						loader: 'js',
 					}
 				}
 
 				return {
-					contents: result.css,
+					contents: css,
 					loader: 'css',
 				}
 			})

@@ -19,9 +19,10 @@ dist/
 ```
 
 Users must import both:
-```javascript
+
+```javascript {2}
 import { Button } from 'my-library';
-import 'my-library/dist/index.css'; // ← Required but easy to forget
+import 'my-library/dist/index.css';
 ```
 
 ### With `injectStyles`
@@ -32,6 +33,7 @@ dist/
 ```
 
 Users only import JavaScript:
+
 ```javascript
 import { Button } from 'my-library';
 // CSS is automatically included! ✨

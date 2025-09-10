@@ -13,10 +13,6 @@
 		"declaration": true,
 		"isolatedDeclarations": true
 	},
-	"include": [
-		"packages/*/src/**/*",
-		"docs/**/*",
-		"packages/plugin-tailwindcss/index.ts"
-	],
+	"include": ["packages/*/src/**/*", "docs/**/*"],
 	"exclude": ["node_modules", "dist"]
 }

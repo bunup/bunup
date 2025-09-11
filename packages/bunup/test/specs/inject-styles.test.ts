@@ -151,7 +151,7 @@ describe('injectStyles plugin', () => {
 		expect(file).toBeDefined()
 		expect(file?.content).toContain('--primary-color')
 		expect(file?.content).toContain('@media')
-		expect(file?.content).toContain('width<=768px')
+		expect(file?.content).toContain('(max-width:768px)')
 		expect(file?.content).toContain('var(--primary-color)')
 	})
 })

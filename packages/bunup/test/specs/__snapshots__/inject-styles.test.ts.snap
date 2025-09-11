@@ -1,0 +1,99 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`injectStyles plugin should transform CSS files to JS that injects styles 1`] = `
+"// __inject-style:__inject-style
+function injectStyle(css) {
+  if (!css || typeof document === "undefined")
+    return;
+  const head = document.head || document.getElementsByTagName("head")[0];
+  const style = document.createElement("style");
+  head.appendChild(style);
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+// packages/bunup/test/.project/src/styles.css
+injectStyle(".container{color:red;padding:20px}");
+
+// packages/bunup/test/.project/src/index.ts
+var hello = "world";
+export {
+  hello
+};
+"
+`;
+
+exports[`injectStyles plugin should use custom inject function when provided 1`] = `
+"// packages/bunup/test/.project/src/styles.css
+console.log("Custom injection for /Users/admin/Desktop/Bunup/bunup/packages/bunup/test/.project/src/styles.css");
+document.adoptedStyleSheets = [...document.adoptedStyleSheets || [], (() => {
+  const sheet = new CSSStyleSheet;
+  sheet.replaceSync(".button{color:#fff;background-color:#00f}");
+  return sheet;
+})()];
+
+// packages/bunup/test/.project/src/index.ts
+var hello = "world";
+export {
+  hello
+};
+"
+`;
+
+exports[`injectStyles plugin should handle multiple CSS files 1`] = `
+"// __inject-style:__inject-style
+function injectStyle(css) {
+  if (!css || typeof document === "undefined")
+    return;
+  const head = document.head || document.getElementsByTagName("head")[0];
+  const style = document.createElement("style");
+  head.appendChild(style);
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+// packages/bunup/test/.project/src/base.css
+injectStyle("body{margin:0;font-family:sans-serif}");
+
+// packages/bunup/test/.project/src/components.css
+injectStyle(".card{border-radius:8px;box-shadow:0 2px 4px #0000001a}");
+
+// packages/bunup/test/.project/src/index.ts
+var app = "my-app";
+export {
+  app
+};
+"
+`;
+
+exports[`injectStyles plugin should handle CSS in different formats correctly 1`] = `
+"// __inject-style:__inject-style
+function injectStyle(css) {
+  if (!css || typeof document === "undefined")
+    return;
+  const head = document.head || document.getElementsByTagName("head")[0];
+  const style = document.createElement("style");
+  head.appendChild(style);
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+// packages/bunup/test/.project/src/styles.css
+injectStyle(":root{--primary-color:#3498db}@media (max-width:768px){.container{padding:10px}}.container{color:var(--primary-color)}.container .title{font-size:24px}");
+
+// packages/bunup/test/.project/src/index.ts
+var hello = "world";
+export {
+  hello
+};
+"
+`;

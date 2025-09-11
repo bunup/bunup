@@ -1,5 +1,6 @@
 import type { GenerateDtsOptions } from '@bunup/dts'
 import type { BuildConfig, BunPlugin } from 'bun'
+import { cssTypedModulesPlugin } from './plugins/internal/css-typed-modules'
 import { report } from './plugins/internal/report'
 import { useClient } from './plugins/internal/use-client'
 import type { BunupPlugin } from './plugins/types'
@@ -30,6 +31,15 @@ type Target = 'bun' | 'node' | 'browser'
 type External = (string | RegExp)[]
 
 type Env = 'inline' | 'disable' | `${string}*` | Record<string, string>
+
+type CSSOptions = {
+	/**
+	 * Generate TypeScript definitions for CSS modules.
+	 *
+	 * @see https://bunup.dev/docs/guide/css#css-modules-and-typescript
+	 */
+	typedModules?: boolean
+}
 
 export type OnSuccess =
 	| ((options: Partial<BuildOptions>) => MaybePromise<void> | (() => void))
@@ -374,6 +384,10 @@ export interface BuildOptions {
 	 * ]
 	 */
 	plugins?: (BunupPlugin | BunPlugin)[]
+	/**
+	 * Options for CSS handling in the build process.
+	 */
+	css?: CSSOptions
 }
 
 const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {
@@ -392,9 +406,16 @@ export function createBuildOptions(
 		...partialOptions,
 	}
 
+	const typedModulesEnabled = options.css?.typedModules !== false
+
 	return {
 		...options,
-		plugins: [...(options.plugins ?? []), useClient(), report()],
+		plugins: [
+			...(options.plugins ?? []),
+			...(typedModulesEnabled ? [cssTypedModulesPlugin()] : []),
+			useClient(),
+			report(),
+		],
 	}
 }
 

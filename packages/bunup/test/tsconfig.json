@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
+		"jsx": "react-jsx",
 		"moduleResolution": "Node",
 		"baseUrl": ".",
 		"paths": {

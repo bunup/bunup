@@ -4,7 +4,7 @@ Bunup supports CSS out of the box.
 
 ## Usage
 
-You can provide CSS files as entry points or import CSS files in your source files. 
+You can provide standalone CSS files as entry points or import CSS files in your source files. 
 
 All CSS files encountered during the build process are bundled into cross-browser compatible CSS files in the build output with vendor prefixing and syntax lowering.
 
@@ -227,7 +227,7 @@ Bunup automatically handles browser compatibility by:
 
 - **Syntax Lowering**: Converts modern CSS syntax into backwards-compatible equivalents
 - **Vendor Prefixing**: Automatically adds vendor prefixes where needed
-- **Target Browsers**: By default, targets ES2020 and the following browsers:
+- **Target Browsers**: By default, targets the following browsers:
   - Edge 88+
   - Firefox 78+
   - Chrome 87+
@@ -235,28 +235,129 @@ Bunup automatically handles browser compatibility by:
 
 ## CSS Modules and TypeScript
 
-When using CSS modules with TypeScript, you may encounter import errors. To resolve this, create a global type declaration file:
+Bunup provides seamless TypeScript integration for CSS modules, offering full type safety and intelligent autocomplete for your CSS class names.
 
-Make sure to include this file in your TypeScript configuration:
+### Automatic Type Generation
+
+When you build your project, Bunup automatically generates type definition files for each `.module.css` file, providing complete type safety for your CSS module imports.
 
 ::: code-group
 
-```typescript [global.d.ts]
+```css [src/components/button.module.css]
+.primary {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+}
+
+.secondary {
+  background-color: transparent;
+  color: #007bff;
+  padding: 8px 16px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+}
+```
+
+```ts [src/components/button.module.css.d.ts]
+declare const classes: {
+  readonly primary: string;
+  readonly secondary: string;
+};
+
+export default classes;
+```
+
+:::
+
+### Type Safety Benefits
+
+With generated type definitions, you get:
+
+- **Autocomplete**: TypeScript will suggest available class names when you type `styles.`
+- **Compile-time Error Checking**: Accessing non-existent classes will show TypeScript errors
+- **Refactoring Safety**: Renaming classes in CSS will immediately highlight usage errors
+
+```tsx [src/components/button.tsx]
+import styles from "./button.module.css";
+
+export function Button({ children }) {
+  return (
+    <button className={styles.primary}>
+      {children}
+    </button>
+  );
+}
+```
+
+### Development Workflow
+
+#### Watch Mode <Badge type="info" text="Recommended" />
+
+For the best development experience, use watch mode to get instant type updates:
+
+```sh
+bun run dev # bunup --watch
+```
+
+When you save changes to CSS module files, type definitions are regenerated immediately. For example, if you rename `.primary` to `.primary-button`, you'll get instant TypeScript errors wherever `styles.primary` is used.
+
+#### Build Mode
+
+If you're not using watch mode, run the build command to regenerate types after making changes to CSS modules:
+
+```sh
+bun run build
+```
+
+### Git Configuration
+
+Since type definition files are generated automatically, you should exclude them from version control:
+
+```plaintext [.gitignore]
+# Generated CSS module type definitions
+**/*.module.*.d.ts
+```
+
+### Disabling Type Generation
+
+If you prefer to handle CSS module types manually, you can disable automatic type generation:
+
+```ts [bunup.config.ts]
+import { defineConfig } from 'bunup';
+
+export default defineConfig({
+  entry: ['src/index.tsx'],
+  css: {
+    typedModules: false
+  }
+});
+```
+
+### Manual Type Setup <Badge type="info" text="Alternative" />
+
+If you've disabled automatic type generation, you can create a global declaration file to prevent TypeScript errors when importing CSS modules:
+
+```ts [src/global.d.ts]
 declare module '*.module.css' {
   const classes: { [key: string]: string };
   export default classes;
 }
 ```
 
+Then include this file in your `tsconfig.json`:
+
 ```json [tsconfig.json]
 {
   "include": [
     "src/**/*",
-    "global.d.ts"
+    "src/global.d.ts"
   ]
 }
 ```
 
+::: tip
+With automatic type generation enabled (default), you don't need this manual setup. The generated types provide better type safety and autocomplete than the generic fallback.
 :::
-
-This declaration file tells TypeScript that CSS module imports return an object with string keys and values, allowing you to use CSS modules without type errors.

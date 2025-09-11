@@ -6,48 +6,45 @@ The `injectStyles` plugin automatically includes your CSS styles in your JavaScr
 
 ## How it works
 
-Instead of creating separate CSS files, `injectStyles` converts your CSS into JavaScript code that creates `<style>` tags in the browser. When someone imports your library, the styles are automatically injected into the page.
+Instead of emitting separate CSS files, `injectStyles` converts your CSS into JavaScript that creates `<style>` tags in the browser. When someone imports your library, the styles are automatically injected into the page.
 
 ## Before vs After
 
 ### Without `injectStyles`
+
 Your build creates separate files:
+
 ```
 dist/
-├── index.js          ← Your JavaScript
-└── index.css         ← Your CSS (separate file)
+├── index.js
+└── index.css
 ```
 
 Users must import both:
 
-```javascript {2}
+```javascript
 import { Button } from 'my-library';
 import 'my-library/dist/index.css';
 ```
 
 ### With `injectStyles`
-Your build creates only JavaScript:
+
+Your build emits only JavaScript (CSS is inlined):
+
 ```
 dist/
-└── index.js          ← Your JavaScript + CSS combined
+└── index.js
 ```
 
-Users only import JavaScript:
+Users only import JavaScript, CSS is automatically included:
 
 ```javascript
 import { Button } from 'my-library';
-// CSS is automatically included! ✨
 ```
 
 ## Usage
 
-The plugin uses LightningCSS under the hood. Install it as a dev dependency:
-
-```bash
-bun add --dev lightningcss
-```
-
-Then add the plugin to your config:
+Just add the `injectStyles` plugin to your config.
 
 ```ts [bunup.config.ts]
 import { defineConfig } from 'bunup';
@@ -61,7 +58,31 @@ export default defineConfig({
 
 That's it! Your CSS will be automatically included in your JavaScript bundle.
 
-## Advanced
+::: info
+Injected CSS is processed for broad browser compatibility (syntax lowering, vendor prefixing, etc.), as described in the [CSS guide’s Browser Compatibility section](/docs/guide/css#browser-compatibility).
+:::
+
+## Options
+
+### `minify`
+
+Minifies injected CSS by default. Set `minify: false` to disable.
+
+```ts [bunup.config.ts]
+import { defineConfig } from 'bunup';
+import { injectStyles } from 'bunup/plugins';
+
+export default defineConfig({
+  entry: 'src/index.ts',
+  plugins: [
+    injectStyles({
+      minify: false,
+    })
+  ],
+});
+```
+
+## Advanced Options
 
 ### Custom Injection
 
@@ -91,14 +112,5 @@ export default defineConfig({
 ```
 
 :::info
-The above example is basic. The default injection handles cases like when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
+The above example is basic. The default injection handles cases such as when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
 :::
-
-### LightningCSS Options
-
-The plugin also passes options directly to LightningCSS. Available options include:
-
-- `minify`: Controls whether the CSS should be minified (enabled by default)
-- `targets`: Specifies browser targets for CSS feature compatibility
-
-For a complete list of LightningCSS options, refer to the [Lightning CSS documentation](https://lightningcss.dev/docs.html).

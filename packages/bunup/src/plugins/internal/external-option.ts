@@ -7,7 +7,7 @@ export function externalOptionPlugin(
 	packageJson: Record<string, unknown> | null,
 ): BunPlugin {
 	return {
-		name: 'bunup:external-option-plugin',
+		name: 'bunup:external-option',
 		setup(build) {
 			build.onResolve({ filter: /.*/ }, (args) => {
 				const importPath = args.path

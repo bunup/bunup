@@ -69,3 +69,4 @@ coverage/
 *.tmp
 *.bak
 .cache
+**/*.module.*.d.ts

@@ -1,23 +1,12 @@
 import path from 'node:path'
 import type { BunPlugin } from 'bun'
+import { transform } from 'lightningcss'
+import { DEFAULT_CSS_TARGETS } from '../../constants/css'
 import { CSS_RE } from '../../constants/re'
 import { logger } from '../../logger'
 import type { MaybePromise } from '../../types'
-import { getPackageForPlugin } from '../utils'
 
-type InjectStylesPluginOptions = Pick<
-	import('lightningcss').TransformOptions<import('lightningcss').CustomAtRules>,
-	| 'targets'
-	| 'nonStandard'
-	| 'pseudoClasses'
-	| 'unusedSymbols'
-	| 'errorRecovery'
-	| 'visitor'
-	| 'customAtRules'
-	| 'include'
-	| 'exclude'
-	| 'drafts'
-> & {
+type InjectStylesPluginOptions = {
 	/**
 	 * Custom function to inject CSS into the document head.
 	 *
@@ -46,6 +35,11 @@ type InjectStylesPluginOptions = Pick<
 	 * The default injection handles cases like when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
 	 */
 	inject?: (css: string, filePath: string) => MaybePromise<string>
+	/**
+	 * Whether to minify the styles being injected.
+	 *
+	 * @default true
+	 */
 	minify?: boolean
 }
 
@@ -55,15 +49,11 @@ type InjectStylesPluginOptions = Pick<
  * @see https://bunup.dev/docs/plugins/inject-styles
  */
 export function injectStyles(options?: InjectStylesPluginOptions): BunPlugin {
-	const { inject, ...transformOptions } = options ?? {}
+	const { inject, minify = true } = options ?? {}
 
 	return {
 		name: 'bunup:inject-styles',
 		async setup(build) {
-			const lightningcss = await getPackageForPlugin<
-				typeof import('lightningcss')
-			>('lightningcss', 'inject-styles')
-
 			build.onResolve({ filter: /^__inject-style$/ }, () => {
 				return {
 					path: '__inject-style',
@@ -98,11 +88,11 @@ export function injectStyles(options?: InjectStylesPluginOptions): BunPlugin {
 			build.onLoad({ filter: CSS_RE }, async (args) => {
 				const source = await Bun.file(args.path).text()
 
-				const { code, warnings } = lightningcss.transform({
-					...transformOptions,
+				const { code, warnings } = transform({
 					filename: path.basename(args.path),
 					code: Buffer.from(source),
-					minify: transformOptions.minify ?? true,
+					minify,
+					targets: DEFAULT_CSS_TARGETS,
 				})
 
 				for (const warning of warnings) {

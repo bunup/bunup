@@ -1,6 +1,4 @@
 import type { BunPlugin } from 'bun'
-import pc from 'picocolors'
-import { BunupPluginError } from '../errors'
 import type { BuildOptions } from '../options'
 import type { BuildMeta, BuildOutput, BunupPlugin } from './types'
 
@@ -44,21 +42,4 @@ export async function runPluginBuildDoneHooks(
 			await plugin.hooks.onBuildDone({ options, output, meta })
 		}
 	}
-}
-
-export async function getPackageForPlugin<T>(
-	name: string,
-	pluginName: string,
-): Promise<T> {
-	let pkg: T
-
-	try {
-		pkg = await import(name)
-	} catch {
-		throw new BunupPluginError(
-			`[${pc.cyan(name)}] is required for the ${pluginName} plugin. Please install it with: ${pc.blue(`bun add ${name} --dev`)}`,
-		)
-	}
-
-	return pkg
 }

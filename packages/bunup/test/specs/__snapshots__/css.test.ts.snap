@@ -1,0 +1,106 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`CSS Handling generates correct CSS output for standard imports 1`] = `
+{
+  "content": 
+"/* packages/bunup/test/.project/src/components/button.css */
+.buttons {
+  background-color: #639;
+}
+
+.button-active {
+  background-color: red;
+}
+"
+,
+  "extension": ".css",
+  "name": "index",
+  "path": "/.output/index.css",
+  "size": 145,
+}
+`;
+
+exports[`CSS Handling handles CSS Modules and generates correct output 1`] = `
+{
+  "content": 
+"/* packages/bunup/test/.project/src/button.module.css */
+.buttons_6hIi-w {
+  background-color: #639;
+}
+
+.button-active_6hIi-w {
+  background-color: red;
+}
+"
+,
+  "extension": ".css",
+  "name": "index",
+  "path": "/.output/index.css",
+  "size": 155,
+}
+`;
+
+exports[`CSS Handling handles CSS Modules and generates correct output 2`] = `
+{
+  "content": 
+"// packages/bunup/test/.project/src/button.module.css
+var button_module_default = {
+  buttons: "buttons_6hIi-w",
+  "button-active": "button-active_6hIi-w"
+};
+
+// packages/bunup/test/.project/src/index.tsx
+import { jsxDEV } from "react/jsx-dev-runtime";
+function Button() {
+  return /* @__PURE__ */ jsxDEV("button", {
+    className: button_module_default.buttons,
+    children: "Click me"
+  }, undefined, false, undefined, this);
+}
+export {
+  Button
+};
+"
+,
+  "extension": ".mjs",
+  "name": "index",
+  "path": "/.output/index.mjs",
+  "size": 452,
+}
+`;
+
+exports[`CSS Handling builds standalone CSS entrypoints 1`] = `
+{
+  "content": 
+"/* packages/bunup/test/.project/src/entry.css */
+:root {
+  --brand: rebeccapurple;
+}
+
+body {
+  background: var(--brand);
+}
+"
+,
+  "extension": ".css",
+  "name": "entry",
+  "path": "/.output/entry.css",
+  "size": 123,
+}
+`;
+
+exports[`CSS Handling builds standalone CSS entrypoints 2`] = `
+{
+  "content": 
+"/* packages/bunup/test/.project/src/other.css */
+.button {
+  color: red;
+}
+"
+,
+  "extension": ".css",
+  "name": "other",
+  "path": "/.output/other.css",
+  "size": 75,
+}
+`;

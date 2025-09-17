@@ -63,6 +63,8 @@ describe('chunk splitting', () => {
 
 		expect(result.success).toBe(true)
 
+		console.log(result.files)
+
 		expect(result.files[0].content.includes('./shared/')).toBe(true)
 	})
 

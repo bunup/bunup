@@ -63,9 +63,9 @@ describe('chunk splitting', () => {
 
 		expect(result.success).toBe(true)
 
-		const dtsFile = result.files.find((file) => file.extension === '.d.ts')
-
-		console.log(dtsFile)
+		const dtsFile = result.files.find(
+			(file) => file.extension === '.d.ts' && file.name === 'a',
+		)
 
 		expect(dtsFile.content.includes('./shared/')).toBe(true)
 	})

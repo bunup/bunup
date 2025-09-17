@@ -63,9 +63,9 @@ describe('chunk splitting', () => {
 
 		expect(result.success).toBe(true)
 
-		console.log(result.files)
+		const dtsFile = result.files.find((file) => file.extension === '.d.ts')
 
-		expect(result.files[0].content.includes('./shared/')).toBe(true)
+		expect(dtsFile.content.includes('./shared/')).toBe(true)
 	})
 
 	it('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {

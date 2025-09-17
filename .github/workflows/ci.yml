@@ -1,28 +1,6 @@
 name: CI
 
 on:
-  push:
-    paths:
-      - .github/workflows/ci.yml
-      - src/**
-      - tests/**
-      - package.json
-      - bun.lock
-      - bunup.config.ts
-      - tsconfig*.json
-      - '!**/*.md'
-
-  pull_request:
-    paths:
-      - .github/workflows/ci.yml
-      - src/**
-      - tests/**
-      - package.json
-      - bun.lock
-      - bunup.config.ts
-      - tsconfig*.json
-      - '!**/*.md'
-
   workflow_dispatch:
 
 permissions: {}

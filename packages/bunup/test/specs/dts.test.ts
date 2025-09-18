@@ -252,7 +252,7 @@ describe('dts', () => {
 		const dtsFile = findFile(result, 'index', '.d.cts')
 		expect(dtsFile).toBeDefined()
 		expect(dtsFile?.content).toContain('declare function loadConfig')
-		// TODO: uncomment these expectations after rolldown-plugin-dts solves this issue: https://github.com/sxzz/rolldown-plugin-dts/issues/5
+		// TODO: add support for triple slash directives, for example referencing type declaration files.
 		// expect(dtsFile?.content).toContain("interface Config");
 		// expect(dtsFile?.content).toContain("appName");
 	})

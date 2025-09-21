@@ -8,12 +8,12 @@ import { type BuildOptions, createBuildOptions } from './options'
 import { getShortFilePath } from './utils'
 
 export async function watch(
-	partialOptions: Partial<BuildOptions>,
+	userOptions: BuildOptions,
 	rootDir: string,
 ): Promise<void> {
 	const watchPaths = new Set<string>()
 
-	const options = createBuildOptions(partialOptions)
+	const options = createBuildOptions(userOptions)
 
 	const uniqueEntries = new Set(options.entry)
 

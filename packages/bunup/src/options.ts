@@ -4,7 +4,7 @@ import { cssTypedModulesPlugin } from './plugins/internal/css-typed-modules'
 import { report } from './plugins/internal/report'
 import { useClient } from './plugins/internal/use-client'
 import type { BunupPlugin } from './plugins/types'
-import type { MaybePromise, WithRequired } from './types'
+import type { MaybePromise } from './types'
 
 type Loader =
 	| 'js'
@@ -390,28 +390,13 @@ export interface BuildOptions {
 	css?: CSSOptions
 }
 
-const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {
-	entry: 'src/index.ts',
-	format: 'esm',
-	outDir: 'dist',
-	target: 'node',
-	clean: true,
-}
-
-export function createBuildOptions(
-	partialOptions: Partial<BuildOptions>,
-): BuildOptions {
-	const options = {
-		...DEFAULT_OPTIONS,
-		...partialOptions,
-	}
-
-	const typedModulesEnabled = options.css?.typedModules !== false
+export function createBuildOptions(userOptions: BuildOptions): BuildOptions {
+	const typedModulesEnabled = userOptions.css?.typedModules !== false
 
 	return {
-		...options,
+		...userOptions,
 		plugins: [
-			...(options.plugins ?? []),
+			...(userOptions.plugins ?? []),
 			...(typedModulesEnabled ? [cssTypedModulesPlugin()] : []),
 			useClient(),
 			report(),

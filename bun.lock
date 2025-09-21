@@ -20,7 +20,7 @@
     },
     "examples/basic": {
       "name": "basic",
-      "version": "0.11.24",
+      "version": "0.11.26",
       "devDependencies": {
         "@types/bun": "^1.2.20",
         "bunup": "^0.8.72",
@@ -35,7 +35,7 @@
     },
     "examples/react": {
       "name": "react",
-      "version": "0.11.24",
+      "version": "0.11.26",
       "devDependencies": {
         "@types/bun": "^1.2.20",
         "@types/react": "^19.1.10",
@@ -57,7 +57,7 @@
     },
     "packages/bunup": {
       "name": "bunup",
-      "version": "0.11.24",
+      "version": "0.11.26",
       "bin": {
         "bunup": "dist/cli/index.js",
       },
@@ -69,6 +69,7 @@
         "picocolors": "^1.1.1",
         "tinyexec": "^1.0.1",
         "tree-kill": "^1.2.2",
+        "zlye": "^0.3.0",
       },
       "devDependencies": {
         "@types/bun": "^1.2.21",
@@ -100,11 +101,17 @@
       },
       "peerDependencies": {
         "ora": "^8.2.0",
+        "react": "^18.0.0 || ^19.0.0 || ^19.0.0-rc",
+        "react-dom": "^18.0.0 || ^19.0.0 || ^19.0.0-rc",
+        "typescript": ">=4.5.0",
       },
+      "optionalPeers": [
+        "typescript",
+      ],
     },
     "packages/dts": {
       "name": "@bunup/dts",
-      "version": "0.11.24",
+      "version": "0.11.26",
       "dependencies": {
         "@babel/parser": "^7.28.0",
         "coffi": "^0.1.31",
@@ -1156,6 +1163,8 @@
     "yargs": ["yargs@17.7.2", "", { "dependencies": { "cliui": "^8.0.1", "escalade": "^3.1.1", "get-caller-file": "^2.0.5", "require-directory": "^2.1.1", "string-width": "^4.2.3", "y18n": "^5.0.5", "yargs-parser": "^21.1.1" } }, "sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w=="],
 
     "yargs-parser": ["yargs-parser@21.1.1", "", {}, "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw=="],
+
+    "zlye": ["zlye@0.3.0", "", { "dependencies": { "picocolors": "^1.1.1" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-k8zPJKR7zOQRGfi1vAGQZ0NU8ZQnTsFb5l2nu+CMUIm4Kv//M5sCCju8hN/fM3NWATanf3xme1mWKsARBBSp6Q=="],
 
     "zwitch": ["zwitch@2.0.4", "", {}, "sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A=="],
 

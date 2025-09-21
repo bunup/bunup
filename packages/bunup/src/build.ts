@@ -38,16 +38,16 @@ import {
 	getFilesFromGlobs,
 	getShortFilePath,
 	isJavascriptFile,
-	isTypeScriptFile,
 	replaceExtension,
 } from './utils'
 
 let ac: AbortController | null = null
 
 export async function build(
-	partialOptions: Partial<BuildOptions>,
+	userOptions: BuildOptions,
 	rootDir: string = process.cwd(),
 ): Promise<void> {
+	console.log(userOptions)
 	if (ac) {
 		ac.abort()
 	}
@@ -58,7 +58,7 @@ export async function build(
 		files: [],
 	}
 
-	const options = createBuildOptions(partialOptions)
+	const options = createBuildOptions(userOptions)
 
 	if (!options.entry || options.entry.length === 0 || !options.outDir) {
 		throw new BunupBuildError(
@@ -188,7 +188,7 @@ export async function build(
 
 	await Promise.all(buildPromises)
 
-	if (options.dts ?? entrypoints.some(isTypeScriptFile)) {
+	if (options.dts) {
 		try {
 			const { entry, splitting, ...dtsOptions } =
 				typeof options.dts === 'object' ? options.dts : {}

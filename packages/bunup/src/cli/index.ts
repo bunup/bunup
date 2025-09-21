@@ -55,8 +55,8 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 			const optionsArray = ensureArray(options)
 			return optionsArray.map(async (o) => {
 				const userOptions: BuildOptions = {
-					...o,
 					...removeCliOnlyOptions(cliOptions),
+					...o,
 				}
 
 				if (userOptions.watch) {

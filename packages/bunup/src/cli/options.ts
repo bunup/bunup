@@ -55,8 +55,8 @@ const program = cli()
 			.string()
 			.describe('Output directory for bundled files')
 			.alias('o')
-			.example('./build')
-			.default('./dist'),
+			.example('build')
+			.default('dist'),
 	)
 	.option(
 		'format',

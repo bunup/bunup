@@ -47,7 +47,6 @@ export async function build(
 	userOptions: BuildOptions,
 	rootDir: string = process.cwd(),
 ): Promise<void> {
-	console.log(userOptions)
 	if (ac) {
 		ac.abort()
 	}

@@ -6,15 +6,59 @@ Bunup can be used programmatically in your scripts. This is useful when you need
 The build function must be run in the Bun runtime.
 :::
 
+::: warning
+Unlike the CLI, the programmatic `build()` function does not provide defaults for most options. You must specify all required options explicitly.
+:::
+
 ## Basic Usage
 
 ```typescript
 import { build } from 'bunup';
 
-await build({
+const output = await build({
   entry: 'src/index.ts',
+  outDir: 'dist',
+  format: 'esm',
 });
+
+console.log('Built files:', output.files);
 ```
+
+## Return Value
+
+The `build` function returns a `BuildOutput` object containing information about the generated files:
+
+```typescript
+type BuildOutput = {
+  /** Array of generated files with their paths and metadata */
+  files: BuildOutputFile[]
+}
+
+type BuildOutputFile = {
+  /** The entry point for which this file was generated (undefined for chunks/assets) */
+  entrypoint: string | undefined
+  /** The kind of the file */
+  kind: 'entry-point' | 'chunk' | 'asset' | 'sourcemap' | 'bytecode'
+  /** Absolute path to the generated file */
+  fullPath: string
+  /** Path relative to the root directory */
+  pathRelativeToRootDir: string
+  /** Path relative to the output directory */
+  pathRelativeToOutdir: string
+  /** Whether the file is a TypeScript declaration file */
+  dts: boolean
+  /** The format of the output file */
+  format: Format
+}
+```
+
+## Required Options
+
+When using the programmatic API, you must specify these required options:
+
+- **`entry`**: Entry point files for the build
+- **`outDir`**: Output directory for the bundled files  
+- **`format`**: Output format(s) for the bundle
 
 ## Options
 
@@ -27,6 +71,7 @@ import { build, type BuildOptions } from 'bunup';
 
 const options: BuildOptions = {
   entry: 'src/index.ts',
+  outDir: 'dist',
   format: ['esm', 'cjs'],
 };
 
@@ -44,10 +89,14 @@ import { build } from 'bunup';
 
 await build({
   entry: 'src/index.ts',
+  outDir: 'dist',
+  format: 'esm',
 }, '/path/to/your/project');
 
 await build({
   entry: 'src/index.ts',
+  outDir: 'dist', 
+  format: 'esm',
 }, './my-project');
 ```
 
@@ -61,10 +110,12 @@ import { injectStyles } from 'bunup/plugins';
 
 await build({
   entry: 'src/index.ts',
+  outDir: 'dist',
+  format: 'esm',
   plugins: [
-  	injectStyles({
-    	minify: false,
-   	})
+    injectStyles({
+      minify: false,
+    })
   ]
 });
 ```

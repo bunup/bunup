@@ -585,7 +585,7 @@ You can specify where Bunup should output the bundled files:
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --out-dir build
+bunup src/index.ts --outDir build
 ```
 
 ```ts [bunup.config.ts]

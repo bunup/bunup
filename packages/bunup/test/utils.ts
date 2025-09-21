@@ -82,10 +82,13 @@ export async function runBuild(
 	}
 
 	try {
-		const buildOptions = {
+		const buildOptions: BuildOptions = {
 			outDir: '.output',
 			silent: true,
 			dts: false,
+			format: 'esm',
+			target: 'node',
+			clean: true,
 			...options,
 		}
 
@@ -212,7 +215,7 @@ export async function runCli(options: string): Promise<RunCliResult> {
 		const command = `bun run ${join(
 			process.cwd(),
 			'packages/bunup/src/cli/index.ts',
-		)} ${options} --out-dir .output`
+		)} ${options} --outDir .output`
 
 		const execResult = await exec(command, [], {
 			nodeOptions: {

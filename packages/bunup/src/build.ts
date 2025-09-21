@@ -20,6 +20,7 @@ import {
 	getResolvedMinify,
 	getResolvedSourcemap,
 	getResolvedSplitting,
+	getResolvedTarget,
 } from './options'
 import { externalOptionPlugin } from './plugins/internal/external-option'
 import type { BuildOutput } from './plugins/types'
@@ -46,7 +47,7 @@ let ac: AbortController | null = null
 export async function build(
 	userOptions: BuildOptions,
 	rootDir: string = process.cwd(),
-): Promise<void> {
+): Promise<BuildOutput> {
 	if (ac) {
 		ac.abort()
 	}
@@ -111,7 +112,7 @@ export async function build(
 			splitting: getResolvedSplitting(options.splitting, fmt),
 			define: getResolvedDefine(options.define, options.env),
 			minify: getResolvedMinify(options),
-			target: options.target,
+			target: getResolvedTarget(options.target),
 			sourcemap: getResolvedSourcemap(options.sourcemap),
 			loader: options.loader,
 			drop: options.drop,
@@ -259,4 +260,6 @@ export async function build(
 	if (options.onSuccess) {
 		await executeOnSuccess(options.onSuccess, options, ac.signal)
 	}
+
+	return buildOutput
 }

@@ -22,6 +22,17 @@ const program = cli()
 		'bunup --config custom.config.ts              # Custom config',
 		'bunup src/index.ts --dts.splitting           # Declaration splitting',
 	])
+
+	.option(
+		'entry',
+		z
+			.union(
+				z.string().describe('Entry file or glob pattern'),
+				z.array(z.string()).describe('Multiple entry files or globs'),
+			)
+			.alias('e')
+			.optional(),
+	)
 	.option(
 		'config',
 		z

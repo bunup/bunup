@@ -1,3 +1,4 @@
+import pc from 'picocolors'
 import { cli, z } from 'zlye'
 import { BunupCLIError } from '../errors'
 import type { BuildOptions } from '../options'
@@ -14,13 +15,27 @@ const program = cli()
 		'A blazing-fast build tool for your TypeScript/React libraries — built on Bun',
 	)
 	.example([
-		'bunup src/index.ts                           # Basic build',
-		'bunup src/index.ts --watch                   # Watch mode',
-		'bunup src/index.ts --format cjs,esm          # Multiple formats',
-		'bunup src/index.ts --target browser          # Browser target',
-		'bunup src/*.ts --outDir build                # Multiple entries',
-		'bunup --config custom.config.ts              # Custom config',
-		'bunup src/index.ts --dts.splitting           # Declaration splitting',
+		pc.dim(
+			`${pc.blue('bunup src/index.ts')}                            # Basic build`,
+		),
+		pc.dim(
+			`${pc.blue('bunup src/**/*.ts')}                             # Glob pattern for multiple files`,
+		),
+		pc.dim(
+			`${pc.blue('bunup src/index.ts --watch')}                    # Watch mode`,
+		),
+		pc.dim(
+			`${pc.blue('bunup src/index.ts --format cjs,esm')}           # Multiple formats`,
+		),
+		pc.dim(
+			`${pc.blue('bunup src/index.ts --target bun')}               # Bun target`,
+		),
+		pc.dim(
+			`${pc.blue('bunup src/index.ts src/cli.ts --outDir build')}  # Multiple entries`,
+		),
+		pc.dim(
+			`${pc.blue('bunup src/index.ts --dts.splitting')}            # Declaration splitting`,
+		),
 	])
 
 	.option(
@@ -66,7 +81,6 @@ const program = cli()
 			.string()
 			.describe('Output directory for bundled files')
 			.alias('o')
-			.example('build')
 			.default('dist'),
 	)
 	.option(
@@ -361,7 +375,6 @@ const program = cli()
 				typedModules: true,
 			}),
 	)
-
 	.rest('entries', z.string().describe('Entry point files to bundle'))
 
 export const parseCliOptions = (

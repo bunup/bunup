@@ -114,9 +114,9 @@ dist/
 
 ```
 dist/
-├── index.d.ts         		    # ~15KB, imports from shared chunk
-├── utils.d.ts           		  # ~10KB, imports from shared chunk
-└── shared/chunk-abc123.d.ts  # ~30KB, shared types
+├── index.d.ts					# ~15KB, imports from shared chunk
+├── utils.d.ts					# ~10KB, imports from shared chunk
+└── shared/chunk-abc123.d.ts	# ~30KB, shared types
 ```
 
 The result is clean declarations with no duplicates, improved readability, and reduced bundle size.

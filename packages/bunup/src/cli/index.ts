@@ -46,9 +46,9 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 		})
 	}
 
-	const startTime = performance.now()
-
 	logger.info('Build started')
+
+	const startTime = performance.now()
 
 	await Promise.all(
 		configsToProcess.flatMap(({ options, rootDir }) => {

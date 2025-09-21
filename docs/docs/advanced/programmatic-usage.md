@@ -6,10 +6,6 @@ Bunup can be used programmatically in your scripts. This is useful when you need
 The build function must be run in the Bun runtime.
 :::
 
-::: warning
-Unlike the CLI, the programmatic `build()` function does not provide defaults for most options. You must specify all required options explicitly.
-:::
-
 ## Basic Usage
 
 ```typescript
@@ -24,7 +20,7 @@ const output = await build({
 console.log('Built files:', output.files);
 ```
 
-## Return Value
+## Build Output
 
 The `build` function returns a `BuildOutput` object containing information about the generated files:
 
@@ -51,14 +47,6 @@ type BuildOutputFile = {
   format: Format
 }
 ```
-
-## Required Options
-
-When using the programmatic API, you must specify these required options:
-
-- **`entry`**: Entry point files for the build
-- **`outDir`**: Output directory for the bundled files  
-- **`format`**: Output format(s) for the bundle
 
 ## Options
 

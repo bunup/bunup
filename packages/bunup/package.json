@@ -20,7 +20,8 @@
 				"types": "./dist/plugins.d.ts",
 				"default": "./dist/plugins.js"
 			}
-		}
+		},
+		"./package.json": "./package.json"
 	},
 	"license": "MIT",
 	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",

@@ -36,6 +36,9 @@ const program = cli()
 		pc.dim(
 			`${pc.blue('bunup src/index.ts --dts.splitting')}            # Declaration splitting`,
 		),
+		pc.dim(
+			`${pc.blue('bunup src/index.ts --no-clean')}                 # Disable cleaning output directory before build`,
+		),
 	])
 
 	.option(

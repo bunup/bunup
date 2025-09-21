@@ -67,3 +67,5 @@
 
   [2m[34mbunup src/index.ts --dts.splitting[39m            # Declaration splitting[22m
 
+  [2m[34mbunup src/index.ts --no-clean[39m                 # Disable cleaning output directory before build[22m
+

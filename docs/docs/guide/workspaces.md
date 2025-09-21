@@ -85,36 +85,6 @@ export default defineWorkspace(
 );
 ```
 
-When a package has multiple configurations, shared options will apply to all of them:
-
-```typescript [bunup.config.ts]
-export default defineWorkspace(
-  [
-    {
-      name: "web-package",
-      root: "packages/web",
-      config: [
-        {
-          name: "browser-esm",
-          format: "esm",
-          target: "browser",
-        },
-        {
-          name: "node-cjs",
-          format: ["cjs"],
-          target: "node",
-        },
-      ],
-    },
-  ],
-  {
-    // These shared options apply to both browser-esm and node-cjs configs
-    entry: "src/index.ts",
-    minify: true,
-  }
-);
-```
-
 ## Multiple Build Configurations
 
 You can define multiple build configurations for a single package by using an array:
@@ -185,7 +155,7 @@ When using plugins that accept path options (like the [`copy`](/docs/plugins/cop
 To build all packages in your workspace:
 
 ```sh
-bunup
+bunx bunup
 ```
 
 ### Watch Mode
@@ -193,7 +163,7 @@ bunup
 To automatically rebuild packages when files change:
 
 ```sh
-bunup --watch
+bunx bunup --watch
 ```
 
 This single command watches and rebuilds all packages in your workspace.
@@ -203,9 +173,9 @@ This single command watches and rebuilds all packages in your workspace.
 To build only specific packages, use the `--filter` option with the package names (the `name` property defined in your workspace configuration):
 
 ```sh
-bunup --filter core,utils
+bunx bunup --filter core,utils
 # or watch specific packages
-bunup --filter core,utils --watch
+bunx bunup --filter core,utils --watch
 ```
 
 ::: info

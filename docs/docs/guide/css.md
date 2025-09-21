@@ -215,6 +215,12 @@ Since type definitions are auto-generated, exclude them from version control:
 
 Turn off automatic type generation if you prefer to handle it manually:
 
+::: code-group
+
+```sh [CLI]
+bunup src/index.ts --no-css.typedModules
+```
+
 ```ts [bunup.config.ts]
 import { defineConfig } from 'bunup';
 
@@ -224,3 +230,5 @@ export default defineConfig({
   }
 });
 ```
+
+:::

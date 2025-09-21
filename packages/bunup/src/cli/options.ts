@@ -138,7 +138,6 @@ const program = cli()
 		z
 			.boolean()
 			.describe('Watch for file changes and rebuild automatically')
-			.alias('w')
 			.optional(),
 	)
 	.option(

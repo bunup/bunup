@@ -60,7 +60,17 @@ Bunup automatically generates TypeScript declaration files for entry points that
 
 For more control, you can specify custom entry points for declarations:
 
-```typescript
+::: code-group
+
+```sh [CLI - single entry]
+bunup src/index.ts src/utils.ts --dts.entry src/index.ts
+```
+
+```sh [CLI - multiple entries]
+bunup src/index.ts src/utils.ts src/types.ts --dts.entry src/index.ts,src/types.ts
+```
+
+```typescript [bunup.config.ts]
 export default defineConfig({
 	entry: ['src/index.ts', 'src/utils.ts'],
 	dts: {
@@ -69,6 +79,8 @@ export default defineConfig({
 	},
 });
 ```
+
+:::
 
 ### Using Glob Patterns
 
@@ -94,13 +106,21 @@ You can use:
 
 Declaration splitting optimizes TypeScript `.d.ts` files when multiple entry points share types. Instead of duplicating shared types across declaration files, Bunup extracts them into shared chunk files that are imported where needed.
 
-```typescript
+::: code-group
+
+```sh [CLI]
+bunup src/index.ts --dts.splitting
+```
+
+```typescript [bunup.config.ts]
 export default defineConfig({
 	dts: {
 		splitting: true,
 	},
 });
 ```
+
+:::
 
 **Without splitting:**
 
@@ -130,13 +150,21 @@ Declaration splitting is enabled by default if code splitting is enabled.
 
 You can minify the generated declaration files to reduce their size:
 
-```typescript
+::: code-group
+
+```sh [CLI]
+bunup src/index.ts --dts.minify
+```
+
+```typescript [bunup.config.ts]
 export default defineConfig({
 	dts: {
 		minify: true,
 	},
 });
 ```
+
+:::
 
 When enabled, minification preserves public (exported) API names while minifying internal type names and removes documentation comments. This provides significant size reduction especially for large declaration files, making it valuable when bundle size is a priority and JSDoc comments aren't essential.
 
@@ -169,7 +197,7 @@ You can specify a custom tsconfig file for declaration generation:
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --preferred-tsconfig-path ./tsconfig.build.json
+bunup src/index.ts --preferredTsconfigPath ./tsconfig.build.json
 ```
 
 ```ts [bunup.config.ts]
@@ -187,12 +215,16 @@ When generating declaration files, you might need to include type references fro
 
 ::: code-group
 
-```sh [CLI - all packages]
-bunup src/index.ts --resolve-dts
+```sh [CLI - all external types]
+bunup src/index.ts --dts.resolve
 ```
 
-```sh [CLI - specific packages]
-bunup src/index.ts --resolve-dts=react,lodash
+```sh [CLI - single package]
+bunup src/index.ts --dts.resolve react
+```
+
+```sh [CLI - multiple packages]
+bunup src/index.ts --dts.resolve react,lodash,@types/node
 ```
 
 ```ts [bunup.config.ts]
@@ -211,7 +243,17 @@ The `resolve` option helps when your TypeScript code imports types from external
 
 You can also specify which packages to resolve types for:
 
-```typescript
+::: code-group
+
+```sh [CLI - single package]
+bunup src/index.ts --dts.resolve react
+```
+
+```sh [CLI - multiple packages]
+bunup src/index.ts --dts.resolve react,lodash,@types/node
+```
+
+```typescript [bunup.config.ts]
 export default defineConfig({
 	entry: 'src/index.ts',
 	dts: {
@@ -221,6 +263,8 @@ export default defineConfig({
 });
 ```
 
+:::
+
 ## Disabling Declaration Generation
 
 While Bunup automatically generates declaration files for TypeScript entries, you can disable this feature if needed:
@@ -228,7 +272,7 @@ While Bunup automatically generates declaration files for TypeScript entries, yo
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --dts=false
+bunup src/index.ts --no-dts
 ```
 
 ```ts [bunup.config.ts]

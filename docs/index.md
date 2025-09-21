@@ -125,9 +125,11 @@ bun run build
 
 ## Configuration
 
-Create a `bunup.config.ts` file for usage like including plugins, hooks, and advanced options that aren't available via CLI.
+While most build options can be set directly via the CLI, you'll want to use a configuration file if you need to add plugins or perform advanced tasks, such as running a custom operation after a successful build.
 
-For example, you can add the [exports](/docs/plugins/exports) plugin to automatically sync your package.json exports on each build - no more manual export management!
+To do this, create a `bunup.config.ts` file.
+
+For example, you can use the [exports](/docs/plugins/exports) plugin to automatically keep your `package.json` exports in sync on every build, eliminating the need for manual export management!
 
 ```typescript [bunup.config.ts]
 import { defineConfig } from 'bunup';
@@ -165,6 +167,8 @@ If you need to use a configuration file with a non-standard name or location, yo
 
 ```sh
 bunup --config ./configs/custom.bunup.config.ts
+# or using alias
+bunup -c ./configs/custom.bunup.config.ts
 ```
 
 ## Watch Mode

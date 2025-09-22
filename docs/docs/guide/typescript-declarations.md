@@ -62,11 +62,11 @@ For more control, you can specify custom entry points for declarations:
 
 ::: code-group
 
-```sh [CLI - single entry]
+```sh [CLI]
+# Single entry
 bunup src/index.ts src/utils.ts --dts.entry src/index.ts
-```
 
-```sh [CLI - multiple entries]
+# Multiple entries
 bunup src/index.ts src/utils.ts src/types.ts --dts.entry src/index.ts,src/types.ts
 ```
 
@@ -215,15 +215,14 @@ When generating declaration files, you might need to include type references fro
 
 ::: code-group
 
-```sh [CLI - all external types]
+```sh [CLI]
+# All external types
 bunup src/index.ts --dts.resolve
-```
 
-```sh [CLI - single package]
+# Single package
 bunup src/index.ts --dts.resolve react
-```
 
-```sh [CLI - multiple packages]
+# Multiple packages
 bunup src/index.ts --dts.resolve react,lodash,@types/node
 ```
 
@@ -245,11 +244,11 @@ You can also specify which packages to resolve types for:
 
 ::: code-group
 
-```sh [CLI - single package]
+```sh [CLI]
+# Single package
 bunup src/index.ts --dts.resolve react
-```
 
-```sh [CLI - multiple packages]
+# Multiple packages
 bunup src/index.ts --dts.resolve react,lodash,@types/node
 ```
 

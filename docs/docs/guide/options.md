@@ -36,7 +36,7 @@ You can specify multiple entry points in several ways:
 bunup src/index.ts src/cli.ts
 ```
 
-```sh [CLI - method 2]
+```sh [CLI - using --entry flag]
 bunup --entry src/index.ts --entry src/cli.ts
 # or using alias
 bunup -e src/index.ts -e src/cli.ts
@@ -93,13 +93,13 @@ You can specify one or more formats:
 
 ::: code-group
 
-```sh [CLI - single format]
+```sh [CLI]
+# Single format
 bunup src/index.ts --format esm
 # or using alias
 bunup src/index.ts -f esm
-```
 
-```sh [CLI - multiple formats]
+# Multiple formats
 bunup src/index.ts --format esm,cjs,iife
 # or using alias
 bunup src/index.ts -f esm,cjs,iife
@@ -203,11 +203,11 @@ If you want to make sure a package is not bundled (even if it's not in your `pac
 
 ::: code-group
 
-```sh [CLI - single package]
+```sh [CLI]
+# Single package
 bunup src/index.ts --external lodash
-```
 
-```sh [CLI - multiple packages]
+# Multiple packages
 bunup src/index.ts --external lodash,react,vue
 ```
 
@@ -226,11 +226,11 @@ If you want to include a package in your bundle (even if it's normally external)
 
 ::: code-group
 
-```sh [CLI - single package]
+```sh [CLI]
+# Single package
 bunup src/index.ts --noExternal lodash
-```
 
-```sh [CLI - multiple packages]
+# Multiple packages
 bunup src/index.ts --noExternal lodash,react,vue
 ```
 
@@ -269,10 +269,10 @@ You can explicitly enable or disable code splitting:
 ::: code-group
 
 ```sh [CLI]
-# Enable code splitting for all formats
+# Enable code splitting
 bunup src/index.ts --splitting
 
-# Disable code splitting for all formats
+# Disable code splitting
 bunup src/index.ts --no-splitting
 ```
 
@@ -321,13 +321,11 @@ You can configure individual minification options:
 
 ::: code-group
 
-```sh [CLI - single option]
-# Minify whitespace only
+```sh [CLI]
+# Single option - minify whitespace only
 bunup src/index.ts --minifyWhitespace
-```
 
-```sh [CLI - multiple options]
-# Minify whitespace and syntax, but not identifiers
+# Multiple options - minify whitespace and syntax, but not identifiers
 bunup src/index.ts --minifyWhitespace --minifySyntax
 ```
 
@@ -351,12 +349,11 @@ Bunup can generate source maps for your bundled code:
 
 ::: code-group
 
-```sh [CLI - linked]
+```sh [CLI]
+# Linked source maps
 bunup src/index.ts --sourcemap linked
-```
 
-```sh [CLI - inline]
-# Use --sourcemap for inline source maps
+# Inline source maps
 bunup src/index.ts --sourcemap
 ```
 
@@ -444,11 +441,11 @@ You can remove specific function calls from your bundle:
 
 ::: code-group
 
-```sh [CLI - single function]
+```sh [CLI]
+# Single function
 bunup src/index.ts --drop console
-```
 
-```sh [CLI - multiple functions]
+# Multiple functions
 bunup src/index.ts --drop console,debugger
 ```
 
@@ -471,11 +468,11 @@ You can specify custom package.json export conditions for import resolution:
 
 ::: code-group
 
-```sh [CLI - single condition]
+```sh [CLI]
+# Single condition
 bunup src/index.ts --conditions development
-```
 
-```sh [CLI - multiple conditions]
+# Multiple conditions
 bunup src/index.ts --conditions development,node
 ```
 

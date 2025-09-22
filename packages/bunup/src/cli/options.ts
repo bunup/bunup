@@ -15,28 +15,28 @@ const program = cli()
 		'A blazing-fast build tool for your TypeScript/React libraries — built on Bun',
 	)
 	.example([
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts')}                            # Basic build`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/**/*.ts')}                             # Glob pattern for multiple files`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts --watch')}                    # Watch mode`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts --format cjs,esm')}           # Multiple formats`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts --target bun')}               # Bun target`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts src/cli.ts --outDir build')}  # Multiple entries`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts --dts.splitting')}            # Declaration splitting`,
 		),
-		pc.dim(
+		pc.gray(
 			`${pc.blue('bunup src/index.ts --no-clean')}                 # Disable cleaning output directory before build`,
 		),
 	])

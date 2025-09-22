@@ -19,7 +19,7 @@
 		"test:build": "bun run --cwd packages/bunup/test build",
 		"tsc": "tsc --noEmit",
 		"release": "bumpp -r --commit --push --tag",
-		"prepare": "simple-git-hooks"
+		"prepare": "bunx simple-git-hooks"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "bun run lint:fix && git add ."

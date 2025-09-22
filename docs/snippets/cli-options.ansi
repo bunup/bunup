@@ -16,7 +16,7 @@
   [36m    --minifyWhitespace     [39m[2m[22m                                  Minify whitespace in the output to reduce file size
   [36m    --minifyIdentifiers    [39m[2m[22m                                  Minify identifiers by renaming variables to shorter names
   [36m    --minifySyntax         [39m[2m[22m                                  Minify syntax by optimizing code structure
-  [36m-w, --watch                [39m[2m[22m                                  Watch for file changes and rebuild automatically
+  [36m    --watch                [39m[2m[22m                                  Watch for file changes and rebuild automatically
   [36m    --clean                [39m[2m[22m                                  Clean the output directory before building [2m(default: true)[22m
   [36m    --no-clean             [39m[2m[22m                                  Disable clean
   [36m-q, --silent               [39m[2m[22m                                  Disable logging during the build process
@@ -53,19 +53,19 @@
   [36m-h, --help                 [39m[2m[22m                                  [2mDisplay this menu and exit[22m
 
 [1mExamples:[22m
-  [2m[34mbunup src/index.ts[39m                            # Basic build[22m
+  [90m[34mbunup src/index.ts[90m                            # Basic build[39m
 
-  [2m[34mbunup src/**/*.ts[39m                             # Glob pattern for multiple files[22m
+  [90m[34mbunup src/**/*.ts[90m                             # Glob pattern for multiple files[39m
 
-  [2m[34mbunup src/index.ts --watch[39m                    # Watch mode[22m
+  [90m[34mbunup src/index.ts --watch[90m                    # Watch mode[39m
 
-  [2m[34mbunup src/index.ts --format cjs,esm[39m           # Multiple formats[22m
+  [90m[34mbunup src/index.ts --format cjs,esm[90m           # Multiple formats[39m
 
-  [2m[34mbunup src/index.ts --target bun[39m               # Bun target[22m
+  [90m[34mbunup src/index.ts --target bun[90m               # Bun target[39m
 
-  [2m[34mbunup src/index.ts src/cli.ts --outDir build[39m  # Multiple entries[22m
+  [90m[34mbunup src/index.ts src/cli.ts --outDir build[90m  # Multiple entries[39m
 
-  [2m[34mbunup src/index.ts --dts.splitting[39m            # Declaration splitting[22m
+  [90m[34mbunup src/index.ts --dts.splitting[90m            # Declaration splitting[39m
 
-  [2m[34mbunup src/index.ts --no-clean[39m                 # Disable cleaning output directory before build[22m
+  [90m[34mbunup src/index.ts --no-clean[90m                 # Disable cleaning output directory before build[39m
 

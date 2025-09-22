@@ -216,14 +216,8 @@ When generating declaration files, you might need to include type references fro
 ::: code-group
 
 ```sh [CLI]
-# All external types
+# Enable resolving all external types
 bunup src/index.ts --dts.resolve
-
-# Single package
-bunup src/index.ts --dts.resolve react
-
-# Multiple packages
-bunup src/index.ts --dts.resolve react,lodash,@types/node
 ```
 
 ```ts [bunup.config.ts]

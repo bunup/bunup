@@ -615,6 +615,19 @@ For more information, see the [Bun documentation on publicPath](https://bun.sh/d
 Bunup provides flexible options for handling environment variables in your bundled code:
 
 ::: code-group
+```sh [CLI]
+# Inline all environment variables available at build time
+FOO=bar API_KEY=secret bunup src/index.ts --env inline
+
+# Disable all environment variable inlining
+bunup src/index.ts --env disable
+
+# Only inline environment variables with a specific prefix (e.g., PUBLIC_)
+PUBLIC_URL=https://example.com bunup src/index.ts --env PUBLIC_*
+
+# Explicitly provide specific environment variables
+bunup src/index.ts --env.NODE_ENV="production" --env.API_URL="https://api.example.com"
+```
 
 ```ts [bunup.config.ts]
 export default defineConfig({
@@ -637,21 +650,6 @@ export default defineConfig({
 	// },
 });
 ```
-
-```sh [CLI]
-# Inline all environment variables available at build time
-FOO=bar API_KEY=secret bunup src/index.ts --env inline
-
-# Disable all environment variable inlining
-bunup src/index.ts --env disable
-
-# Only inline environment variables with a specific prefix (e.g., PUBLIC_)
-PUBLIC_URL=https://example.com bunup src/index.ts --env PUBLIC_*
-
-# Explicitly provide specific environment variables
-bunup src/index.ts --env.NODE_ENV="production" --env.API_URL="https://api.example.com"
-```
-
 :::
 
 ### How it Works

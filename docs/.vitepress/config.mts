@@ -127,7 +127,7 @@ export default defineConfig({
 	],
 	markdown: {
 		theme: {
-			dark: 'night-owl',
+			dark: 'one-dark-pro',
 			light: 'github-light',
 		},
 		config(md) {

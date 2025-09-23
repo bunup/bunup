@@ -96,7 +96,7 @@ Bundle it with bunup:
 bunx bunup src/index.ts
 ```
 
-That's it! This creates bundled output in the `dist` directory with ESM format (the default), plus TypeScript declaration files (`.d.ts`) since the entry point is a TypeScript file.
+That's it! This creates bundled output in the `dist` directory in ESM format (the default), plus TypeScript declaration files (`.d.ts`), since the entry point is a TypeScript file and has exports.
 
 ### Using with package.json
 

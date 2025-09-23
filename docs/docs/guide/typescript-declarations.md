@@ -86,7 +86,17 @@ export default defineConfig({
 
 Bunup supports glob patterns for both main entries and declaration file entries:
 
-```typescript
+::: code-group
+
+```sh [CLI]
+# Single glob pattern
+bunup src/index.ts --dts.entry "src/public/**/*.ts"
+
+# Multiple patterns (including exclusions)
+bunup src/index.ts --dts.entry "src/public/**/*.ts,!src/public/dev/**/*"
+```
+
+```typescript [bunup.config.ts]
 export default defineConfig({
 	dts: {
 		entry: [
@@ -96,6 +106,8 @@ export default defineConfig({
 	}
 });
 ```
+
+:::
 
 You can use:
 - Simple patterns like `src/**/*.ts` to include files

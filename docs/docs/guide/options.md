@@ -545,14 +545,14 @@ You can configure how different file types are loaded:
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --loader.'.png'=dataurl --loader.'.txt'=file
+bunup src/index.ts --loader.'.css'=text --loader.'.txt'=file
 ```
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
 	entry: 'src/index.ts',
 	loader: {
-		'.png': 'dataurl',
+		'.css': 'text',
 		'.txt': 'file',
 	},
 });

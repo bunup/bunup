@@ -160,7 +160,9 @@ const program = cli()
 		'splitting',
 		z
 			.boolean()
-			.describe('Enable code splitting (defaults: true for ESM, false for CJS)')
+			.describe(
+				'Enable code splitting; this is enabled by default for the ESM format',
+			)
 			.optional(),
 	)
 	.option(

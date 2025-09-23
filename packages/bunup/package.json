@@ -54,7 +54,7 @@
 		"picocolors": "^1.1.1",
 		"tinyexec": "^1.0.1",
 		"tree-kill": "^1.2.2",
-		"zlye": "^0.4.0"
+		"zlye": "^0.4.1"
 	},
 	"peerDependencies": {
 		"typescript": ">=4.5.0"

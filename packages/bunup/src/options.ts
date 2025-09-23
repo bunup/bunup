@@ -287,7 +287,7 @@ export interface BuildOptions {
 	 *
 	 * @example
 	 * loader: {
-	 *   ".png": "dataurl",
+	 *   ".css": "text",
 	 *   ".txt": "file",
 	 * }
 	 */

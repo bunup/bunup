@@ -19,7 +19,7 @@ interface UnusedOptions {
 /**
  * A plugin that detects and reports unused dependencies.
  *
- * @see https://bunup.dev/docs/plugins/unused
+ * @see https://bunup.dev/docs/builtin-plugins/unused
  */
 export function unused(options: UnusedOptions = {}): BunupPlugin {
 	const { level = 'warn', ignore = [] } = options

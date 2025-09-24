@@ -4,7 +4,7 @@ import { JS_TS_RE } from '../../constants/re'
 /**
  * A plugin that provides shims for Node.js globals and ESM/CJS interoperability.
  *
- * @see https://bunup.dev/docs/plugins/shims
+ * @see https://bunup.dev/docs/builtin-plugins/shims
  */
 export function shims(): BunPlugin {
 	return {

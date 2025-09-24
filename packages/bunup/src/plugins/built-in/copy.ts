@@ -13,7 +13,7 @@ type CopyOptions = {
 /**
  * A plugin that copies files and directories to the output directory.
  *
- * @see https://bunup.dev/docs/plugins/copy
+ * @see https://bunup.dev/docs/builtin-plugins/copy
  */
 export function copy(pattern: string | string[]): BunupPlugin & CopyBuilder {
 	return new CopyBuilder(pattern)

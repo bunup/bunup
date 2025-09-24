@@ -50,13 +50,16 @@ export default defineConfig({
 				],
 			},
 			{
-				text: 'Plugins',
+				text: 'Built-in Plugins',
 				items: [
-					{ text: 'Shims', link: '/docs/plugins/shims' },
-					{ text: 'Exports', link: '/docs/plugins/exports' },
-					{ text: 'Copy', link: '/docs/plugins/copy' },
-					{ text: 'Inject Styles', link: '/docs/plugins/inject-styles' },
-					{ text: 'Unused', link: '/docs/plugins/unused' },
+					{ text: 'Shims', link: '/docs/builtin-plugins/shims' },
+					{ text: 'Exports', link: '/docs/builtin-plugins/exports' },
+					{ text: 'Copy', link: '/docs/builtin-plugins/copy' },
+					{
+						text: 'Inject Styles',
+						link: '/docs/builtin-plugins/inject-styles',
+					},
+					{ text: 'Unused', link: '/docs/builtin-plugins/unused' },
 				],
 			},
 			{

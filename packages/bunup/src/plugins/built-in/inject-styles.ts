@@ -46,7 +46,7 @@ type InjectStylesPluginOptions = {
 /**
  * A plugin that injects styles into the document head at runtime instead of bundling them to the build output.
  *
- * @see https://bunup.dev/docs/plugins/inject-styles
+ * @see https://bunup.dev/docs/builtin-plugins/inject-styles
  */
 export function injectStyles(options?: InjectStylesPluginOptions): BunPlugin {
 	const { inject, minify = true } = options ?? {}

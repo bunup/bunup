@@ -101,7 +101,7 @@ const KNOWN_ERRORS: KnownErrorSolution[] = [
 					) +
 					pc.dim('injects styles into the document head at runtime.\n\n') +
 					'Learn more: ' +
-					pc.blue('https://bunup.dev/docs/plugins/inject-styles'),
+					pc.blue('https://bunup.dev/docs/builtin-plugins/inject-styles'),
 			)
 		},
 	},

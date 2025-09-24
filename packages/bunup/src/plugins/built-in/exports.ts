@@ -23,13 +23,13 @@ interface ExportsPluginOptions {
 	/**
 	 * Additional export fields to preserve alongside automatically generated exports
 	 *
-	 * @see https://bunup.dev/docs/plugins/exports#customexports
+	 * @see https://bunup.dev/docs/builtin-plugins/exports#customexports
 	 */
 	customExports?: (ctx: BuildContext) => CustomExports | undefined
 	/**
 	 * Entry points to exclude from the exports field
 	 *
-	 * @see https://bunup.dev/docs/plugins/exports#exclude
+	 * @see https://bunup.dev/docs/builtin-plugins/exports#exclude
 	 */
 	exclude?: Exclude
 	/**
@@ -42,7 +42,7 @@ interface ExportsPluginOptions {
 	 * Whether to include "./package.json": "./package.json" in the exports field
 	 *
 	 * @default true
-	 * @see https://bunup.dev/docs/plugins/exports#includepackagejson
+	 * @see https://bunup.dev/docs/builtin-plugins/exports#includepackagejson
 	 */
 	includePackageJson?: boolean
 	/**
@@ -52,7 +52,7 @@ interface ExportsPluginOptions {
 	 * When false (default), only explicit exports are accessible
 	 *
 	 * @default false
-	 * @see https://bunup.dev/docs/plugins/exports#all
+	 * @see https://bunup.dev/docs/builtin-plugins/exports#all
 	 */
 	all?: boolean
 }
@@ -65,7 +65,7 @@ interface FileEntry {
 /**
  * A plugin that generates the exports field in the package.json file automatically.
  *
- * @see https://bunup.dev/docs/plugins/exports
+ * @see https://bunup.dev/docs/builtin-plugins/exports
  */
 export function exports(options: ExportsPluginOptions = {}): BunupPlugin {
 	return {

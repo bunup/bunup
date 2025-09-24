@@ -22,7 +22,7 @@
 		"prepare": "bun simple-git-hooks"
 	},
 	"simple-git-hooks": {
-		"pre-commit": "bun run lint:fix && git add ."
+		"pre-commit": "bun run lint"
 	},
 	"workspaces": [
 		"docs",

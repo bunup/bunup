@@ -19,9 +19,7 @@ type TailwindCSSOptions = {
  *
  * @see https://bunup.dev/docs/recipes/tailwindcss
  */
-export default function tailwindcss(
-	options: TailwindCSSOptions = {},
-): BunPlugin {
+export function tailwindcss(options: TailwindCSSOptions = {}): BunPlugin {
 	return {
 		name: 'bunup:tailwindcss',
 		setup: (build) => {
@@ -132,6 +130,8 @@ export default function tailwindcss(
 		},
 	}
 }
+
+export default tailwindcss
 
 const TAILWIND_IMPORT_REGEX =
 	/^[\s]*@import\s+["']tailwindcss[^"']*["'][^;]*;[\s]*$/gm

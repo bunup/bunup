@@ -60,6 +60,7 @@ export default defineConfig({
 						link: '/docs/builtin-plugins/inject-styles',
 					},
 					{ text: 'Unused', link: '/docs/builtin-plugins/unused' },
+					{ text: 'Tailwind CSS', link: '/docs/builtin-plugins/tailwindcss' },
 				],
 			},
 			{

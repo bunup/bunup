@@ -4,7 +4,9 @@ This plugin automatically generates and updates the `exports` field in your pack
 
 Bunup handles mapping all entry points to their corresponding output files, including ESM/CJS formats and type declarations. The exports field stays perfectly in sync with your build configuration always - no manual updates needed when you make any change to config.
 
-## Usage
+## Quick Start
+
+Add the plugin to your Bunup configuration:
 
 ```ts [bunup.config.ts]
 import { defineConfig } from 'bunup';
@@ -16,7 +18,7 @@ export default defineConfig({
 });
 ```
 
-When using the exports plugin, your package.json will be automatically updated with the correct exports field each time you build. For example:
+This will automatically update your package.json with the correct exports field each time you build. For example:
 
 ```json [package.json]
 {
@@ -212,13 +214,7 @@ This generates:
 }
 ```
 
-With `all: true`, consumers can import any file that ends up in your published package:
-
-```js
-import pkg from 'your-package'
-import utils from 'your-package/dist/utils.js'
-import internals from 'your-package/src/internal.js'
-```
+With `all: true`, consumers can import any file that ends up in your published package.
 
 ::: warning
 When using `all: true`, any file that ends up in your published tarball becomes importable. Control what you publish using the `files` field in package.json or `.npmignore` to avoid exposing internal files.

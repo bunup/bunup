@@ -15,69 +15,13 @@ Enable `isolatedDeclarations` in your tsconfig:
 }
 ```
 
-See [why here](/docs/guide/typescript-declarations#isolated-declarations)
+Bunup uses TypeScript's new isolated declarations feature to generate type declarations quickly and accurately.
+
+Learn more about the benefits and why you need to enable this [here](https://arshadyaseen.com/writing/isolated-declarations).
 
 ## Basic
 
 Bunup automatically generates TypeScript declaration files for all TypeScript entry points that require them. Files that do not contain exports, or for which declarations are unnecessary, are skipped.
-
-## Custom Entry Points
-
-For more control, you can specify custom entry points for declarations:
-
-::: code-group
-
-```sh [CLI]
-# Single entry
-bunup src/index.ts src/utils.ts --dts.entry src/index.ts
-
-# Multiple entries
-bunup src/index.ts src/utils.ts src/types.ts --dts.entry src/index.ts,src/types.ts
-```
-
-```typescript [bunup.config.ts]
-export default defineConfig({
-	entry: ['src/index.ts', 'src/utils.ts'],
-	dts: {
-		// Only generate declarations for index.ts
-		entry: ['src/index.ts'],
-	},
-});
-```
-
-:::
-
-### Using Glob Patterns
-
-Bunup supports glob patterns for both main entries and declaration file entries:
-
-::: code-group
-
-```sh [CLI]
-# Single glob pattern
-bunup src/index.ts --dts.entry "src/public/**/*.ts"
-
-# Multiple patterns (including exclusions)
-bunup src/index.ts --dts.entry "src/public/**/*.ts,!src/public/dev/**/*"
-```
-
-```typescript [bunup.config.ts]
-export default defineConfig({
-	dts: {
-		entry: [
-			'src/public/**/*.ts',
-			'!src/public/dev/**/*'
-		]
-	}
-});
-```
-
-:::
-
-You can use:
-- Simple patterns like `src/**/*.ts` to include files
-- Exclude patterns starting with `!` to filter out specific files
-- Both for main entries and declaration entries
 
 ## Declaration Splitting
 
@@ -143,7 +87,7 @@ export default defineConfig({
 
 :::
 
-When enabled, minification preserves public (exported) API names while minifying internal type names and removes documentation comments. This provides significant size reduction especially for large declaration files, making it valuable when bundle size is a priority and JSDoc comments aren't essential.
+Minifying TypeScript declarations is uncommon, but bunup supports it. When enabled, minification keeps public (exported) API names intact, shortens internal type names, and removes documentation comments. This can greatly reduce file size, which is useful if bundle size matters and you don't need JSDoc or readable type definitions for consumers.
 
 ### Example
 
@@ -165,6 +109,65 @@ export { fetchData, Response, DeepPartial };
 ```ts
 type e<T>={[P in keyof T]?:e<T[P]>};interface t<T>{data:T;error?:string;meta?:Record<string,unknown>;}declare function n<T>(url:string,options?:RequestInit): Promise<t<T>>;export{n as fetchData,t as Response,e as DeepPartial};
 ```
+
+
+## Custom Entry Points
+
+For more control, you can specify custom entry points for declarations:
+
+::: code-group
+
+```sh [CLI]
+# Single entry
+bunup src/index.ts src/utils.ts --dts.entry src/index.ts
+
+# Multiple entries
+bunup src/index.ts src/utils.ts src/types.ts --dts.entry src/index.ts,src/types.ts
+```
+
+```typescript [bunup.config.ts]
+export default defineConfig({
+	entry: ['src/index.ts', 'src/utils.ts'],
+	dts: {
+		// Only generate declarations for index.ts
+		entry: ['src/index.ts'],
+	},
+});
+```
+
+:::
+
+### Using Glob Patterns
+
+Bunup supports glob patterns for both main entries and declaration file entries:
+
+::: code-group
+
+```sh [CLI]
+# Single glob pattern
+bunup src/index.ts --dts.entry "src/public/**/*.ts"
+
+# Multiple patterns (including exclusions)
+bunup src/index.ts --dts.entry "src/public/**/*.ts,!src/public/dev/**/*"
+```
+
+```typescript [bunup.config.ts]
+export default defineConfig({
+	dts: {
+		entry: [
+			'src/public/**/*.ts',
+			'!src/public/dev/**/*'
+		]
+	}
+});
+```
+
+:::
+
+You can use:
+- Simple patterns like `src/**/*.ts` to include files
+- Exclude patterns starting with `!` to filter out specific files
+- Both for main entries and declaration entries
 
 
 ## TypeScript Configuration

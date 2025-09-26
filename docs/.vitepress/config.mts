@@ -62,8 +62,8 @@ export default defineConfig({
 				],
 			},
 			{
-				text: 'Ecosystem',
-				items: [{ text: 'Tailwind CSS', link: '/docs/ecosystem/tailwindcss' }],
+				text: 'Add-ons',
+				items: [{ text: 'Tailwind CSS', link: '/docs/addons/tailwindcss' }],
 			},
 			{
 				text: 'Advanced',

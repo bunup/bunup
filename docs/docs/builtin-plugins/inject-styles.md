@@ -1,12 +1,10 @@
 # Inject Styles
 
-## What does it do?
-
 The `injectStyles` plugin automatically includes your CSS styles in your JavaScript bundle, so users don't need to manually import CSS files. Instead of creating separate `.css` files, your styles become part of your JavaScript code.
 
 ## How it works
 
-Instead of emitting separate CSS files, `injectStyles` converts your CSS into JavaScript that creates `<style>` tags in the browser. When someone imports your library, the styles are automatically injected into the page.
+Instead of outputting CSS files in the build output, `injectStyles` converts your CSS into JavaScript that creates `<style>` tags in the browser. When someone imports your library, the styles are automatically injected into the page.
 
 ## Before vs After
 
@@ -59,7 +57,7 @@ export default defineConfig({
 That's it! Your CSS will be automatically included in your JavaScript bundle.
 
 ::: info
-Injected CSS is processed for broad browser compatibility (syntax lowering, vendor prefixing, etc.), as described in the [CSS guide’s Browser Compatibility section](/docs/guide/css#browser-compatibility).
+Injected CSS is processed for broad browser compatibility (syntax lowering, vendor prefixing, etc.), as described in the [CSS guide’s Browser Support section](/docs/guide/css#browser-support).
 :::
 
 ## Options

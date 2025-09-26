@@ -195,7 +195,13 @@ const program = cli()
 			.describe('Packages that should be bundled even if listed in external')
 			.optional(),
 	)
-
+	.option(
+		'shims',
+		z
+			.boolean()
+			.describe('Enable shims for Node.js globals and ESM/CJS interoperability')
+			.optional(),
+	)
 	.option(
 		'dts',
 		z

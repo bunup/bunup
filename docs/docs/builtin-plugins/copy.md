@@ -14,15 +14,9 @@ export default defineConfig({
 });
 ```
 
-## How it Works
+This will copy the `README.md` file and all files in the `assets` directory to your build output directory.
 
-The copy plugin uses a builder pattern that allows you to chain methods for configuration:
-
-- **`copy(pattern)`** – Creates a copy plugin with the specified glob patterns, folder paths, or file paths (string or array of strings).
-- **`.to(destination)`** – Optional method to specify destination path (file or folder).
-- **`.with(options)`** – Optional method to configure copy behavior.
-
-If no destination is specified, files/folders are copied to your build output directory. You don't need to include the output directory in the destination path - files/folders are copied to the output directory by default.
+Use `copy(pattern)` to copy files or folders. Optionally, add `.to(destination)` to set the output name or location, and `.with(options)` for extra settings. By default, everything is copied to your build output directory.
 
 ## Examples
 

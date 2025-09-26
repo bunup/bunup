@@ -1,5 +1,6 @@
 import type { GenerateDtsOptions } from '@bunup/dts'
 import type { BuildConfig, BunPlugin } from 'bun'
+import { shims } from './plugins'
 import { cssTypedModulesPlugin } from './plugins/internal/css-typed-modules'
 import { report } from './plugins/internal/report'
 import { useClient } from './plugins/internal/use-client'
@@ -342,6 +343,12 @@ export interface BuildOptions {
 	 */
 	env?: Env
 	/**
+	 * Whether to enable shims for Node.js globals and ESM/CJS interoperability.
+	 *
+	 * @default false
+	 */
+	shims?: boolean
+	/**
 	 * Ignore dead code elimination/tree-shaking annotations such as @__PURE__ and package.json
 	 * "sideEffects" fields. This should only be used as a temporary workaround for incorrect
 	 * annotations in libraries.
@@ -396,6 +403,7 @@ export function createBuildOptions(userOptions: BuildOptions): BuildOptions {
 		plugins: [
 			...(userOptions.plugins ?? []),
 			...(typedModulesEnabled ? [cssTypedModulesPlugin()] : []),
+			...(userOptions.shims ? [shims()] : []),
 			useClient(),
 			report(),
 		],

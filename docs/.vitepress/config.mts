@@ -52,7 +52,6 @@ export default defineConfig({
 			{
 				text: 'Built-in Plugins',
 				items: [
-					{ text: 'Shims', link: '/docs/builtin-plugins/shims' },
 					{ text: 'Exports', link: '/docs/builtin-plugins/exports' },
 					{ text: 'Copy', link: '/docs/builtin-plugins/copy' },
 					{
@@ -60,8 +59,11 @@ export default defineConfig({
 						link: '/docs/builtin-plugins/inject-styles',
 					},
 					{ text: 'Unused', link: '/docs/builtin-plugins/unused' },
-					{ text: 'Tailwind CSS', link: '/docs/builtin-plugins/tailwindcss' },
 				],
+			},
+			{
+				text: 'Ecosystem',
+				items: [{ text: 'Tailwind CSS', link: '/docs/ecosystem/tailwindcss' }],
 			},
 			{
 				text: 'Advanced',

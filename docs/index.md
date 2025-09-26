@@ -61,21 +61,6 @@ Or, initialize bunup in an existing project:
 bunx @bunup/cli@latest init
 ```
 
-## Prerequisites
-
-Enable `isolatedDeclarations` in your tsconfig:
-
-```json [tsconfig.json] {4}
-{
-  "compilerOptions": {
-    "declaration": true,
-    "isolatedDeclarations": true
-  }
-}
-```
-
-See [why here](/docs/guide/typescript-declarations#isolated-declarations)
-
 ## Getting Started
 
 Get started with Bunup in seconds - install, configure, and build your TypeScript projects with minimal setup.

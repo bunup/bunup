@@ -4,66 +4,66 @@
   [36m[...entries][39m  Entry point files to bundle
 
 [1mFlags:[22m
-  [36m    --entry                  [39m [2m<val>[22m                            Entry file or glob pattern
-  [36m    --entry                  [39m [2m<val,...>[22m                        Multiple entry files or globs
-  [36m-c, --config                 [39m [2m<val>[22m                            Path to configuration file [2mExample: ./configs/custom.bunup.config.js[22m
-  [36m    --filter                 [39m [2m<val,...>[22m                        Filter workspace packages by name
-  [36m    --name                   [39m [2m<val>[22m                            Name of the build configuration (for logging and identification) [2mExample: my-library[22m
-  [36m-o, --outDir                 [39m [2m<val>[22m                            Output directory for bundled files [2m(default: "dist")[22m
-  [36m    --format                 [39m [2m<esm|cjs|iife>[22m                   Single output format
-  [36m    --format                 [39m [2m<val,...>[22m                        Multiple output formats
-  [36m    --minify                 [39m[2m[22m                                  Enable all minification options (whitespace, identifiers, syntax)
-  [36m    --no-minify              [39m[2m[22m                                  Disable minify
-  [36m    --minifyWhitespace       [39m[2m[22m                                  Minify whitespace in the output to reduce file size
-  [36m    --no-minifyWhitespace    [39m[2m[22m                                  Disable minify whitespace
-  [36m    --minifyIdentifiers      [39m[2m[22m                                  Minify identifiers by renaming variables to shorter names
-  [36m    --no-minifyIdentifiers   [39m[2m[22m                                  Disable minify identifiers
-  [36m    --minifySyntax           [39m[2m[22m                                  Minify syntax by optimizing code structure
-  [36m    --no-minifySyntax        [39m[2m[22m                                  Disable minify syntax
-  [36m    --watch                  [39m[2m[22m                                  Watch for file changes and rebuild automatically
-  [36m    --no-watch               [39m[2m[22m                                  Disable watch
-  [36m    --clean                  [39m[2m[22m                                  Clean the output directory before building [2m(default: true)[22m
-  [36m    --no-clean               [39m[2m[22m                                  Disable clean
-  [36m-q, --silent                 [39m[2m[22m                                  Disable logging during the build process
-  [36m    --no-silent              [39m[2m[22m                                  Disable silent
-  [36m    --splitting              [39m[2m[22m                                  Enable code splitting; this is enabled by default for the ESM format
-  [36m    --no-splitting           [39m[2m[22m                                  Disable splitting
-  [36m    --conditions             [39m [2m<val,...>[22m                        Package.json export conditions for import resolution
-  [36m-t, --target                 [39m [2m<bun|node|browser>[22m               Target environment for the bundle [2m(default: "node")[22m
-  [36m    --external               [39m [2m<val,...>[22m                        External packages that should not be bundled
-  [36m    --noExternal             [39m [2m<val,...>[22m                        Packages that should be bundled even if listed in external
-  [36m    --dts.entry              [39m [2m<val>[22m                            Single entrypoint for declaration file generation
-  [36m    --dts.entry              [39m [2m<val,...>[22m                        Multiple entrypoints for declaration file generation
-  [36m    --dts.resolve            [39m[2m[22m                                  Resolve types from dependencies
-  [36m    --dts.resolve            [39m [2m<val,...>[22m                        Names or patterns of packages from which to resolve types
-  [36m    --no-dts.resolve         [39m[2m[22m                                  Disable dts resolve
-  [36m    --dts.splitting          [39m[2m[22m                                  Enable declaration file splitting
-  [36m    --no-dts.splitting       [39m[2m[22m                                  Disable dts splitting
-  [36m    --dts.minify             [39m[2m[22m                                  Minify generated declaration files
-  [36m    --no-dts.minify          [39m[2m[22m                                  Disable dts minify
-  [36m    --dts                    [39m[2m[22m                                  Generate TypeScript declaration files (.d.ts)
-  [36m    --no-dts                 [39m[2m[22m                                  Disable dts
-  [36m    --preferredTsconfigPath  [39m [2m<val>[22m                            Path to preferred tsconfig.json for declaration generation [2mExample: ./tsconfig.build.json[22m
-  [36m    --sourcemap              [39m[2m[22m                                  Generate a sourcemap (uses the inline type by default)
-  [36m    --sourcemap              [39m [2m<none|linked|inline|external>[22m    Generate a sourcemap with a specific type
-  [36m    --no-sourcemap           [39m[2m[22m                                  Disable sourcemap
-  [36m    --define.<key>           [39m [2m<val>[22m                            Define global constants replaced at build time [2mExample: --define.PACKAGE_VERSION='"1.0.0"'[22m
-  [36m    --env.<key>              [39m [2m<val>[22m                            Explicit env var mapping [2mExample: --env.NODE_ENV="production" --env.API_URL="https://api.example.com"[22m
-  [36m    --env                    [39m [2m<inline|disable>[22m                 inline: inject all, disable: inject none
-  [36m    --env                    [39m [2m<val>[22m                            Inject env vars with this prefix [2mExample: MYAPP_*[22m [2m(Environment prefix must end with *)[22m
-  [36m    --banner                 [39m [2m<val>[22m                            Banner text added to the top of bundle files
-  [36m    --footer                 [39m [2m<val>[22m                            Footer text added to the bottom of bundle files
-  [36m    --drop                   [39m [2m<val,...>[22m                        Remove function calls from bundle [2mExample: --drop console,debugger[22m
-  [36m    --loader.<key>           [39m [2m<js|jsx|ts|tsx|...>[22m              File extension to loader mapping
-  [36m    --publicPath             [39m [2m<val>[22m                            Public path prefix for assets and chunk files [2mExample: https://cdn.example.com/[22m
-  [36m    --ignoreDCEAnnotations   [39m[2m[22m                                  Ignore dead code elimination annotations (@__PURE__, sideEffects)
-  [36m    --no-ignoreDCEAnnotations[39m[2m[22m                                  Disable ignore d c e annotations
-  [36m    --emitDCEAnnotations     [39m[2m[22m                                  Force emit @__PURE__ annotations even with minification
-  [36m    --no-emitDCEAnnotations  [39m[2m[22m                                  Disable emit d c e annotations
-  [36m    --onSuccess              [39m [2m<val>[22m                            Command to run after successful build
-  [36m    --css.typedModules       [39m[2m[22m                                  Generate TypeScript definitions for CSS modules
-  [36m    --no-css.typedModules    [39m[2m[22m                                  Disable css typed modules
-  [36m-h, --help                   [39m[2m[22m                                  [2mDisplay this menu and exit[22m
+  [36m     --entry                    [39m  [2m<val>[22m                            Entry file or glob pattern
+  [36m     --entry                    [39m  [2m<val,...>[22m                        Multiple entry files or globs
+  [36m -c, --config                   [39m  [2m<val>[22m                            Path to configuration file [2mExample: ./configs/custom.bunup.config.js[22m
+  [36m     --filter                   [39m  [2m<val,...>[22m                        Filter workspace packages by name
+  [36m     --name                     [39m  [2m<val>[22m                            Name of the build configuration (for logging and identification) [2mExample: my-library[22m
+  [36m -o, --out-dir                  [39m  [2m<val>[22m                            Output directory for bundled files [2m(default: "dist")[22m
+  [36m     --format                   [39m  [2m<esm|cjs|iife>[22m                   Single output format
+  [36m     --format                   [39m  [2m<val,...>[22m                        Multiple output formats
+  [36m     --minify                   [39m[2m[22m                                   Enable all minification options (whitespace, identifiers, syntax)
+  [36m     --no-minify                [39m[2m[22m                                   Explicitly disable minify
+  [36m     --minify-whitespace        [39m[2m[22m                                   Minify whitespace in the output to reduce file size
+  [36m     --no-minify-whitespace     [39m[2m[22m                                   Explicitly disable minify whitespace
+  [36m     --minify-identifiers       [39m[2m[22m                                   Minify identifiers by renaming variables to shorter names
+  [36m     --no-minify-identifiers    [39m[2m[22m                                   Explicitly disable minify identifiers
+  [36m     --minify-syntax            [39m[2m[22m                                   Minify syntax by optimizing code structure
+  [36m     --no-minify-syntax         [39m[2m[22m                                   Explicitly disable minify syntax
+  [36m     --watch                    [39m[2m[22m                                   Watch for file changes and rebuild automatically
+  [36m     --no-watch                 [39m[2m[22m                                   Explicitly disable watch
+  [36m     --clean                    [39m[2m[22m                                   Clean the output directory before building [2m(default: true)[22m
+  [36m     --no-clean                 [39m[2m[22m                                   Explicitly disable clean
+  [36m -q, --silent                   [39m[2m[22m                                   Disable logging during the build process
+  [36m     --no-silent                [39m[2m[22m                                   Explicitly disable silent
+  [36m     --splitting                [39m[2m[22m                                   Enable code splitting [2m(enabled by default for ESM format)[22m
+  [36m     --no-splitting             [39m[2m[22m                                   Explicitly disable splitting
+  [36m     --conditions               [39m  [2m<val,...>[22m                        Package.json export conditions for import resolution
+  [36m -t, --target                   [39m  [2m<bun|node|browser>[22m               Target environment for the bundle [2m(default: "node")[22m
+  [36m     --external                 [39m  [2m<val,...>[22m                        External packages that should not be bundled
+  [36m     --no-external              [39m  [2m<val,...>[22m                        Packages that should be bundled even if listed in external
+  [36m     --dts.entry                [39m  [2m<val>[22m                            Single entrypoint for declaration file generation
+  [36m     --dts.entry                [39m  [2m<val,...>[22m                        Multiple entrypoints for declaration file generation
+  [36m     --dts.resolve              [39m[2m[22m                                   Resolve types from dependencies
+  [36m     --dts.resolve              [39m  [2m<val,...>[22m                        Names or patterns of packages from which to resolve types
+  [36m     --no-dts.resolve           [39m[2m[22m                                   Explicitly disable dts resolve
+  [36m     --dts.splitting            [39m[2m[22m                                   Enable declaration file splitting
+  [36m     --no-dts.splitting         [39m[2m[22m                                   Explicitly disable dts splitting
+  [36m     --dts.minify               [39m[2m[22m                                   Minify generated declaration files
+  [36m     --no-dts.minify            [39m[2m[22m                                   Explicitly disable dts minify
+  [36m     --dts                      [39m[2m[22m                                   Generate TypeScript declaration files (.d.ts)
+  [36m     --no-dts                   [39m[2m[22m                                   Explicitly disable dts
+  [36m     --preferred-tsconfig-path  [39m  [2m<val>[22m                            Path to preferred tsconfig.json for declaration generation [2mExample: ./tsconfig.build.json[22m
+  [36m     --sourcemap                [39m[2m[22m                                   Generate a sourcemap (uses the inline type by default)
+  [36m     --sourcemap                [39m  [2m<none|linked|inline|external>[22m    Generate a sourcemap with a specific type
+  [36m     --no-sourcemap             [39m[2m[22m                                   Explicitly disable sourcemap
+  [36m     --define.<key>             [39m  [2m<val>[22m                            Define global constants replaced at build time [2mExample: --define.PACKAGE_VERSION='"1.0.0"'[22m
+  [36m     --env.<key>                [39m  [2m<val>[22m                            Explicit env var mapping [2mExample: --env.NODE_ENV="production" --env.API_URL="https://api.example.com"[22m
+  [36m     --env                      [39m  [2m<inline|disable>[22m                 inline: inject all, disable: inject none
+  [36m     --env                      [39m  [2m<val>[22m                            Inject env vars with this prefix [2mExample: MYAPP_*[22m [2m(Environment prefix must end with *)[22m
+  [36m     --banner                   [39m  [2m<val>[22m                            Banner text added to the top of bundle files
+  [36m     --footer                   [39m  [2m<val>[22m                            Footer text added to the bottom of bundle files
+  [36m     --drop                     [39m  [2m<val,...>[22m                        Remove function calls from bundle [2mExample: --drop console,debugger[22m
+  [36m     --loader.<key>             [39m  [2m<js|jsx|ts|tsx|...>[22m              File extension to loader mapping
+  [36m     --public-path              [39m  [2m<val>[22m                            Public path prefix for assets and chunk files [2mExample: https://cdn.example.com/[22m
+  [36m     --ignore-dce-annotations   [39m[2m[22m                                   Ignore dead code elimination annotations (@__PURE__, sideEffects)
+  [36m     --no-ignore-dce-annotations[39m[2m[22m                                   Explicitly disable ignore dce annotations
+  [36m     --emit-dce-annotations     [39m[2m[22m                                   Force emit @__PURE__ annotations even with minification
+  [36m     --no-emit-dce-annotations  [39m[2m[22m                                   Explicitly disable emit dce annotations
+  [36m     --on-success               [39m  [2m<val>[22m                            Command to run after successful build
+  [36m     --css.typed-modules        [39m[2m[22m                                   Generate TypeScript definitions for CSS modules [2m(default: true)[22m
+  [36m     --no-css.typed-modules     [39m[2m[22m                                   Explicitly disable css typed modules
+  [36m-h, --help                      [39m[2m[22m                                   [2mDisplay this menu and exit[22m
 
 [1mExamples:[22m
   [90m[34mbunup src/index.ts[90m                            # Basic build[39m
@@ -76,7 +76,7 @@
 
   [90m[34mbunup src/index.ts --target bun[90m               # Bun target[39m
 
-  [90m[34mbunup src/index.ts src/cli.ts --outDir build[90m  # Multiple entries[39m
+  [90m[34mbunup src/index.ts src/cli.ts[90m                 # Multiple entries[39m
 
   [90m[34mbunup src/index.ts --dts.splitting[90m            # Declaration splitting[39m
 

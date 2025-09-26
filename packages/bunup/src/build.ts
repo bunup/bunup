@@ -45,7 +45,7 @@ import {
 let ac: AbortController | null = null
 
 export async function build(
-	userOptions: BuildOptions,
+	userOptions: Partial<BuildOptions>,
 	rootDir: string = process.cwd(),
 ): Promise<BuildOutput> {
 	if (ac) {

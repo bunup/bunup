@@ -1,7 +1,7 @@
 {
 	"name": "bunup",
 	"description": "⚡ A blazing-fast build tool for your libraries built with Bun.",
-	"version": "0.11.27",
+	"version": "0.11.30",
 	"type": "module",
 	"files": [
 		"dist"
@@ -54,7 +54,7 @@
 		"picocolors": "^1.1.1",
 		"tinyexec": "^1.0.1",
 		"tree-kill": "^1.2.2",
-		"zlye": "^0.4.1"
+		"zlye": "^0.4.4"
 	},
 	"peerDependencies": {
 		"typescript": ">=4.5.0"

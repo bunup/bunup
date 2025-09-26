@@ -177,7 +177,7 @@ You can specify a custom tsconfig file for declaration generation:
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --preferredTsconfigPath ./tsconfig.build.json
+bunup src/index.ts --preferred-tsconfig-path ./tsconfig.build.json
 ```
 
 ```ts [bunup.config.ts]

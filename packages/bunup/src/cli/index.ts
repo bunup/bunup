@@ -54,9 +54,9 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 		configsToProcess.flatMap(({ options, rootDir }) => {
 			const optionsArray = ensureArray(options)
 			return optionsArray.map(async (o) => {
-				const userOptions: BuildOptions = {
-					...removeCliOnlyOptions(cliOptions),
+				const userOptions: Partial<BuildOptions> = {
 					...o,
+					...removeCliOnlyOptions(cliOptions),
 				}
 
 				if (userOptions.watch) {
@@ -83,7 +83,7 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 
 const CLI_ONLY_OPTIONS: (keyof CliOnlyOptions)[] = ['config', 'filter']
 
-function removeCliOnlyOptions(options: CliOnlyOptions & BuildOptions) {
+function removeCliOnlyOptions(options: CliOnlyOptions & Partial<BuildOptions>) {
 	const cleanedOptions = { ...options }
 	for (const option of CLI_ONLY_OPTIONS) {
 		delete cleanedOptions[option]

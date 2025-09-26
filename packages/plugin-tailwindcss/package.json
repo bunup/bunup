@@ -1,7 +1,7 @@
 {
 	"name": "@bunup/plugin-tailwindcss",
 	"description": "The official Bunup plugin for creating component libraries with Tailwind CSS.",
-	"version": "0.11.27",
+	"version": "0.11.30",
 	"type": "module",
 	"files": [
 		"dist"

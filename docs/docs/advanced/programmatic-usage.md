@@ -13,8 +13,6 @@ import { build } from 'bunup';
 
 const output = await build({
   entry: 'src/index.ts',
-  outDir: 'dist',
-  format: 'esm',
 });
 
 console.log('Built files:', output.files);
@@ -59,7 +57,6 @@ import { build, type BuildOptions } from 'bunup';
 
 const options: BuildOptions = {
   entry: 'src/index.ts',
-  outDir: 'dist',
   format: ['esm', 'cjs'],
 };
 
@@ -77,14 +74,10 @@ import { build } from 'bunup';
 
 await build({
   entry: 'src/index.ts',
-  outDir: 'dist',
-  format: 'esm',
 }, '/path/to/your/project');
 
 await build({
   entry: 'src/index.ts',
-  outDir: 'dist', 
-  format: 'esm',
 }, './my-project');
 ```
 
@@ -98,8 +91,6 @@ import { injectStyles } from 'bunup/plugins';
 
 await build({
   entry: 'src/index.ts',
-  outDir: 'dist',
-  format: 'esm',
   plugins: [
     injectStyles({
       minify: false,

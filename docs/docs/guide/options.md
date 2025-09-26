@@ -79,6 +79,30 @@ Glob pattern features:
 - Prefix patterns with `!` to exclude files that match the pattern
 - Patterns are resolved relative to the project root
 
+
+## Output Directory
+
+You can specify where Bunup should output the bundled files:
+
+::: code-group
+
+```sh [CLI]
+bunup src/index.ts --out-dir build
+# or using alias
+bunup src/index.ts -o build
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+    entry: 'src/index.ts',
+    outDir: 'build',
+});
+```
+
+:::
+
+The default output directory is `dist`.
+
 ## Output Formats
 
 Bunup supports three output formats:
@@ -228,10 +252,10 @@ If you want to include a package in your bundle (even if it's normally external)
 
 ```sh [CLI]
 # Single package
-bunup src/index.ts --noExternal lodash
+bunup src/index.ts --no-external lodash
 
 # Multiple packages
-bunup src/index.ts --noExternal lodash,react,vue
+bunup src/index.ts --no-external lodash,react,vue
 ```
 
 ```ts [bunup.config.ts]
@@ -244,7 +268,7 @@ export default defineConfig({
 :::
 
 ::: info
-Both `external` and `noExternal` support exact strings and regular expressions for flexible dependency management.
+Both `external` and `no-external` support exact strings and regular expressions for flexible dependency management.
 :::
 
 ## Tree Shaking
@@ -323,10 +347,10 @@ You can configure individual minification options:
 
 ```sh [CLI]
 # Single option - minify whitespace only
-bunup src/index.ts --minifyWhitespace
+bunup src/index.ts --minify-whitespace
 
 # Multiple options - minify whitespace and syntax, but not identifiers
-bunup src/index.ts --minifyWhitespace --minifySyntax
+bunup src/index.ts --minify-whitespace --minify-syntax
 ```
 
 ```ts [bunup.config.ts]
@@ -495,10 +519,10 @@ Control how dead code elimination annotations are handled:
 
 ```sh [CLI]
 # Ignore @__PURE__ annotations and sideEffects
-bunup src/index.ts --ignoreDCEAnnotations
+bunup src/index.ts --ignore-dce-annotations
 
 # Force emit @__PURE__ annotations even with minification
-bunup src/index.ts --emitDCEAnnotations
+bunup src/index.ts --emit-dce-annotations
 ```
 
 ```typescript [bunup.config.ts]
@@ -512,8 +536,8 @@ export default defineConfig({
 
 :::
 
-- `ignoreDCEAnnotations`: Ignores dead code elimination annotations like `@__PURE__` and `sideEffects` in package.json
-- `emitDCEAnnotations`: Forces emission of `@__PURE__` annotations even when minification is enabled
+- `ignore-dce-annotations`: Ignores dead code elimination annotations like `@__PURE__` and `sideEffects` in package.json
+- `emit-dce-annotations`: Forces emission of `@__PURE__` annotations even when minification is enabled
 
 ## Silent Mode
 
@@ -571,7 +595,7 @@ You can specify a prefix to be added to specific import paths in your bundled co
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --publicPath https://cdn.example.com/
+bunup src/index.ts --public-path https://cdn.example.com/
 ```
 
 ```ts [bunup.config.ts]
@@ -724,29 +748,6 @@ If a file contains a Bun shebang (`#!/usr/bin/env bun`), the `bun` target will b
 
 When targeting `bun`, bundles are marked with a special `// @bun` pragma that tells the Bun runtime not to re-transpile the file before execution. While bundling isn't always necessary for server-side code, it can improve startup times and runtime performance.
 
-## Output Directory
-
-You can specify where Bunup should output the bundled files:
-
-::: code-group
-
-```sh [CLI]
-bunup src/index.ts --outDir build
-# or using alias
-bunup src/index.ts -o build
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-    entry: 'src/index.ts',
-    outDir: 'build',
-});
-```
-
-:::
-
-The default output directory is `dist`.
-
 ## Cleaning the Output Directory
 
 By default, Bunup cleans the output directory before each build. You can disable this behavior:
@@ -795,7 +796,7 @@ Execute a shell command as a string:
 ::: code-group
 
 ```sh [CLI]
-bunup src/index.ts --onSuccess "bun run ./scripts/server.ts"
+bunup src/index.ts --on-success "bun run ./scripts/server.ts"
 ```
 
 ```ts [bunup.config.ts]

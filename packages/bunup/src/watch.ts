@@ -8,7 +8,7 @@ import { type BuildOptions, createBuildOptions } from './options'
 import { getShortFilePath } from './utils'
 
 export async function watch(
-	userOptions: BuildOptions,
+	userOptions: Partial<BuildOptions>,
 	rootDir: string,
 ): Promise<void> {
 	const watchPaths = new Set<string>()

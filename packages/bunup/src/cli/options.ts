@@ -1,5 +1,6 @@
 import pc from 'picocolors'
 import { cli, z } from 'zlye'
+import { version } from '../../package.json'
 import { BunupCLIError } from '../errors'
 import type { BuildOptions } from '../options'
 
@@ -10,10 +11,13 @@ export type CliOnlyOptions = {
 
 const program = cli()
 	.name('bunup')
-	.version('0.11.26')
+	.version(version)
 	.description(
 		'A blazing-fast build tool for your TypeScript/React libraries — built on Bun',
 	)
+	.with({
+		ignoreOptionDefaultValue: true,
+	})
 	.example([
 		pc.gray(
 			`${pc.blue('bunup src/index.ts')}                            # Basic build`,
@@ -31,7 +35,7 @@ const program = cli()
 			`${pc.blue('bunup src/index.ts --target bun')}               # Bun target`,
 		),
 		pc.gray(
-			`${pc.blue('bunup src/index.ts src/cli.ts --outDir build')}  # Multiple entries`,
+			`${pc.blue('bunup src/index.ts src/cli.ts')}                 # Multiple entries`,
 		),
 		pc.gray(
 			`${pc.blue('bunup src/index.ts --dts.splitting')}            # Declaration splitting`,
@@ -79,7 +83,7 @@ const program = cli()
 			.optional(),
 	)
 	.option(
-		'outDir',
+		'out-dir',
 		z
 			.string()
 			.describe('Output directory for bundled files')
@@ -112,21 +116,21 @@ const program = cli()
 			.optional(),
 	)
 	.option(
-		'minifyWhitespace',
+		'minify-whitespace',
 		z
 			.boolean()
 			.describe('Minify whitespace in the output to reduce file size')
 			.optional(),
 	)
 	.option(
-		'minifyIdentifiers',
+		'minify-identifiers',
 		z
 			.boolean()
 			.describe('Minify identifiers by renaming variables to shorter names')
 			.optional(),
 	)
 	.option(
-		'minifySyntax',
+		'minify-syntax',
 		z
 			.boolean()
 			.describe('Minify syntax by optimizing code structure')
@@ -160,10 +164,8 @@ const program = cli()
 		'splitting',
 		z
 			.boolean()
-			.describe(
-				'Enable code splitting; this is enabled by default for the ESM format',
-			)
-			.optional(),
+			.describe('Enable code splitting')
+			.default(true, 'enabled by default for ESM format'),
 	)
 	.option(
 		'conditions',
@@ -189,7 +191,7 @@ const program = cli()
 			.optional(),
 	)
 	.option(
-		'noExternal',
+		'no-external',
 		z
 			.array(z.string())
 			.describe('Packages that should be bundled even if listed in external')
@@ -243,7 +245,7 @@ const program = cli()
 			.default(true),
 	)
 	.option(
-		'preferredTsconfigPath',
+		'preferred-tsconfig-path',
 		z
 			.string()
 			.describe('Path to preferred tsconfig.json for declaration generation')
@@ -346,7 +348,7 @@ const program = cli()
 			.optional(),
 	)
 	.option(
-		'publicPath',
+		'public-path',
 		z
 			.string()
 			.describe('Public path prefix for assets and chunk files')
@@ -355,7 +357,7 @@ const program = cli()
 	)
 
 	.option(
-		'ignoreDCEAnnotations',
+		'ignore-dce-annotations',
 		z
 			.boolean()
 			.describe(
@@ -363,14 +365,14 @@ const program = cli()
 			),
 	)
 	.option(
-		'emitDCEAnnotations',
+		'emit-dce-annotations',
 		z
 			.boolean()
 			.describe('Force emit @__PURE__ annotations even with minification'),
 	)
 
 	.option(
-		'onSuccess',
+		'on-success',
 		z.string().describe('Command to run after successful build').optional(),
 	)
 
@@ -378,19 +380,18 @@ const program = cli()
 		'css',
 		z
 			.object({
-				typedModules: z
+				'typed-modules': z
 					.boolean()
-					.describe('Generate TypeScript definitions for CSS modules'),
+					.describe('Generate TypeScript definitions for CSS modules')
+					.default(true),
 			})
-			.default({
-				typedModules: true,
-			}),
+			.optional(),
 	)
 	.rest('entries', z.string().describe('Entry point files to bundle'))
 
 export const parseCliOptions = (
 	argv: string[],
-): CliOnlyOptions & BuildOptions => {
+): CliOnlyOptions & Partial<BuildOptions> => {
 	const result = program.parse(argv)
 
 	if (!result) {
@@ -399,9 +400,9 @@ export const parseCliOptions = (
 
 	const { options, rest } = result
 
-	const parsedOptions: CliOnlyOptions & BuildOptions = {
+	const parsedOptions: CliOnlyOptions & Partial<BuildOptions> = {
 		...options,
-		entry: rest.length > 0 ? rest : 'src/index.ts',
+		...(rest.length > 0 ? { entry: rest } : {}),
 	}
 
 	return parsedOptions

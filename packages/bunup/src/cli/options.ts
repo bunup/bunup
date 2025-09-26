@@ -336,6 +336,7 @@ const program = cli()
 					]),
 			)
 			.describe('File extension to loader mapping')
+			.example("--loader.'.css'=text --loader.'.txt'=file")
 			.optional(),
 	)
 	.option(

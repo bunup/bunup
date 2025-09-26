@@ -6,7 +6,7 @@ import { useClient } from './plugins/internal/use-client'
 import type { BunupPlugin } from './plugins/types'
 import type { MaybePromise } from './types'
 
-type Loader =
+export type Loader =
 	| 'js'
 	| 'jsx'
 	| 'ts'

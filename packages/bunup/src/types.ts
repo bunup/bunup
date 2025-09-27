@@ -10,9 +10,9 @@ export type WithRequired<T, K extends keyof T> = Omit<T, K> &
 
 export type Arrayable<T> = T | T[]
 
-export type DefineConfigItem = Omit<
-	WithOptional<BuildOptions, 'outDir' | 'format'>,
-	'watch'
+export type DefineConfigItem = WithOptional<
+	BuildOptions,
+	'outDir' | 'format' | 'entry'
 >
 
 export type DefineWorkspaceItem = {

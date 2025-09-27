@@ -16,15 +16,10 @@ interface FormatMessageOptions extends LogOptions {
 	type?: LogLevel
 }
 
-export let silent = false
-
-export function setSilent(value: boolean | undefined): void {
-	silent = value ?? false
-}
-
 export class Logger {
 	private static instance: Logger
 	private readonly loggedOnceMessages = new Set<string>()
+	private silent = false
 
 	private constructor() {}
 
@@ -37,6 +32,14 @@ export class Logger {
 
 	public dispose(): void {
 		this.loggedOnceMessages.clear()
+	}
+
+	public setSilent(value: boolean | undefined): void {
+		this.silent = value ?? false
+	}
+
+	public isSilent(): boolean {
+		return this.silent
 	}
 
 	private shouldLog(options?: LogOptions): boolean {
@@ -97,7 +100,7 @@ export class Logger {
 		options: LogOptions = {},
 		logFn: (...args: any[]) => void = console.log,
 	): void {
-		if (silent || !this.shouldLog(options)) {
+		if (this.silent || !this.shouldLog(options)) {
 			return
 		}
 
@@ -149,75 +152,15 @@ export class Logger {
 	}
 
 	public space(): void {
-		if (!silent) {
+		if (!this.silent) {
 			console.log('')
 		}
 	}
 
 	public log(...args: any[]): void {
-		if (!silent) {
+		if (!this.silent) {
 			console.log(...args)
 		}
-	}
-}
-
-export interface TableColumn {
-	header: string
-	align: 'left' | 'right'
-	color?: (str: string) => string
-}
-
-export function logTable(
-	columns: TableColumn[],
-	data: Record<string, string>[],
-	footer?: Record<string, string>,
-): void {
-	if (silent) return
-
-	const widths: Record<string, number> = {}
-	for (const col of columns) {
-		const headerLength = col.header.length
-		const dataLengths = data.map((row) => row[col.header]?.length || 0)
-		const footerLength = footer ? footer[col.header]?.length || 0 : 0
-		widths[col.header] = Math.max(headerLength, ...dataLengths, footerLength)
-	}
-
-	const pad = (str: string, width: number, align: 'left' | 'right') => {
-		return align === 'left' ? str.padEnd(width) : str.padStart(width)
-	}
-
-	const headerRow = columns
-		.map((col) => pad(col.header, widths[col.header], col.align))
-		.join(pc.dim(' | '))
-	console.log(pc.dim(headerRow))
-
-	const separator = columns
-		.map((col) => '-'.repeat(widths[col.header]))
-		.join(' | ')
-	console.log(pc.dim(separator))
-
-	for (const row of data) {
-		const rowStr = columns
-			.map((col) => {
-				const value = row[col.header] || ''
-				const padded = pad(value, widths[col.header], col.align)
-				return col.color ? col.color(padded) : padded
-			})
-			.join(pc.dim(' | '))
-		console.log(rowStr)
-	}
-
-	console.log(pc.dim(separator))
-
-	if (footer) {
-		const footerRow = columns
-			.map((col) => {
-				const value = footer[col.header] || ''
-				const padded = pad(value, widths[col.header], col.align)
-				return padded
-			})
-			.join(pc.dim(' | '))
-		console.log(footerRow)
 	}
 }
 
@@ -227,7 +170,7 @@ export function logTime(ms: number): string {
 		: pc.green(`${Math.round(ms)}ms`)
 }
 
-export const link = (url: string, label?: string): string => {
+export function link(url: string, label?: string): string {
 	if (!label) {
 		label = url
 	}

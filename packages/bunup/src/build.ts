@@ -1,7 +1,6 @@
 import path from 'node:path'
 import { generateDts, logIsolatedDeclarationErrors } from '@bunup/dts'
 import type { BunPlugin } from 'bun'
-import pc from 'picocolors'
 import {
 	BunupBuildError,
 	BunupDTSBuildError,
@@ -9,7 +8,7 @@ import {
 } from './errors'
 import { executeOnSuccess } from './helpers/on-success'
 import { loadPackageJson } from './loaders'
-import { logger, setSilent, silent } from './logger'
+import { logger } from './logger'
 import {
 	type BuildOptions,
 	createBuildOptions,
@@ -70,7 +69,7 @@ export async function build(
 		cleanOutDir(rootDir, options.outDir)
 	}
 
-	setSilent(options.silent)
+	logger.setSilent(options.silent)
 
 	const packageJson = await loadPackageJson(rootDir)
 
@@ -161,10 +160,6 @@ export async function build(
 
 			await Bun.write(fullPath, content)
 
-			logger.success(`${pc.dim(`${options.outDir}/`)}${pathRelativeToOutdir}`, {
-				identifier: options.name,
-			})
-
 			if (!buildOutput.files.some((f) => f.fullPath === fullPath)) {
 				buildOutput.files.push({
 					fullPath,
@@ -203,7 +198,7 @@ export async function build(
 				...dtsOptions,
 			})
 
-			if (dtsResult.errors.length && !silent) {
+			if (dtsResult.errors.length && !logger.isSilent()) {
 				logIsolatedDeclarationErrors(dtsResult.errors)
 			}
 
@@ -220,15 +215,6 @@ export async function build(
 					const pathRelativeToRootDir = cleanPath(
 						`${options.outDir}/${pathRelativeToOutdir}`,
 					)
-
-					if (file.kind === 'entry-point') {
-						logger.success(
-							`${pc.dim(`${options.outDir}/`)}${pathRelativeToOutdir}`,
-							{
-								identifier: options.name,
-							},
-						)
-					}
 
 					const fullPath = path.join(rootDir, pathRelativeToRootDir)
 

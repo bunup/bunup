@@ -11,7 +11,7 @@ import {
 	type ProcessableConfig,
 	processLoadedConfigs,
 } from '../loaders'
-import { logger, logTime, setSilent } from '../logger'
+import { logger, logTime } from '../logger'
 import type { BuildOptions } from '../options'
 import { ensureArray, getShortFilePath } from '../utils'
 import { watch } from '../watch'
@@ -20,7 +20,7 @@ import { type CliOnlyOptions, parseCliOptions } from './options'
 async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 	const cliOptions = parseCliOptions(args)
 
-	setSilent(cliOptions.silent)
+	logger.setSilent(cliOptions.silent)
 
 	const cwd = process.cwd()
 
@@ -70,6 +70,7 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 
 	const buildTimeMs = performance.now() - startTime
 
+	logger.space()
 	logger.success(`Build completed in ${pc.green(logTime(buildTimeMs))}`)
 
 	if (cliOptions.watch) {

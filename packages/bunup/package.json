@@ -15,11 +15,11 @@
 				"default": "./dist/index.js"
 			}
 		},
+		"./cli": {
+			"import": "./dist/cli/index.js"
+		},
 		"./plugins": {
-			"import": {
-				"types": "./dist/plugins.d.ts",
-				"default": "./dist/plugins.js"
-			}
+			"types": "./dist/plugins.d.ts"
 		},
 		"./package.json": "./package.json"
 	},

@@ -2,7 +2,7 @@ import type { GenerateDtsOptions } from '@bunup/dts'
 import type { BuildConfig, BunPlugin } from 'bun'
 import { shims } from './plugins'
 import { cssTypedModulesPlugin } from './plugins/internal/css-typed-modules'
-import { report } from './plugins/internal/report'
+import { type ReportOptions, report } from './plugins/internal/report'
 import { useClient } from './plugins/internal/use-client'
 import type { BunupPlugin } from './plugins/types'
 import type { MaybePromise, WithRequired } from './types'
@@ -351,6 +351,10 @@ export interface BuildOptions {
 	 */
 	shims?: boolean
 	/**
+	 * Configuration for the build report that shows file sizes and compression stats.
+	 */
+	report?: ReportOptions
+	/**
 	 * Ignore dead code elimination/tree-shaking annotations such as @__PURE__ and package.json
 	 * "sideEffects" fields. This should only be used as a temporary workaround for incorrect
 	 * annotations in libraries.
@@ -423,7 +427,7 @@ export function createBuildOptions(
 			...(typedModulesEnabled ? [cssTypedModulesPlugin()] : []),
 			...(userOptions.shims ? [shims()] : []),
 			useClient(),
-			report(),
+			report(options.report),
 		],
 	}
 }

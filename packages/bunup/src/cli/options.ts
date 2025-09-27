@@ -205,6 +205,26 @@ const program = cli()
 			.optional(),
 	)
 	.option(
+		'report',
+		z
+			.object({
+				gzip: z
+					.boolean()
+					.describe('Enable gzip compression size calculation')
+					.default(true),
+				brotli: z
+					.boolean()
+					.describe('Enable brotli compression size calculation')
+					.optional(),
+				'max-bundle-size': z
+					.number()
+					.describe('Maximum bundle size in bytes. Will warn if exceeded')
+					.optional(),
+			})
+			.describe('Configuration for the build report')
+			.optional(),
+	)
+	.option(
 		'dts',
 		z
 			.union(

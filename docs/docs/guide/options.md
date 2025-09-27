@@ -1,6 +1,6 @@
 # Options
 
-Bunup provides a rich set of options to customize your build. See the table of contents on the right side to quickly navigate to the option you are looking for.
+Bunup provides a rich set of options to customize your build. Use the table of contents on the right side or search to quickly navigate to the option you are looking for.
 
 ## Entry Points
 
@@ -561,6 +561,46 @@ export default defineConfig({
 :::
 
 This is useful when you want minimal output, such as in CI/CD environments.
+
+## Build Report
+
+Configure the build report that shows file sizes and compression statistics:
+
+::: code-group
+
+```sh [CLI]
+# Enable brotli compression reporting (gzip is enabled by default)
+bunup src/index.ts --report.brotli
+
+# Set maximum bundle size warning threshold (in bytes)
+bunup src/index.ts --report.max-bundle-size 1048576
+
+# Disable gzip compression reporting
+bunup src/index.ts --no-report.gzip
+```
+
+```typescript [bunup.config.ts]
+export default defineConfig({
+	entry: 'src/index.ts',
+	report: {
+		gzip: true,        // Enable gzip size calculation (default: true)
+		brotli: false,     // Enable brotli size calculation (default: false)
+		maxBundleSize: 1024 * 1024, // Warn if bundle exceeds 1MB
+	},
+});
+```
+
+:::
+
+The `report` option controls the build output report:
+
+- **gzip**: Calculate and display gzip compressed file sizes (enabled by default)
+- **brotli**: Calculate and display brotli compressed file sizes (disabled by default)
+- **maxBundleSize**: Set a size threshold in bytes - bunup will warn if the total bundle size exceeds this limit
+
+::: info
+For large output files, compression size calculation may slow down the build process. Consider disabling compression reporting if build speed is critical.
+:::
 
 ## Custom Loaders
 

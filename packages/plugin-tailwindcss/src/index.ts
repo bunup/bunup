@@ -1,7 +1,7 @@
 import tailwindPostcss from '@tailwindcss/postcss'
 import type { BunPlugin } from 'bun'
 import { transform } from 'lightningcss'
-import postcss from 'postcss'
+import postcss, { type Plugin } from 'postcss'
 
 /**
  * Configuration options for the TailwindCSS plugin
@@ -12,6 +12,7 @@ type TailwindCSSOptions = {
 	minify?: boolean
 	preflight?: boolean
 	prefix?: string | false
+	postcssPlugins?: Plugin[]
 }
 
 /**
@@ -23,7 +24,13 @@ export function tailwindcss(options: TailwindCSSOptions = {}): BunPlugin {
 	return {
 		name: 'bunup:tailwindcss',
 		setup: (build) => {
-			const { inject, minify, preflight = true, prefix } = options
+			const {
+				inject,
+				minify,
+				preflight = true,
+				prefix,
+				postcssPlugins,
+			} = options
 
 			if (inject) {
 				build.onResolve({ filter: /^__inject-style$/ }, () => {
@@ -96,6 +103,7 @@ export function tailwindcss(options: TailwindCSSOptions = {}): BunPlugin {
 							transformAssetUrls: false,
 							optimize: false,
 						}),
+						...(postcssPlugins ?? []),
 					]).process(preprocessSource(source, preflight), {
 						from: args.path,
 					})

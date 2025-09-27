@@ -21,7 +21,6 @@ export interface ReportOptions {
 	 * @default true
 	 */
 	gzip?: boolean
-
 	/**
 	 * Enable brotli compression size calculation.
 	 *
@@ -30,7 +29,6 @@ export interface ReportOptions {
 	 * @default false
 	 */
 	brotli?: boolean
-
 	/**
 	 * Maximum bundle size in bytes. Will warn if exceeded.
 	 *
@@ -52,10 +50,13 @@ export function report(options: ReportOptions = {}): BunupPlugin {
 				if (options.watch || logger.isSilent()) return
 
 				const showCompression = gzip || brotli
-
 				const files = await Promise.all(
 					output.files.map(async (file) => {
-						const name = `${pc.dim(`${options.outDir}/`)}${file.dts && file.kind === 'entry-point' ? pc.green(pc.bold(file.pathRelativeToOutdir)) : file.pathRelativeToOutdir}`
+						const name = `${pc.dim(`${options.outDir}/`)}${
+							file.dts && file.kind === 'entry-point'
+								? pc.green(pc.bold(file.pathRelativeToOutdir))
+								: file.pathRelativeToOutdir
+						}`
 						const plainName = `${options.outDir}/${file.pathRelativeToOutdir}`
 						const size = Bun.file(file.fullPath).size
 
@@ -65,14 +66,15 @@ export function report(options: ReportOptions = {}): BunupPlugin {
 						if (showCompression) {
 							const buffer = await Bun.file(file.fullPath).arrayBuffer()
 							const uint8 = new Uint8Array(buffer)
-
-							const compressions = await Promise.all([
-								gzip && Promise.resolve(Bun.gzipSync(uint8)),
-								brotli && brotliAsync(uint8),
+							const [gzipResult, brotliResult] = await Promise.all([
+								gzip
+									? Promise.resolve(Bun.gzipSync(uint8))
+									: Promise.resolve(null),
+								brotli ? brotliAsync(uint8) : Promise.resolve(null),
 							])
 
-							if (gzip && compressions[0]) gzipSize = compressions[0].length
-							if (brotli && compressions[1]) brotliSize = compressions[1].length
+							gzipSize = gzipResult?.length
+							brotliSize = brotliResult?.length
 						}
 
 						return {
@@ -89,9 +91,14 @@ export function report(options: ReportOptions = {}): BunupPlugin {
 
 				const totalFiles = files.length
 				const totalSize = files.reduce((sum, file) => sum + file.size, 0)
-
 				const maxNameLength = Math.max(
 					...files.map((file) => file.plainName.length),
+				)
+				const formats = ensureArray(options.format)
+				const showFormatLabel = formats.length > 1
+				const formatPaddingRight = Math.max(...formats.map((f) => f.length))
+				const maxSizeLength = Math.max(
+					...files.map((file) => formatFileSize(file.size).length),
 				)
 
 				logger.space()
@@ -101,27 +108,24 @@ export function report(options: ReportOptions = {}): BunupPlugin {
 					logger.space()
 				}
 
-				const showFormatLabel = ensureArray(options.format).length > 1
-				const formatPaddingRight = Math.max(
-					...ensureArray(options.format).map((f) => f.length),
-				)
-
-				const maxSizeLength = Math.max(
-					...files.map((file) => formatFileSize(file.size).length),
-				)
-
 				for (const file of files) {
 					const padding = ' '.repeat(maxNameLength - file.plainName.length + 2)
 					const sizeString = formatFileSize(file.size)
 					const sizePadding = ' '.repeat(maxSizeLength - sizeString.length)
 
+					const gzipInfo = file.gzipSize
+						? `gzip: ${formatFileSize(file.gzipSize)}`
+						: ''
+					const brotliInfo = file.brotliSize
+						? `brotli: ${formatFileSize(file.brotliSize)}`
+						: ''
+					const compressionSeparator = gzipInfo && brotliInfo ? ' | ' : ''
 					const compressionInfo =
-						file.gzipSize || file.brotliSize
-							? ` | ${file.gzipSize ? `gzip: ${formatFileSize(file.gzipSize)}` : ''}${file.gzipSize && file.brotliSize ? ' | ' : ''}${file.brotliSize ? `brotli: ${formatFileSize(file.brotliSize)}` : ''}`
+						gzipInfo || brotliInfo
+							? ` | ${gzipInfo}${compressionSeparator}${brotliInfo}`
 							: ''
 
 					const formatLabel = file.format.toUpperCase()
-
 					const formatColor =
 						file.format === 'esm'
 							? pc.blueBright
@@ -145,7 +149,7 @@ export function report(options: ReportOptions = {}): BunupPlugin {
 				)
 
 				logger.log(
-					`${summaryPadding}${totalFiles} files${pc.dim(`, total size:`)} ${formatFileSize(totalSize)}`,
+					`${summaryPadding}${totalFiles} files${pc.dim(', total size:')} ${formatFileSize(totalSize)}`,
 				)
 
 				if (maxBundleSize && totalSize > maxBundleSize) {

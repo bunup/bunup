@@ -75,6 +75,12 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 		}),
 	)
 
+	if (cliOptions.watch) {
+		console.log(
+			`\n  ${pc.bgMagentaBright(' WATCH ')} Watching for file changes...\n`,
+		)
+	}
+
 	const buildTimeMs = performance.now() - startTime
 
 	logger.space()

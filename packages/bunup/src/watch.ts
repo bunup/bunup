@@ -51,12 +51,6 @@ export async function watch(
 
 			await new Promise((resolve) => setTimeout(resolve, 20))
 
-			if (initial) {
-				console.log(
-					`\n  ${pc.bgMagentaBright(' WATCH ')} Watching for file changes...`,
-				)
-			}
-
 			if (lastChangedFile === changed) {
 				buildCount++
 			} else {

@@ -80,10 +80,6 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 	logger.space()
 	logger.success(`Build completed in ${pc.green(logTime(buildTimeMs))}`)
 
-	if (cliOptions.watch) {
-		logger.info(pc.dim('Watching for file changes...'))
-	}
-
 	if (!cliOptions.watch) {
 		process.exit(process.exitCode ?? 0)
 	}

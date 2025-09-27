@@ -1,7 +1,7 @@
 import { exec } from 'tinyexec'
 import treeKill from 'tree-kill'
-import { logger } from '../logger'
 import type { BuildOptions, OnSuccess } from '../options'
+import { logger } from '../printer/logger'
 
 export async function executeOnSuccess(
 	onSuccess: OnSuccess,

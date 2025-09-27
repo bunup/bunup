@@ -1,5 +1,5 @@
 import pc from 'picocolors'
-import { link, logger } from './logger'
+import { link, logger } from './printer/logger'
 
 class BunupError extends Error {
 	constructor(message?: string) {
@@ -84,24 +84,6 @@ const KNOWN_ERRORS: KnownErrorSolution[] = [
 					pc.dim('dts: { splitting: true }') +
 					' from your config.' +
 					' You can re-enable it once the issue is fixed.',
-			)
-		},
-	},
-	{
-		pattern: /Multiple files share the same output path/i,
-		errorType: 'BUILD ERROR',
-		logSolution: () => {
-			logger.log(
-				pc.yellow('CSS Import Detected') +
-					"\n\nYou're importing CSS files in JavaScript. To bundle styles properly, use the " +
-					pc.green('injectStyles()') +
-					' plugin.\n\n' +
-					pc.dim(
-						'This plugin transforms CSS imports into JavaScript that automatically ',
-					) +
-					pc.dim('injects styles into the document head at runtime.\n\n') +
-					'Learn more: ' +
-					pc.blue('https://bunup.dev/docs/builtin-plugins/inject-styles'),
 			)
 		},
 	},

@@ -8,10 +8,8 @@ import {
 } from './errors'
 import { executeOnSuccess } from './helpers/on-success'
 import { loadPackageJson } from './loaders'
-import { logger } from './logger'
 import {
 	type BuildOptions,
-	createBuildOptions,
 	getDefaultChunkNaming,
 	getResolvedDefine,
 	getResolvedDtsSplitting,
@@ -20,8 +18,12 @@ import {
 	getResolvedSourcemap,
 	getResolvedSplitting,
 	getResolvedTarget,
+	resolveBuildOptions,
 } from './options'
+import { shims } from './plugins'
+import { cssTypedModulesPlugin } from './plugins/internal/css-typed-modules'
 import { externalOptionPlugin } from './plugins/internal/external-option'
+import { useClient } from './plugins/internal/use-client'
 import type { BuildOutput } from './plugins/types'
 import {
 	filterBunPlugins,
@@ -29,6 +31,8 @@ import {
 	runPluginBuildDoneHooks,
 	runPluginBuildStartHooks,
 } from './plugins/utils'
+import { logger } from './printer/logger'
+import { printBuildReport } from './printer/print-build-report'
 import {
 	cleanOutDir,
 	cleanPath,
@@ -57,7 +61,11 @@ export async function build(
 		files: [],
 	}
 
-	const options = createBuildOptions(userOptions)
+	const options = resolveBuildOptions(userOptions)
+
+	if (options.silent) {
+		logger.setSilent(options.silent)
+	}
 
 	if (!options.entry || options.entry.length === 0 || !options.outDir) {
 		throw new BunupBuildError(
@@ -69,8 +77,6 @@ export async function build(
 		cleanOutDir(rootDir, options.outDir)
 	}
 
-	logger.setSilent(options.silent)
-
 	const packageJson = await loadPackageJson(rootDir)
 
 	if (packageJson.data && packageJson.path) {
@@ -81,15 +87,19 @@ export async function build(
 		})
 	}
 
-	const bunupPlugins = filterBunupPlugins(options.plugins)
+	const packageType = packageJson.data?.type as string | undefined
+
+	const bunupPlugins = [...filterBunupPlugins(options.plugins), useClient()]
 
 	await runPluginBuildStartHooks(bunupPlugins, options)
-
-	const packageType = packageJson.data?.type as string | undefined
 
 	const plugins: BunPlugin[] = [
 		externalOptionPlugin(options, packageJson.data),
 		...filterBunPlugins(options.plugins),
+		...(userOptions.css?.typedModules !== false
+			? [cssTypedModulesPlugin()]
+			: []),
+		...(userOptions.shims ? [shims()] : []),
 	]
 
 	const entrypoints = await getFilesFromGlobs(
@@ -245,6 +255,10 @@ export async function build(
 
 	if (options.onSuccess) {
 		await executeOnSuccess(options.onSuccess, options, ac.signal)
+	}
+
+	if (!options.watch && !logger.isSilent()) {
+		await printBuildReport(buildOutput, options)
 	}
 
 	return buildOutput

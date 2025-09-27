@@ -1,5 +1,5 @@
 import pc from 'picocolors'
-import { logger } from '../../logger'
+import { logger } from '../../printer/logger'
 import { formatListWithAnd } from '../../utils'
 import type { BunupPlugin } from '../types'
 

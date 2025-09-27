@@ -3,7 +3,7 @@ import type { BunPlugin } from 'bun'
 import { transform } from 'lightningcss'
 import { DEFAULT_CSS_TARGETS } from '../../constants/css'
 import { CSS_RE } from '../../constants/re'
-import { logger } from '../../logger'
+import { logger } from '../../printer/logger'
 import type { MaybePromise } from '../../types'
 
 type InjectStylesPluginOptions = {

@@ -1,5 +1,5 @@
 import { basename, extname, join } from 'node:path'
-import { logger } from '../../logger'
+import { logger } from '../../printer/logger'
 import { ensureArray, isGlobPattern } from '../../utils'
 import type { BunupPlugin, BunupPluginHooks } from '../types'
 

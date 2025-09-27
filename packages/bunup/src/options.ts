@@ -1,9 +1,5 @@
 import type { GenerateDtsOptions } from '@bunup/dts'
 import type { BuildConfig, BunPlugin } from 'bun'
-import { shims } from './plugins'
-import { cssTypedModulesPlugin } from './plugins/internal/css-typed-modules'
-import { type ReportOptions, report } from './plugins/internal/report'
-import { useClient } from './plugins/internal/use-client'
 import type { BunupPlugin } from './plugins/types'
 import type { MaybePromise, WithRequired } from './types'
 
@@ -74,6 +70,31 @@ export type OnSuccess =
 				killSignal?: NodeJS.Signals | number
 			}
 	  }
+
+type ReportOptions = {
+	/**
+	 * Enable gzip compression size calculation.
+	 *
+	 * Note: For huge output files, this may slow down the build process. In this case, consider disabling this option.
+	 *
+	 * @default true
+	 */
+	gzip?: boolean
+	/**
+	 * Enable brotli compression size calculation.
+	 *
+	 * Note: For huge output files, this may slow down the build process. In this case, consider disabling this option.
+	 *
+	 * @default false
+	 */
+	brotli?: boolean
+	/**
+	 * Maximum bundle size in bytes. Will warn if exceeded.
+	 *
+	 * @default undefined
+	 */
+	maxBundleSize?: number
+}
 
 export interface BuildOptions {
 	/**
@@ -410,26 +431,15 @@ const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {
 	clean: true,
 }
 
-export function createBuildOptions(
+export function resolveBuildOptions(
 	userOptions: Partial<BuildOptions>,
 ): BuildOptions {
-	const options = {
+	const resolved = {
 		...DEFAULT_OPTIONS,
 		...userOptions,
 	}
 
-	const typedModulesEnabled = userOptions.css?.typedModules !== false
-
-	return {
-		...options,
-		plugins: [
-			...(options.plugins ?? []),
-			...(typedModulesEnabled ? [cssTypedModulesPlugin()] : []),
-			...(userOptions.shims ? [shims()] : []),
-			useClient(),
-			report(options.report),
-		],
-	}
+	return resolved
 }
 
 export function getResolvedMinify(options: BuildOptions): {

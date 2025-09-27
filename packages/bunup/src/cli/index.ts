@@ -11,16 +11,14 @@ import {
 	type ProcessableConfig,
 	processLoadedConfigs,
 } from '../loaders'
-import { logger, logTime } from '../logger'
 import type { BuildOptions } from '../options'
+import { logger, logTime } from '../printer/logger'
 import { ensureArray, getShortFilePath } from '../utils'
 import { watch } from '../watch'
 import { type CliOnlyOptions, parseCliOptions } from './options'
 
 async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 	const cliOptions = parseCliOptions(args)
-
-	logger.setSilent(cliOptions.silent)
 
 	const cwd = process.cwd()
 
@@ -35,6 +33,15 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 	const configsToProcess: ProcessableConfig[] = !config
 		? [{ rootDir: cwd, options: cliOptions }]
 		: await processLoadedConfigs(config, cwd, cliOptions.filter)
+
+	const shouldSilent =
+		cliOptions.watch ||
+		cliOptions.silent ||
+		configsToProcess.some((c) => ensureArray(c.options).some((o) => o.silent))
+
+	if (shouldSilent) {
+		logger.setSilent(true)
+	}
 
 	logger.info(`Using bunup v${version} and bun v${Bun.version}`, {
 		muted: true,

@@ -12,9 +12,6 @@ import {
 
 const brotliAsync = promisify(brotliCompress)
 
-/**
- * Format and log build output with size information
- */
 export async function printBuildReport(
 	buildOutput: BuildOutput,
 	options: BuildOptions,

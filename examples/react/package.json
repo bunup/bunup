@@ -1,7 +1,7 @@
 {
 	"name": "react",
 	"description": "A react component library",
-	"version": "0.14.5",
+	"version": "0.14.6",
 	"type": "module",
 	"files": [
 		"dist"

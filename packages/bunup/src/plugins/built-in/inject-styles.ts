@@ -1,7 +1,7 @@
 import path from 'node:path'
+import { getDefaultCssBrowserTargets } from '@bunup/shared'
 import type { BunPlugin } from 'bun'
 import { transform } from 'lightningcss'
-import { DEFAULT_CSS_TARGETS } from '../../constants/css'
 import { CSS_RE } from '../../constants/re'
 import { logger } from '../../printer/logger'
 import type { MaybePromise } from '../../types'
@@ -92,7 +92,7 @@ export function injectStyles(options?: InjectStylesPluginOptions): BunPlugin {
 					filename: path.basename(args.path),
 					code: Buffer.from(source),
 					minify,
-					targets: DEFAULT_CSS_TARGETS,
+					targets: getDefaultCssBrowserTargets(),
 				})
 
 				for (const warning of warnings) {

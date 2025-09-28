@@ -34,7 +34,7 @@ import { defineConfig } from 'bunup';
 
 export default defineConfig({
   entry: [
-    'src/index.ts', 
+    'src/index.ts',
     'src/components/button.css'
   ],
 });
@@ -145,13 +145,16 @@ Users can then import your styles:
 
 ```javascript
 import 'your-package/styles.css';
+import { Button } from 'your-package';
+
+<Button />
 ```
 
 ::: tip
-Use the [inject styles plugin](/docs/plugins/inject-styles) to bundle CSS directly into JavaScript. No separate imports needed.
+Use the [inject styles plugin](/docs/plugins/inject-styles) to bundle CSS directly into JavaScript so users do not need a separate CSS import.
 :::
 
-## Browser Support
+## Browser Compatibility
 
 Bunup automatically ensures cross-browser compatibility:
 

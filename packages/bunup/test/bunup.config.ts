@@ -1,6 +1,11 @@
+import { tailwindcss } from '@bunup/plugin-tailwindcss'
 import { defineConfig } from '../src'
 
 export default defineConfig({
 	entry: ['fixtures/index.tsx'],
-	name: 'bunup',
+	plugins: [
+		tailwindcss({
+			minify: true,
+		}),
+	],
 })

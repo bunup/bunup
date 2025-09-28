@@ -1,5 +1,5 @@
 # @bunup/plugin-tailwindcss
 
-The official Bunup plugin for creating component libraries with Tailwind CSS.
+A plugin for Bunup that provides seamless integration with Tailwind CSS.
 
 Learn more: https://bunup.dev/docs/builtin-plugins/tailwindcss

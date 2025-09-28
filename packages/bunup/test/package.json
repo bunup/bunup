@@ -35,7 +35,8 @@
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
 		"uvu": "^0.5.6",
-		"uvu-expect": "^0.5.0"
+		"uvu-expect": "^0.5.0",
+		"@bunup/plugin-tailwindcss": "workspace:*"
 	},
 	"peerDependencies": {
 		"typescript": ">=4.5.0",

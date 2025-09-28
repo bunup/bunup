@@ -12,7 +12,7 @@ Instead of outputting CSS files in the build output, `injectStyles` converts you
 
 Your build creates separate files:
 
-```
+```plaintext {3}
 dist/
 ├── index.js
 └── index.css
@@ -21,8 +21,10 @@ dist/
 Users must import both:
 
 ```javascript
-import { Button } from 'my-library';
 import 'my-library/dist/index.css';
+import { Button } from 'my-library';
+
+<Button />
 ```
 
 ### With `injectStyles`
@@ -38,6 +40,8 @@ Users only import JavaScript, CSS is automatically included:
 
 ```javascript
 import { Button } from 'my-library';
+
+<Button />
 ```
 
 ## Usage
@@ -57,7 +61,7 @@ export default defineConfig({
 That's it! Your CSS will be automatically included in your JavaScript bundle.
 
 ::: info
-Injected CSS is processed for broad browser compatibility (syntax lowering, vendor prefixing, etc.), as described in the [CSS guide’s Browser Support section](/docs/guide/css#browser-support).
+Injected CSS is processed for broad browser compatibility (syntax lowering, vendor prefixing, etc.), as described in the [CSS guide’s Browser Compatibility section](/docs/guide/css#browser-compatibility).
 :::
 
 ## Options

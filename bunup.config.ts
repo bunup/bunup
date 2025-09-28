@@ -29,4 +29,12 @@ export default [
 			plugins: [exports(), unused()],
 		},
 	},
+	{
+		name: '@bunup/shared',
+		root: 'packages/shared',
+		config: {
+			entry: ['src/index.ts'],
+			plugins: [exports(), unused()],
+		},
+	},
 ]

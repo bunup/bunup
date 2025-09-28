@@ -1,40 +1,33 @@
+import { defineWorkspace } from './packages/bunup/src'
 import { exports, unused } from './packages/bunup/src/plugins'
 
-export default [
-	{
-		name: 'bunup',
-		root: 'packages/bunup',
-		config: {
-			target: 'bun',
-			entry: ['src/index.ts', 'src/plugins.ts', 'src/cli/index.ts'],
-			dts: {
-				splitting: true,
+export default defineWorkspace(
+	[
+		{
+			name: 'bunup',
+			root: 'packages/bunup',
+			config: {
+				target: 'bun',
+				entry: ['src/index.ts', 'src/plugins.ts', 'src/cli/index.ts'],
 			},
-			plugins: [exports(), unused()],
 		},
-	},
+		{
+			name: '@bunup/dts',
+			root: 'packages/dts',
+		},
+		{
+			name: '@bunup/plugin-tailwindcss',
+			root: 'packages/plugin-tailwindcss',
+		},
+		{
+			name: '@bunup/shared',
+			root: 'packages/shared',
+		},
+	],
 	{
-		name: '@bunup/dts',
-		root: 'packages/dts',
-		config: {
-			entry: ['src/index.ts'],
-			plugins: [exports(), unused()],
+		dts: {
+			splitting: true,
 		},
+		plugins: [exports(), unused()],
 	},
-	{
-		name: '@bunup/plugin-tailwindcss',
-		root: 'packages/plugin-tailwindcss',
-		config: {
-			entry: ['src/index.ts'],
-			plugins: [exports(), unused()],
-		},
-	},
-	{
-		name: '@bunup/shared',
-		root: 'packages/shared',
-		config: {
-			entry: ['src/index.ts'],
-			plugins: [exports(), unused()],
-		},
-	},
-]
+)

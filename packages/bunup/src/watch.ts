@@ -6,7 +6,7 @@ import { BunupWatchError, handleError, parseErrorMessage } from './errors'
 import { type BuildOptions, resolveBuildOptions } from './options'
 import { logTime } from './printer/logger'
 import { printBuildReport } from './printer/print-build-report'
-import { getShortFilePath } from './utils'
+import { ensureArray, getShortFilePath } from './utils'
 
 export async function watch(
 	userOptions: Partial<BuildOptions>,
@@ -16,7 +16,7 @@ export async function watch(
 
 	const options = resolveBuildOptions(userOptions)
 
-	const uniqueEntries = new Set(options.entry)
+	const uniqueEntries = new Set(ensureArray(options.entry))
 
 	for (const entry of uniqueEntries) {
 		const entryPath = path.resolve(rootDir, entry)
@@ -32,7 +32,7 @@ export async function watch(
 		ignored: [
 			/[\\/]\.git[\\/]/,
 			/[\\/]node_modules[\\/]/,
-			path.join(rootDir, options.outDir),
+			path.resolve(rootDir, options.outDir),
 		],
 	})
 

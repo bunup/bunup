@@ -121,6 +121,8 @@ class CopyBuilder {
 					destinationPath = buildOptions.outDir
 				}
 
+				const activeFiles = new Set<string>()
+
 				for (const pattern of this._patterns) {
 					const glob = new Bun.Glob(pattern)
 
@@ -131,8 +133,8 @@ class CopyBuilder {
 						followSymlinks: this._options?.followSymlinks,
 					})) {
 						const sourcePath = join(meta.rootDir, scannedPath)
+						activeFiles.add(sourcePath)
 
-						// Skip if file hasn't changed in watch mode
 						if (isWatchMode && watchBehavior === 'changed') {
 							const stat = await Bun.file(sourcePath).stat()
 							const lastModified = stat?.mtime?.getTime() ?? 0
@@ -151,7 +153,6 @@ class CopyBuilder {
 							meta.rootDir,
 						)
 
-						// Check if destination exists and handle override option
 						const shouldOverride = this._options?.override ?? true
 						if (!shouldOverride) {
 							const destinationExists =
@@ -169,6 +170,14 @@ class CopyBuilder {
 								finalDestinationPath,
 								buildOptions,
 							)
+						}
+					}
+				}
+
+				if (isWatchMode && watchBehavior === 'changed') {
+					for (const cachedPath of this._fileCache.keys()) {
+						if (!activeFiles.has(cachedPath)) {
+							this._fileCache.delete(cachedPath)
 						}
 					}
 				}

@@ -91,5 +91,13 @@ export async function watch(
 		throw new BunupWatchError(`Watcher error: ${parseErrorMessage(error)}`)
 	})
 
+	const cleanup = async () => {
+		await watcher.close()
+		process.exit(0)
+	}
+
+	process.on('SIGINT', cleanup)
+	process.on('SIGTERM', cleanup)
+
 	await triggerRebuild(true)
 }

@@ -86,13 +86,30 @@ export async function cleanOutDir(
 	rootDir: string,
 	outDir: string,
 ): Promise<void> {
+	const normalizedOutDir = path.normalize(outDir)
+	if (
+		['/', '.', '..', '~'].includes(normalizedOutDir) ||
+		normalizedOutDir.startsWith('/') ||
+		normalizedOutDir.startsWith('~')
+	) {
+		throw new BunupBuildError(
+			`Invalid output directory: "${outDir}" is not allowed`,
+		)
+	}
+
 	const outDirPath = path.join(rootDir, outDir)
+	if (!path.normalize(outDirPath).startsWith(path.normalize(rootDir))) {
+		throw new BunupBuildError(
+			`Output directory "${outDir}" escapes root directory`,
+		)
+	}
+
 	try {
 		await fs.rm(outDirPath, { recursive: true, force: true })
+		await fs.mkdir(outDirPath, { recursive: true })
 	} catch (error) {
-		throw new BunupBuildError(`Failed to clean output directory: ${error}`)
+		throw new BunupBuildError(`Failed to manage output directory: ${error}`)
 	}
-	await fs.mkdir(outDirPath, { recursive: true })
 }
 
 export function cleanPath(path: string): string {

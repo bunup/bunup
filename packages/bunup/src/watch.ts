@@ -11,6 +11,7 @@ import { ensureArray, getShortFilePath } from './utils'
 export async function watch(
 	userOptions: Partial<BuildOptions>,
 	rootDir: string,
+	configFilePath?: string | null,
 ): Promise<void> {
 	const watchPaths = new Set<string>()
 
@@ -22,6 +23,10 @@ export async function watch(
 		const entryPath = path.resolve(rootDir, entry)
 		const parentDir = path.dirname(entryPath)
 		watchPaths.add(parentDir)
+	}
+
+	if (configFilePath) {
+		watchPaths.add(configFilePath)
 	}
 
 	const chokidar = await import('chokidar')
@@ -83,8 +88,18 @@ export async function watch(
 		}
 	}
 
-	watcher.on('change', (path) => {
-		triggerRebuild(false, getShortFilePath(path))
+	watcher.on('change', (changedPath) => {
+		if (configFilePath && changedPath === configFilePath) {
+			console.log(
+				pc.yellow(
+					`  Please restart watch mode to apply configuration changes.\n`,
+				),
+			)
+			cleanup()
+			return
+		}
+
+		triggerRebuild(false, getShortFilePath(changedPath))
 	})
 
 	watcher.on('error', (error) => {

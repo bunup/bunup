@@ -74,7 +74,7 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 				}
 
 				if (userOptions.watch) {
-					await watch(userOptions, rootDir)
+					await watch(userOptions, rootDir, filepath)
 				} else {
 					await build(userOptions, rootDir)
 				}

@@ -1,10 +1,13 @@
-import { describe, expect, it } from 'bun:test'
+import { afterEach, describe, expect, it } from 'bun:test'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import {
 	getResolvedDefine,
 	getResolvedMinify,
 	getResolvedSplitting,
 } from '../../src/options'
 import {
+	cleanOutDir,
 	cleanPath,
 	ensureArray,
 	formatFileSize,
@@ -307,6 +310,111 @@ describe('Utils', () => {
 
 		it('returns false for path with dots and slashes only', () => {
 			expect(isGlobPattern('./src/../dist/index.js')).toBe(false)
+		})
+	})
+
+	describe('cleanOutDir', () => {
+		const testRootDir = path.join(process.cwd(), 'test-temp-root')
+
+		afterEach(async () => {
+			try {
+				await fs.rm(testRootDir, { recursive: true, force: true })
+			} catch {}
+		})
+
+		it('successfully cleans a valid output directory', async () => {
+			await fs.mkdir(testRootDir, { recursive: true })
+			const outDir = 'dist'
+			const outDirPath = path.join(testRootDir, outDir)
+
+			await fs.mkdir(outDirPath, { recursive: true })
+			await fs.writeFile(path.join(outDirPath, 'test.js'), 'content')
+
+			await cleanOutDir(testRootDir, outDir)
+
+			const files = await fs.readdir(outDirPath)
+			expect(files.length).toBe(0)
+		})
+
+		it('throws error for root directory "/"', async () => {
+			expect(cleanOutDir(testRootDir, '/')).rejects.toThrow(
+				'Invalid output directory: "/" is not allowed',
+			)
+		})
+
+		it('throws error for current directory "."', async () => {
+			expect(cleanOutDir(testRootDir, '.')).rejects.toThrow(
+				'Invalid output directory: "." is not allowed',
+			)
+		})
+
+		it('throws error for parent directory ".."', async () => {
+			expect(cleanOutDir(testRootDir, '..')).rejects.toThrow(
+				'Invalid output directory: ".." is not allowed',
+			)
+		})
+
+		it('throws error for home directory "~"', async () => {
+			expect(cleanOutDir(testRootDir, '~')).rejects.toThrow(
+				'Invalid output directory: "~" is not allowed',
+			)
+		})
+
+		it('throws error for absolute path starting with "/"', async () => {
+			expect(cleanOutDir(testRootDir, '/tmp/output')).rejects.toThrow(
+				'Invalid output directory: "/tmp/output" is not allowed',
+			)
+		})
+
+		it('throws error for path starting with "~"', async () => {
+			expect(cleanOutDir(testRootDir, '~/output')).rejects.toThrow(
+				'Invalid output directory: "~/output" is not allowed',
+			)
+		})
+
+		it('throws error for path that escapes root directory using ".."', async () => {
+			expect(cleanOutDir(testRootDir, '../outside')).rejects.toThrow(
+				'Output directory "../outside" escapes root directory',
+			)
+		})
+
+		it('throws error for path that escapes root directory using "dist/../../outside"', async () => {
+			expect(cleanOutDir(testRootDir, 'dist/../../outside')).rejects.toThrow(
+				'Output directory "dist/../../outside" escapes root directory',
+			)
+		})
+
+		it('allows nested valid directories', async () => {
+			await fs.mkdir(testRootDir, { recursive: true })
+			const outDir = 'dist/nested/output'
+
+			await cleanOutDir(testRootDir, outDir)
+
+			const outDirPath = path.join(testRootDir, outDir)
+			const stats = await fs.stat(outDirPath)
+			expect(stats.isDirectory()).toBe(true)
+		})
+
+		it('allows directory with same name as root in path', async () => {
+			await fs.mkdir(testRootDir, { recursive: true })
+			const outDir = 'dist/test-temp-root/output'
+
+			await cleanOutDir(testRootDir, outDir)
+
+			const outDirPath = path.join(testRootDir, outDir)
+			const stats = await fs.stat(outDirPath)
+			expect(stats.isDirectory()).toBe(true)
+		})
+
+		it('handles paths with trailing slashes', async () => {
+			await fs.mkdir(testRootDir, { recursive: true })
+			const outDir = 'dist/output/'
+
+			await cleanOutDir(testRootDir, outDir)
+
+			const outDirPath = path.join(testRootDir, 'dist', 'output')
+			const stats = await fs.stat(outDirPath)
+			expect(stats.isDirectory()).toBe(true)
 		})
 	})
 })

@@ -460,17 +460,19 @@ export interface BuildOptions {
 	unused?: boolean | UnusedOptions
 }
 
+export const DEFAULT_ENTYPOINTS: string[] = [
+	'index.ts',
+	'index.tsx',
+	'src/index.ts',
+	'src/index.tsx',
+	'cli.ts',
+	'src/cli.ts',
+	'src/cli/index.ts',
+]
+
 const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {
 	// It's safe to provide multiple entry points as default since we use Bun.glob, so it only returns the available files. No errors will be thrown if the entries are not found or can't be resolved. For these entries, users don't need to provide the entry.
-	entry: [
-		'index.ts',
-		'index.tsx',
-		'src/index.ts',
-		'src/index.tsx',
-		'cli.ts',
-		'src/cli.ts',
-		'src/cli/index.ts',
-	],
+	entry: DEFAULT_ENTYPOINTS,
 	format: 'esm',
 	outDir: 'dist',
 	target: 'node',

@@ -3,12 +3,16 @@ import { generateDts, logIsolatedDeclarationErrors } from '@bunup/dts'
 import {
 	BunupBuildError,
 	BunupDTSBuildError,
+	invalidEntryPointsError,
+	noDefaultEntryPointsError,
+	PrettyError,
 	parseErrorMessage,
 } from './errors'
 import { executeOnSuccess } from './helpers/on-success'
 import { loadPackageJson } from './loaders'
 import {
 	type BuildOptions,
+	DEFAULT_ENTYPOINTS,
 	getDefaultChunkNaming,
 	getResolvedDefine,
 	getResolvedDtsSplitting,
@@ -33,6 +37,7 @@ import {
 	cleanOutDir,
 	cleanPath,
 	ensureArray,
+	formatListWithAnd,
 	getDefaultDtsOutputExtention,
 	getDefaultJsOutputExtension,
 	getFilesFromGlobs,
@@ -63,12 +68,6 @@ export async function build(
 		logger.setSilent(options.silent)
 	}
 
-	if (!options.entry || options.entry.length === 0 || !options.outDir) {
-		throw new BunupBuildError(
-			'Nothing to build. Please make sure you have provided a proper bunup configuration or cli arguments.',
-		)
-	}
-
 	if (options.clean) {
 		cleanOutDir(rootDir, options.outDir)
 	}
@@ -92,16 +91,23 @@ export async function build(
 	const bunPlugins = filterBunPlugins(allPlugins)
 
 	await runPluginBuildStartHooks(bunupPlugins, options)
-	const entrypoints = await getFilesFromGlobs(
-		ensureArray(options.entry),
-		rootDir,
-	)
+
+	const entryArray = ensureArray(options.entry)
+
+	const entrypoints = await getFilesFromGlobs(entryArray, rootDir)
 
 	if (!entrypoints.length) {
-		throw new BunupBuildError(
-			`One or more of the entrypoints you provided do not exist. Please check that each entrypoint points to a valid file.`,
-		)
+		if (!ensureArray(userOptions.entry).length) {
+			throw new PrettyError(noDefaultEntryPointsError(DEFAULT_ENTYPOINTS))
+		}
+		throw new PrettyError(invalidEntryPointsError(entryArray))
 	}
+
+	logger.info(`entry: ${formatListWithAnd(entrypoints)}`, {
+		identifier: options.name,
+		once: options.name,
+		muted: true,
+	})
 
 	const buildPromises = ensureArray(options.format).flatMap(async (fmt) => {
 		const result = await Bun.build({
@@ -208,9 +214,11 @@ export async function build(
 						packageType,
 						file.kind,
 					)
+
 					const pathRelativeToOutdir = cleanPath(
 						`${file.pathInfo.outputPathWithoutExtension}${dtsExtension}`,
 					)
+
 					const pathRelativeToRootDir = cleanPath(
 						`${options.outDir}/${pathRelativeToOutdir}`,
 					)

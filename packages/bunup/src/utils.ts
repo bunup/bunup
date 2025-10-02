@@ -5,7 +5,7 @@ import { BunupBuildError } from './errors'
 import type { Format } from './options'
 
 export function ensureArray<T>(value: T | T[]): T[] {
-	return Array.isArray(value) ? value : [value]
+	return Array.isArray(value) ? value : [value].filter(Boolean)
 }
 
 export function ensureObject<T>(

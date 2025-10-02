@@ -15,6 +15,13 @@ export class BunupBuildError extends BunupError {
 	}
 }
 
+export class PrettyError extends BunupError {
+	constructor(message: string) {
+		super(message)
+		this.name = 'PrettyError'
+	}
+}
+
 export class BunupDTSBuildError extends BunupError {
 	constructor(message: string) {
 		super(message)
@@ -48,6 +55,31 @@ export const parseErrorMessage = (error: unknown): string => {
 		return error.message
 	}
 	return String(error)
+}
+
+export const noDefaultEntryPointsError = (
+	defaultEntrypoints: string[],
+): string => {
+	return (
+		`${pc.red(pc.bold('\nNo entry points found'))}\n\n` +
+		`Looked for these default entry points:\n\n` +
+		logger.list(defaultEntrypoints, { dim: true }) +
+		`\n\nYou can specify entry points via CLI like ${pc.green('bunup lib/main.ts')}, ` +
+		`use multiple entries like ${pc.green('bunup components/button.tsx utils/format.ts')}, or add the entry option in your bunup config.`
+	)
+}
+
+export const invalidEntryPointsError = (userEntrypoints: string[]): string => {
+	const entryPointsFormatted = logger.list(userEntrypoints, { dim: true })
+	const isMultiple = userEntrypoints.length > 1
+
+	return `${pc.red(pc.bold('\nNo valid entry points found'))}
+
+${isMultiple ? 'None of these entry points' : 'This entry point does not'} ${isMultiple ? 'point' : 'point'} to ${isMultiple ? 'valid files' : 'a valid file'}:
+
+${entryPointsFormatted}
+
+Please check that ${isMultiple ? 'these paths exist and point' : 'this path exists and points'} to ${isMultiple ? 'valid files' : 'a valid file'}.`
 }
 
 interface KnownErrorSolution {
@@ -104,6 +136,10 @@ export const handleError = (error: unknown, context?: string): void => {
 		errorType = 'WATCH ERROR'
 	} else if (error instanceof BunupPluginError) {
 		errorType = 'PLUGIN ERROR'
+	}
+	// pretty error is for custom error UI, this will have it's own title etc
+	else if (error instanceof PrettyError) {
+		errorType = ''
 	} else if (error instanceof BunupError) {
 		errorType = 'BUNUP ERROR'
 	}
@@ -114,8 +150,10 @@ export const handleError = (error: unknown, context?: string): void => {
 			(error.errorType === errorType || !error.errorType),
 	)
 
-	if (!knownError && errorType) {
-		console.error(`\n${pc.red(errorType)} ${contextPrefix}${errorMessage}`)
+	if (!knownError) {
+		console.error(
+			`${errorType ? `\n${pc.red(pc.bold(errorType))} ` : ''}${contextPrefix}${errorMessage}`,
+		)
 	}
 
 	if (knownError) {

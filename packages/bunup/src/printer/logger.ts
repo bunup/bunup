@@ -157,6 +157,16 @@ export class Logger {
 			console.log(...args)
 		}
 	}
+
+	public list(items: string[], options?: { dim?: boolean }): string {
+		return items
+			.map((item) => {
+				const bullet = pc.cyan('-')
+				const text = options?.dim ? pc.dim(item) : item
+				return `  ${bullet} ${text}`
+			})
+			.join('\n')
+	}
 }
 
 export function logTime(ms: number): string {

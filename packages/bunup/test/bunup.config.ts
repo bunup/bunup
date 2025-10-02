@@ -1,17 +1,21 @@
-import { defineConfig } from '../src'
+import { defineWorkspace } from '../src'
 
-export default defineConfig([
+export default defineWorkspace([
 	{
-		entry: ['fixtures/index.tsx'],
-		name: 'node',
-		format: 'esm',
-		target: 'node',
-	},
-	{
-		entry: ['fixtures/index.tsx'],
-		name: 'browser',
-		format: ['esm', 'iife'],
-		target: 'browser',
-		outDir: 'dist/browser',
+		name: 'first',
+		root: 'fixtures',
+		config: [
+			{
+				entry: ['index.tsx'],
+				format: 'esm',
+				target: 'node',
+			},
+			{
+				entry: ['index.tsx'],
+				format: ['esm', 'iife'],
+				target: 'browser',
+				outDir: 'dist/browser',
+			},
+		],
 	},
 ])

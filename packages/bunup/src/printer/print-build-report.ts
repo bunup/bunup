@@ -121,10 +121,11 @@ export async function printBuildReport(
 		let formatLabel = ''
 
 		if (showFormat) {
+			let plainFormatLabel = ''
 			if (file.isJs) {
-				formatLabel = pc.dim(`[${file.format}] `)
+				plainFormatLabel = `[${file.format}] `
 			}
-			formatLabel = pad(formatLabel, formatLabelWidth)
+			formatLabel = pc.dim(pad(plainFormatLabel, formatLabelWidth))
 		}
 
 		const outDirWithSlash = `${options.outDir}/`

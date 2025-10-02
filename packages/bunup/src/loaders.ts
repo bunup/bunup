@@ -20,7 +20,7 @@ export async function processLoadedConfigs(
 				.filter((c) => (filter ? filter.includes(c.name) : true))
 				.map((c) => ({
 					rootDir: path.resolve(cwd, c.root),
-					options: addField(
+					options: setOrSuffixField(
 						c.config,
 						'name',
 						c.name,
@@ -34,14 +34,20 @@ export async function processLoadedConfigs(
 			]
 }
 
-function addField<T extends Record<string, unknown>, F extends string>(
+function setOrSuffixField<T extends Record<string, unknown>, F extends string>(
 	objectOrArray: T | T[],
 	field: F,
-	value: unknown,
+	prefix: unknown,
 ): (T & { [key in F]: unknown }) | (T[] & { [key in F]: unknown }[]) {
+	const addPrefix = (obj: T) => {
+		const existingValue = obj[field]
+		const newValue = existingValue ? `${prefix}-${existingValue}` : prefix
+		return { ...obj, [field]: newValue }
+	}
+
 	return Array.isArray(objectOrArray)
-		? objectOrArray.map((o) => ({ ...o, [field]: value }))
-		: { ...objectOrArray, [field]: value }
+		? objectOrArray.map(addPrefix)
+		: addPrefix(objectOrArray)
 }
 
 export type PackageJson = {

@@ -15,13 +15,6 @@ export class BunupBuildError extends BunupError {
 	}
 }
 
-export class PrettyError extends BunupError {
-	constructor(message: string) {
-		super(message)
-		this.name = 'PrettyError'
-	}
-}
-
 export class BunupDTSBuildError extends BunupError {
 	constructor(message: string) {
 		super(message)
@@ -73,9 +66,7 @@ export const invalidEntryPointsError = (userEntrypoints: string[]): string => {
 	const entryPointsFormatted = logger.list(userEntrypoints, { dim: true })
 	const isMultiple = userEntrypoints.length > 1
 
-	return `${pc.red(pc.bold('\nNo valid entry points found'))}
-
-${isMultiple ? 'None of these entry points' : 'This entry point does not'} ${isMultiple ? 'point' : 'point'} to ${isMultiple ? 'valid files' : 'a valid file'}:
+	return `${pc.red(pc.bold(`\nEntry ${isMultiple ? 'points do not exist' : 'point does not exist'}`))}
 
 ${entryPointsFormatted}
 
@@ -136,10 +127,6 @@ export const handleError = (error: unknown, context?: string): void => {
 		errorType = 'WATCH ERROR'
 	} else if (error instanceof BunupPluginError) {
 		errorType = 'PLUGIN ERROR'
-	}
-	// pretty error is for custom error UI, this will have it's own title etc
-	else if (error instanceof PrettyError) {
-		errorType = ''
 	} else if (error instanceof BunupError) {
 		errorType = 'BUNUP ERROR'
 	}
@@ -152,7 +139,10 @@ export const handleError = (error: unknown, context?: string): void => {
 
 	if (!knownError) {
 		console.error(
-			`${errorType ? `\n${pc.red(pc.bold(errorType))} ` : ''}${contextPrefix}${errorMessage}`,
+			`\n${pc.bgRed(` ${errorType} `)}\n${contextPrefix}${errorMessage}`
+				.split('\n')
+				.map((line) => `  ${line}`)
+				.join('\n'),
 		)
 	}
 
@@ -169,7 +159,7 @@ export const handleError = (error: unknown, context?: string): void => {
 		)
 
 		console.error(
-			pc.white('\nIf you think this is a bug, please ') +
+			pc.white('\n  If you think this is a bug, please ') +
 				link(issueUrl.toString(), 'open an issue') +
 				' with details about this error\n',
 		)

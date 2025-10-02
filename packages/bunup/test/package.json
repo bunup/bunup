@@ -23,7 +23,7 @@
 		"zx-extra": "^4.0.11"
 	},
 	"scripts": {
-		"build": "bun run ../src/cli/index.ts",
+		"build": "bun run ../src/cli/index.ts src/index.ts",
 		"dev": "bun run ../src/cli/index.ts --watch"
 	},
 	"devDependencies": {

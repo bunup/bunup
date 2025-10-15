@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'bun:test'
 import { createProject, runBuild } from '../utils'
 
+// TODO: remove all skipped tests in this file once Bun fixes the crash when running these tests
+
 describe('chunk splitting', () => {
-	// TODO: remove skip once Bun fixes the crash when running this test
 	it('should generate correctly named chunks and assets in the specified output directory', async () => {
 		createProject({
 			'src/index.ts': `
@@ -71,7 +72,7 @@ describe('chunk splitting', () => {
 		expect(dtsFile.content.includes('./shared/')).toBe(true)
 	})
 
-	it('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
+	it.skip('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
 		createProject({
 			'src/a.ts': `
 				import { SharedType } from './shared-type'

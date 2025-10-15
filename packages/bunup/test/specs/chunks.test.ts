@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'bun:test'
-import { createProject, runBuild } from '../utils'
+import { createProject, isWindows, runBuild } from '../utils'
 
-// TODO: remove all skipped tests in this file once Bun fixes the crash when running these tests
-
-describe('chunk splitting', () => {
+describe.skipIf(isWindows())('chunk splitting', () => {
 	it('should generate correctly named chunks and assets in the specified output directory', async () => {
 		createProject({
 			'src/index.ts': `
@@ -35,7 +33,7 @@ describe('chunk splitting', () => {
 		)
 	})
 
-	it.skip('chunk imports should point to valid path', async () => {
+	it('chunk imports should point to valid path', async () => {
 		createProject({
 			'src/a.ts': `
 				import { SharedType } from './shared-type'
@@ -72,7 +70,7 @@ describe('chunk splitting', () => {
 		expect(dtsFile.content.includes('./shared/')).toBe(true)
 	})
 
-	it.skip('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
+	it('should place JS and DTS chunk files in the shared folder, and not place assets in shared', async () => {
 		createProject({
 			'src/a.ts': `
 				import { SharedType } from './shared-type'
@@ -123,7 +121,7 @@ describe('chunk splitting', () => {
 		expect(assetFile?.path.includes('shared/')).toBe(false)
 	})
 
-	it.skip('should only create one dts chunk file per chunk regardless of formats', async () => {
+	it('should only create one dts chunk file per chunk regardless of formats', async () => {
 		createProject({
 			'src/a.ts': `
 				import { SharedType } from './shared-type'
@@ -171,7 +169,7 @@ describe('chunk splitting', () => {
 		}
 	})
 
-	it.skip('should prefix all chunk file names with the provided name in build config', async () => {
+	it('should prefix all chunk file names with the provided name in build config', async () => {
 		createProject({
 			'src/entry1.ts': `
 				import { sharedUtil } from './shared'

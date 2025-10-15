@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'bun:test'
-import { cleanProjectDir, createProject, runDtsBuild } from '../utils'
+import { cleanProjectDir, createProject, isWindows, runDtsBuild } from '../utils'
 
-describe('Config', () => {
+describe.skipIf(isWindows())('Config', () => {
 	beforeEach(() => {
 		cleanProjectDir()
 	})

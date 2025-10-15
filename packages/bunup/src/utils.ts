@@ -229,3 +229,35 @@ export async function detectFileFormatting(filePath: string): Promise<{
 export function isGlobPattern(pattern: string): boolean {
 	return /[*?[\]{}]/.test(pattern)
 }
+
+export function stripAnsiSafe(text: string): string {
+	return Bun.stripANSI ? Bun.stripANSI(text) : text
+}
+
+export function ansiHighlight(code: string): string {
+	const colors = {
+		keyword: '\x1b[35m', // magenta
+		string: '\x1b[32m', // green
+		comment: '\x1b[90m', // gray
+		number: '\x1b[33m', // yellow
+		function: '\x1b[36m', // cyan
+		reset: '\x1b[0m',
+	}
+
+	const keywords =
+		/\b(const|let|var|function|return|if|else|for|while|class|import|export|from|async|await|new|try|catch|throw|typeof|interface|type|enum)\b/g
+	const strings = /(["'`])(?:(?=(\\?))\2.)*?\1/g
+	const comments = /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm
+	const numbers = /\b(\d+\.?\d*)\b/g
+	const functions = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g
+
+	let result = code
+
+	result = result.replace(comments, `${colors.comment}$1${colors.reset}`)
+	result = result.replace(strings, `${colors.string}$&${colors.reset}`)
+	result = result.replace(keywords, `${colors.keyword}$&${colors.reset}`)
+	result = result.replace(numbers, `${colors.number}$&${colors.reset}`)
+	result = result.replace(functions, `${colors.function}$&${colors.reset}`)
+
+	return result
+}

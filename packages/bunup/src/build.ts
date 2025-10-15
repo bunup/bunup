@@ -4,6 +4,7 @@ import { ensureMinimumBunVersion } from './ensure-bun-version'
 import {
 	BunupBuildError,
 	BunupDTSBuildError,
+	formatBunBuildError,
 	invalidEntryPointsError,
 	noEntryPointsFoundError,
 	parseErrorMessage,
@@ -150,9 +151,10 @@ export async function build(
 
 		for (const log of result.logs) {
 			if (log.level === 'error') {
-				throw new BunupBuildError(log.message)
+				throw new BunupBuildError(formatBunBuildError(log))
 			}
 			if (log.level === 'warning') logger.warn(log.message)
+			if (log.level === 'verbose') logger.log(log.message)
 			else if (log.level === 'info') logger.info(log.message)
 		}
 

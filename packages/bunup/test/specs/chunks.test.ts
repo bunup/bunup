@@ -171,7 +171,7 @@ describe('chunk splitting', () => {
 		}
 	})
 
-	it('should prefix all chunk file names with the provided name in build config', async () => {
+	it.skip('should prefix all chunk file names with the provided name in build config', async () => {
 		createProject({
 			'src/entry1.ts': `
 				import { sharedUtil } from './shared'

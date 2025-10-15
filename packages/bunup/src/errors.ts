@@ -156,7 +156,7 @@ export const handleError = (error: unknown, context?: string): void => {
 	}
 }
 
-export const noEntryPointsFoundError = (
+export const formatNoEntryPointsFoundError = (
 	defaultEntrypoints: string[],
 ): string => {
 	return (
@@ -168,7 +168,9 @@ export const noEntryPointsFoundError = (
 	)
 }
 
-export const invalidEntryPointsError = (userEntrypoints: string[]): string => {
+export const formatInvalidEntryPointsError = (
+	userEntrypoints: string[],
+): string => {
 	const entryPointsFormatted = logger.list(userEntrypoints, { dim: true })
 	const isMultiple = userEntrypoints.length > 1
 

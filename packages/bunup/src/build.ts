@@ -5,8 +5,8 @@ import {
 	BunupBuildError,
 	BunupDTSBuildError,
 	formatBunBuildError,
-	invalidEntryPointsError,
-	noEntryPointsFoundError,
+	formatInvalidEntryPointsError,
+	formatNoEntryPointsFoundError,
 	parseErrorMessage,
 } from './errors'
 import { executeOnSuccess } from './helpers/on-success'
@@ -101,9 +101,11 @@ export async function build(
 
 	if (!entrypoints.length) {
 		if (!ensureArray(userOptions.entry).length) {
-			throw new BunupBuildError(noEntryPointsFoundError(DEFAULT_ENTYPOINTS))
+			throw new BunupBuildError(
+				formatNoEntryPointsFoundError(DEFAULT_ENTYPOINTS),
+			)
 		}
-		throw new BunupBuildError(invalidEntryPointsError(entryArray))
+		throw new BunupBuildError(formatInvalidEntryPointsError(entryArray))
 	}
 
 	logger.info(`entry: ${formatListWithAnd(entrypoints)}`, {

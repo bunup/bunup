@@ -13,6 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+      	# TODO: add windows-latest once Bun fixes random crashes on windows
         os: [ubuntu-latest, macos-latest]
 
     steps:

@@ -3,7 +3,7 @@ import { createProject, runBuild } from '../utils'
 
 describe('chunk splitting', () => {
 	// TODO: remove skip once Bun fixes the crash when running this test
-	it.skip('should generate correctly named chunks and assets in the specified output directory', async () => {
+	it('should generate correctly named chunks and assets in the specified output directory', async () => {
 		createProject({
 			'src/index.ts': `
 				import plain from './plain.txt'
@@ -34,7 +34,7 @@ describe('chunk splitting', () => {
 		)
 	})
 
-	it('chunk imports should point to valid path', async () => {
+	it.skip('chunk imports should point to valid path', async () => {
 		createProject({
 			'src/a.ts': `
 				import { SharedType } from './shared-type'

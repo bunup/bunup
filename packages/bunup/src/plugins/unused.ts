@@ -1,6 +1,6 @@
 import pc from 'picocolors'
 import { logger } from '../printer/logger'
-import { formatListWithAnd } from '../utils'
+import { formatListWithAnd } from '../utils/format'
 import type { BunupPlugin } from './types'
 
 export interface UnusedOptions {

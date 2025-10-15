@@ -1,7 +1,8 @@
 import path from 'node:path'
 import { CSS_RE, JS_DTS_RE } from '../constants/re'
 import { logger } from '../printer/logger'
-import { cleanPath, detectFileFormatting } from '../utils'
+import { detectFileFormatting } from '../utils/file'
+import { cleanPath } from '../utils/path'
 import type { BuildContext, BuildOutputFile, BunupPlugin } from './types'
 
 type ExportField = 'require' | 'import' | 'types'

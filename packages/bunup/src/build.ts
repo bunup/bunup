@@ -33,18 +33,15 @@ import {
 	runPluginBuildStartHooks,
 } from './plugins/utils'
 import { logger } from './printer/logger'
+import { ensureArray } from './utils/common'
 import {
-	cleanOutDir,
-	cleanPath,
-	ensureArray,
-	formatListWithAnd,
 	getDefaultDtsOutputExtention,
 	getDefaultJsOutputExtension,
-	getFilesFromGlobs,
-	getShortFilePath,
-	isJavascriptFile,
 	replaceExtension,
-} from './utils'
+} from './utils/extension'
+import { cleanOutDir, getFilesFromGlobs, isJavascriptFile } from './utils/file'
+import { formatListWithAnd } from './utils/format'
+import { cleanPath, getShortFilePath } from './utils/path'
 
 let ac: AbortController | null = null
 

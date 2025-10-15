@@ -1,7 +1,8 @@
 import { basename, extname, join } from 'node:path'
 import type { BuildOptions } from '../options'
 import { logger } from '../printer/logger'
-import { ensureArray, isGlobPattern } from '../utils'
+import { ensureArray } from '../utils/common'
+import { isGlobPattern } from '../utils/file'
 import type { BunupPlugin, BunupPluginHooks } from './types'
 
 type CopyOptions = {

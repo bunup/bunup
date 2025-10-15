@@ -10,7 +10,7 @@ import { shims } from './plugins/shims'
 import type { BunupPlugin } from './plugins/types'
 import { type UnusedOptions, unused } from './plugins/unused'
 import type { MaybePromise, WithRequired } from './types'
-import { ensureObject } from './utils'
+import { ensureObject } from './utils/common'
 
 export type Loader =
 	| 'js'

@@ -6,17 +6,15 @@ import {
 	getResolvedMinify,
 	getResolvedSplitting,
 } from '../../src/options'
+import { ensureArray } from '../../src/utils/common'
 import {
-	cleanOutDir,
-	cleanPath,
-	ensureArray,
-	formatFileSize,
 	getDefaultDtsOutputExtention,
 	getDefaultJsOutputExtension,
-	getPackageDeps,
-	getShortFilePath,
-	isGlobPattern,
-} from '../../src/utils'
+} from '../../src/utils/extension'
+import { cleanOutDir, isGlobPattern } from '../../src/utils/file'
+import { formatFileSize } from '../../src/utils/format'
+import { getPackageDeps } from '../../src/utils/package'
+import { cleanPath, getShortFilePath } from '../../src/utils/path'
 
 describe('Utils', () => {
 	describe('ensureArray', () => {

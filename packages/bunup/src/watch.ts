@@ -6,7 +6,8 @@ import { BunupWatchError, handleError, parseErrorMessage } from './errors'
 import { type BuildOptions, resolveBuildOptions } from './options'
 import { logTime } from './printer/logger'
 import { printBuildReport } from './printer/print-build-report'
-import { ensureArray, getShortFilePath } from './utils'
+import { ensureArray } from './utils/common'
+import { getShortFilePath } from './utils/path'
 
 export async function watch(
 	userOptions: Partial<BuildOptions>,

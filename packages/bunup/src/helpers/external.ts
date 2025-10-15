@@ -1,5 +1,5 @@
 import type { BuildOptions } from '../options'
-import { getPackageDeps } from '../utils'
+import { getPackageDeps } from '../utils/package'
 
 function getPackageDepsPatterns(
 	packageJson: Record<string, unknown> | null,

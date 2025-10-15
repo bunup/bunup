@@ -1,6 +1,7 @@
 import pc from 'picocolors'
 import { link, logger } from './printer/logger'
-import { ansiHighlight, getShortFilePath, stripAnsiSafe } from './utils'
+import { stripAnsiSafe } from './utils/format'
+import { getShortFilePath } from './utils/path'
 
 class BunupError extends Error {
 	constructor(message?: string) {
@@ -125,18 +126,19 @@ export const handleError = (error: unknown, context?: string): void => {
 	)
 
 	if (!knownError) {
-		console.error(
+		logger.error(
 			`\n${pc.bgRed(` ${errorType} `)}\n\n${contextPrefix}${errorMessage}`
 				.split('\n')
 				.map((line) => pc.white(`  ${line}`))
 				.join('\n'),
+			{ noIcon: true },
 		)
 	}
 
 	if (knownError) {
-		console.log('\n')
+		logger.space()
 		knownError.logSolution(errorMessage)
-		console.log('\n')
+		logger.space()
 	} else {
 		const issueUrl = new URL('https://github.com/bunup/bunup/issues/new')
 		issueUrl.searchParams.set(
@@ -148,7 +150,7 @@ export const handleError = (error: unknown, context?: string): void => {
 			`## Error Details\n\n**Error Type:** ${errorType}\n**Error Message:** ${stripAnsiSafe(errorMessage)}\n\n## Additional Context\n\n<!-- Please provide any additional context about what you were trying to do when the error occurred -->`,
 		)
 
-		console.error(
+		logger.log(
 			pc.white('\n  If you think this is a bug, please ') +
 				link(issueUrl.toString(), 'open an issue') +
 				' with details about this error\n',
@@ -194,7 +196,7 @@ export function formatBunBuildError(
 	const padding = ' '.repeat(lineNum.length)
 	const caretPos = pos.column
 
-	return `${pc.dim(`${lineNum} |`)} ${ansiHighlight(pos.lineText)}
+	return `${pc.dim(`${lineNum} |`)} ${logger.highlight(pos.lineText)}
 ${pc.dim(`${padding} |`)} ${' '.repeat(caretPos)}${pc.red('^')}
 
 ${pc.bold(error.message)}

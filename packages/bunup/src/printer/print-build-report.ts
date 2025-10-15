@@ -2,12 +2,9 @@ import { promisify } from 'node:util'
 import { brotliCompress } from 'node:zlib'
 import pc from 'picocolors'
 import type { BuildOutput } from '../plugins/types'
-import {
-	ensureArray,
-	formatFileSize,
-	isJavascriptFile,
-	isTypeScriptFile,
-} from '../utils'
+import { ensureArray } from '../utils/common'
+import { isJavascriptFile, isTypeScriptFile } from '../utils/file'
+import { formatFileSize } from '../utils/format'
 
 const brotliAsync = promisify(brotliCompress)
 

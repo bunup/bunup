@@ -7,6 +7,7 @@ interface LogOptions {
 	once?: string
 	tick?: boolean
 	icon?: string
+	noIcon?: boolean
 }
 
 export type LogLevel = 'info' | 'warn' | 'error'
@@ -75,9 +76,10 @@ export class Logger {
 			muted = false,
 			tick = false,
 			type = 'info',
+			noIcon = false,
 		} = options
 
-		const icon = options.icon ?? this.getIcon(type, tick)
+		const icon = noIcon ? '' : (options.icon ?? this.getIcon(type, tick))
 		const styledMessage = muted
 			? pc.dim(message)
 			: type === 'error'
@@ -87,7 +89,8 @@ export class Logger {
 					: message
 
 		const identifierPart = this.formatIdentifier(identifier)
-		return `${icon} ${styledMessage}${identifierPart}`
+		const iconPart = icon ? `${icon} ` : ''
+		return `${iconPart}${styledMessage}${identifierPart}`
 	}
 
 	private output(
@@ -166,6 +169,25 @@ export class Logger {
 				return `  ${bullet} ${text}`
 			})
 			.join('\n')
+	}
+
+	public highlight(code: string): string {
+		const keywords =
+			/\b(const|let|var|function|return|if|else|for|while|class|import|export|from|async|await|new|try|catch|throw|typeof|interface|type|enum)\b/g
+		const strings = /(["'`])(?:(?=(\\?))\2.)*?\1/g
+		const comments = /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm
+		const numbers = /\b(\d+\.?\d*)\b/g
+		const functions = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g
+
+		let result = code
+
+		result = result.replace(comments, (match) => pc.dim(match))
+		result = result.replace(strings, (match) => pc.green(match))
+		result = result.replace(keywords, (match) => pc.magenta(match))
+		result = result.replace(numbers, (match) => pc.yellow(match))
+		result = result.replace(functions, (match) => pc.cyan(match))
+
+		return result
 	}
 }
 

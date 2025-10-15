@@ -104,6 +104,7 @@ export async function runBuild(
 	} catch (error) {
 		result.success = false
 		result.error = error instanceof Error ? error : new Error(String(error))
+		console.error('runBuild failed:', result.error)
 	}
 
 	return { ...result, packageJson: getPackageJson(PROJECT_DIR) }
@@ -232,6 +233,7 @@ export async function runCli(options: string): Promise<RunCliResult> {
 			result.error = new Error(
 				`CLI command failed with exit code ${execResult.exitCode}: ${execResult.stderr}`,
 			)
+			console.error('runCli failed:', result.error)
 			return {
 				...result,
 				packageJson: {
@@ -251,6 +253,7 @@ export async function runCli(options: string): Promise<RunCliResult> {
 	} catch (error) {
 		result.success = false
 		result.error = error instanceof Error ? error : new Error(String(error))
+		console.error('runCli failed:', result.error)
 	}
 
 	return { ...result, packageJson: getPackageJson(PROJECT_DIR) }

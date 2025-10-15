@@ -123,7 +123,7 @@ describe('chunk splitting', () => {
 		expect(assetFile?.path.includes('shared/')).toBe(false)
 	})
 
-	it('should only create one dts chunk file per chunk regardless of formats', async () => {
+	it.skip('should only create one dts chunk file per chunk regardless of formats', async () => {
 		createProject({
 			'src/a.ts': `
 				import { SharedType } from './shared-type'

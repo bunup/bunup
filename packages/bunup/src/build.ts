@@ -191,6 +191,7 @@ export async function build(
 						file.kind === 'entry-point'
 							? cleanPath(entrypoints[entrypointIndex])
 							: undefined,
+					size: file.size,
 				})
 
 				if (file.kind === 'entry-point') {
@@ -251,6 +252,7 @@ export async function build(
 						entrypoint: file.entrypoint
 							? cleanPath(file.entrypoint)
 							: undefined,
+						size: file.dts.length,
 					})
 				}
 			}

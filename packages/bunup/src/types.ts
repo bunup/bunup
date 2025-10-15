@@ -18,5 +18,5 @@ export type DefineConfigItem = WithOptional<
 export type DefineWorkspaceItem = {
 	name: string
 	root: string
-	config?: DefineConfigItem | DefineConfigItem[]
+	config?: DefineConfigItem | WithRequired<DefineConfigItem, 'name'>[]
 }

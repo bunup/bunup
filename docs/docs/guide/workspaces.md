@@ -1,6 +1,6 @@
 # Bunup Workspaces
 
-Effortlessly manage **multiple packages in a monorepo** with Bunup’s built-in workspace support.  
+Effortlessly manage **multiple packages in a monorepo** with Bunup’s built-in workspace support.
 
 This eliminates the need for separate build configurations and multiple commands for each package. With a single configuration file and a single command, you can build all your packages at once.
 
@@ -91,7 +91,11 @@ export default defineWorkspace(
 
 ## Multiple Build Configurations
 
-Each package can have multiple builds by passing an array:
+Each package can have multiple builds by passing an array.
+
+::: info Named Configurations
+When using an array of build configurations, the `name` property is **required** for each configuration to identify the builds in logs and reports.
+:::
 
 ```ts [bunup.config.ts]
 export default defineWorkspace([
@@ -127,20 +131,18 @@ export default defineWorkspace([
     config: [
       {
         entry: "src/index.ts",
+        name: "main",
         format: ["esm", "cjs"],
       },
       {
         entry: "src/cli.ts",
+        name: "cli",
         format: ["esm"],
       },
     ],
   },
 ]);
 ```
-
-::: tip
-Use the `name` property inside each config to easily distinguish builds in logs.
-:::
 
 ## Path Resolution
 

@@ -18,7 +18,11 @@ This is the simplest way to centralize and reuse your build configuration. See [
 
 ## Multiple Configurations
 
-Bunup supports exporting an **array of configurations**, useful when you want to build for multiple environments or formats in a single run:
+Bunup supports exporting an **array of configurations**, useful when you want to build for multiple environments or formats in a single run.
+
+::: info Named Configurations
+When using an array of configurations, the `name` property is **required** for each configuration to identify the builds in logs and reports.
+:::
 
 ```ts [bunup.config.ts]
 export default defineConfig([
@@ -46,10 +50,12 @@ With this setup, Bunup will build both Node.js and browser bundles.
 export default defineConfig([
   {
     entry: "src/index.ts",
+    name: 'main',
     format: ['esm', 'cjs'],
   },
   {
     entry: "src/cli.ts",
+    name: 'cli',
     format: ['esm'],
   },
 ]);

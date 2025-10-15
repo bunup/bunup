@@ -97,6 +97,7 @@ type BuildOutputFile = {
   pathRelativeToOutdir: string;
   dts: boolean;
   format: Format;
+  size: number;
 }
 ```
 
@@ -109,6 +110,7 @@ type BuildOutputFile = {
 | `pathRelativeToOutdir` | `string` | Path relative to output directory |
 | `dts` | `boolean` | Whether this is a TypeScript declaration file |
 | `format` | `Format` | Output format (esm, cjs, etc.) |
+| `size` | `number` | The size of the file in bytes |
 
 ### `BuildContext.meta`
 
@@ -183,9 +185,3 @@ export function bundleSizeReporter(maxSize?: number): BunupPlugin {
   };
 }
 ```
-
-## Publishing Plugins
-
-If you've created a useful plugin for Bunup, consider publishing it as an npm package
-for others to use. Use a naming convention like `bunup-plugin-*` to make it easily
-discoverable.

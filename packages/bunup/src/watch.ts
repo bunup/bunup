@@ -14,7 +14,6 @@ export async function watch(
 	configFilePath?: string | null,
 ): Promise<void> {
 	const watchPaths = new Set<string>()
-
 	const options = resolveBuildOptions(userOptions)
 
 	const uniqueEntries = new Set(ensureArray(options.entry))
@@ -92,7 +91,7 @@ export async function watch(
 		if (configFilePath && changedPath === configFilePath) {
 			console.log(
 				pc.yellow(
-					`\n  Please restart watch mode to apply configuration changes.`,
+					`\n  Please restart watch mode to apply configuration changes.\n`,
 				),
 			)
 			cleanup()

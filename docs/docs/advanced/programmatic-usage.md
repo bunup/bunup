@@ -46,6 +46,8 @@ type BuildOutputFile = {
   dts: boolean
   /** The format of the output file */
   format: Format
+  /** The size of the file in bytes */
+  size: number
 }
 ```
 

@@ -1,13 +1,13 @@
 import type {
-	Arrayable,
 	DefineConfigItem,
 	DefineWorkspaceItem,
 	WithOptional,
+	WithRequired,
 } from './types'
 
 export function defineConfig(
-	options: Arrayable<DefineConfigItem>,
-): Arrayable<DefineConfigItem> {
+	options: DefineConfigItem | WithRequired<DefineConfigItem, 'name'>[],
+): DefineConfigItem | WithRequired<DefineConfigItem, 'name'>[] {
 	return options
 }
 

@@ -22,8 +22,7 @@ export async function printBuildReport(
 	const files = await Promise.all(
 		buildOutput.files.map(async (file) => {
 			const pathRelative = file.pathRelativeToOutdir
-			const bunFile = Bun.file(file.fullPath)
-			const size = bunFile.size
+			const size = file.size
 			const isDts = file.dts && file.kind === 'entry-point'
 
 			const isJs =
@@ -32,6 +31,7 @@ export async function printBuildReport(
 			let brotliSize: number | undefined
 
 			if (showCompression) {
+				const bunFile = Bun.file(file.fullPath)
 				const uint8 = new Uint8Array(await bunFile.arrayBuffer())
 				const [gzipResult, brotliResult] = await Promise.all([
 					gzip ? Promise.resolve(Bun.gzipSync(uint8)) : Promise.resolve(null),

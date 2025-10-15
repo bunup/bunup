@@ -274,7 +274,3 @@ function getPackageJson(rootDir: string): PackageJson {
 		}
 	}
 }
-
-export function isWindows(): boolean {
-	return process.platform === 'win32'
-}

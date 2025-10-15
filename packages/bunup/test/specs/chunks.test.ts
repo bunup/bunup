@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
-import { createProject, isWindows, runBuild } from '../utils'
+import { createProject, runBuild } from '../utils'
 
-describe.skipIf(isWindows())('chunk splitting', () => {
+describe('chunk splitting', () => {
 	it('should generate correctly named chunks and assets in the specified output directory', async () => {
 		createProject({
 			'src/index.ts': `

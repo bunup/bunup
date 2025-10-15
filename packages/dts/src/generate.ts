@@ -143,7 +143,9 @@ export async function generateDts(
 		packages: 'external',
 		minify: options.minify,
 		throw: false,
-		tsconfig: options.preferredTsconfig ? path.resolve(cwd, options.preferredTsconfig) : undefined
+		tsconfig: options.preferredTsconfig
+			? path.resolve(cwd, options.preferredTsconfig)
+			: undefined,
 	})
 
 	if (!result.success) {

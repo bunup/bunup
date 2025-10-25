@@ -24,6 +24,9 @@ type CustomExports = Record<
 	string | Record<string, string | Record<string, string>>
 >
 
+/**
+ * Exclude can be a list of glob patterns or a function that returns a list of glob patterns
+ */
 type Exclude = ((ctx: BuildContext) => string[] | undefined) | string[]
 
 export interface ExportsOptions {
@@ -81,6 +84,33 @@ export interface ExportsOptions {
 	 * @see https://bunup.dev/docs/extra-options/exports#all
 	 */
 	all?: boolean
+
+	/**
+	 * A base path to strip from generated export keys.
+	 *
+	 * Example: basePath: "./src" will convert generated keys like
+	 * "./src/admin-panel/admin-panel-layout" into "./admin-panel/admin-panel-layout"
+	 *
+	 * This only affects the automatically generated export keys (not keys
+	 * provided via customExports).
+	 */
+	basePath?: string
+
+	/**
+	 * A map/transform function that receives the internally generated exports
+	 * (before merging customExports) and can return a modified exports object.
+	 *
+	 * The function may return either an ExportsField or CustomExports. If it
+	 * returns undefined the generated exports are left unchanged.
+	 *
+	 * This allows arbitrary modifications: rename keys, remove entries, etc.
+	 *
+	 * Signature: map(exports, ctx) => ExportsField | CustomExports | undefined
+	 */
+	map?: (
+		exportsField: ExportsField,
+		ctx: OnBuildDoneCtx,
+	) => ExportsField | CustomExports | undefined
 }
 
 interface FileEntry {
@@ -115,13 +145,24 @@ async function processPackageJsonExports(
 	}
 
 	try {
+		// Generate exports using basePath (if provided)
 		const { exportsField, entryPoints } = generateExportsFields(
 			files,
 			options.exclude,
 			options.excludeCli,
 			options.excludeCss,
+			options.basePath,
 			ctx,
 		)
+
+		// Allow user to map/transform the generated exports before merging custom exports
+		let transformedExports: ExportsField | CustomExports = exportsField
+		if (options.map) {
+			const maybeMapped = options.map(exportsField, ctx)
+			if (maybeMapped) {
+				transformedExports = maybeMapped
+			}
+		}
 
 		const updatedFiles = createUpdatedFilesArray(
 			meta.packageJson.data,
@@ -129,7 +170,7 @@ async function processPackageJsonExports(
 		)
 
 		const mergedExports = mergeCustomExportsWithGenerated(
-			exportsField,
+			transformedExports,
 			options.customExports,
 			ctx,
 		)
@@ -181,6 +222,7 @@ function generateExportsFields(
 	exclude: Exclude | undefined,
 	excludeCli: boolean | undefined,
 	excludeCss: boolean | undefined,
+	basePath: string | undefined,
 	ctx: OnBuildDoneCtx,
 ): {
 	exportsField: ExportsField
@@ -188,11 +230,11 @@ function generateExportsFields(
 } {
 	const filteredFiles = filterFiles(files, exclude, excludeCli, ctx)
 	const { filesByExportKey, allDtsFiles, cssFiles } =
-		groupFilesByExportKey(filteredFiles)
+		groupFilesByExportKey(filteredFiles, basePath)
 	const exportsField = createExportEntries(filesByExportKey)
 
 	if (!excludeCss) {
-		addCssToExports(exportsField, cssFiles)
+		addCssToExports(exportsField, cssFiles, basePath)
 	}
 
 	const entryPoints = extractEntryPoints(exportsField, allDtsFiles)
@@ -200,13 +242,16 @@ function generateExportsFields(
 	return { exportsField, entryPoints }
 }
 
-function groupFilesByExportKey(files: BuildOutputFile[]) {
+function groupFilesByExportKey(files: BuildOutputFile[], basePath?: string) {
 	const filesByExportKey = new Map<string, Map<string, FileEntry>>()
 	const allDtsFiles = new Map<string, BuildOutputFile[]>()
 	const cssFiles: BuildOutputFile[] = []
 
 	for (const file of files) {
-		const exportKey = getExportKey(cleanPath(file.pathRelativeToOutdir))
+		const exportKey = getExportKey(
+			cleanPath(file.pathRelativeToOutdir),
+			basePath,
+		)
 
 		if (CSS_RE.test(file.fullPath)) {
 			cssFiles.push(file)
@@ -373,7 +418,8 @@ function createUpdatedFilesArray(
 }
 
 function mergeCustomExportsWithGenerated(
-	baseExports: ExportsField,
+	// baseExports may be the original generated ExportsField or the result of a map transform (which may be CustomExports)
+	baseExports: CustomExports,
 	customExportsProvider: ExportsOptions['customExports'],
 	ctx: OnBuildDoneCtx,
 ): CustomExports {
@@ -487,15 +533,34 @@ function isExcluded(
 	return allPatterns.some((pattern) => new Bun.Glob(pattern).match(entrypoint))
 }
 
-function getExportKey(pathRelativeToOutdir: string): string {
-	const pathSegments = cleanPath(removeExtension(pathRelativeToOutdir)).split(
-		'/',
-	)
+/**
+ * Build an export key for a given path relative to the outdir.
+ * If basePath is provided (e.g. "src"), and the path starts with that prefix,
+ * the prefix is removed for the generated export key.
+ */
+function getExportKey(
+	pathRelativeToOutdir: string,
+	basePath?: string,
+): string {
+	let normalized = cleanPath(removeExtension(pathRelativeToOutdir))
 
-	if (pathSegments.length === 1 && pathSegments[0]?.startsWith('index')) {
+	if (basePath) {
+		const cleanBase = cleanPath(basePath).replace(/^\.\//, '')
+		if (cleanBase && normalized.startsWith(`${cleanBase}/`)) {
+			normalized = normalized.slice(cleanBase.length + 1)
+		} else if (normalized === cleanBase) {
+			// if the file path equals the base path (e.g. "src/index"), treat it as root
+			normalized = ''
+		}
+	}
+
+	const pathSegments = normalized.split('/').filter(Boolean)
+
+	if (pathSegments.length === 0 || (pathSegments.length === 1 && pathSegments[0]?.startsWith('index'))) {
 		return '.'
 	}
 
+	// Remove index segments from path when building export key
 	return `./${pathSegments.filter((segment) => !segment.startsWith('index')).join('/')}`
 }
 
@@ -518,19 +583,32 @@ function removeExtension(filePath: string): string {
 function addCssToExports(
 	exportsField: ExportsField,
 	cssFiles: BuildOutputFile[],
+	basePath?: string,
 ): void {
 	if (cssFiles.length === 0) return
 
 	for (const cssFile of cssFiles) {
-		const exportKey = getCssExportKey(cleanPath(cssFile.pathRelativeToOutdir))
+		const exportKey = getCssExportKey(
+			cleanPath(cssFile.pathRelativeToOutdir),
+			basePath,
+		)
 		exportsField[exportKey] = `./${cleanPath(cssFile.pathRelativeToRootDir)}`
 	}
 }
 
-function getCssExportKey(pathRelativeToOutdir: string): string {
-	const pathSegments = cleanPath(removeExtension(pathRelativeToOutdir)).split(
-		'/',
-	)
+function getCssExportKey(pathRelativeToOutdir: string, basePath?: string): string {
+	let normalized = cleanPath(removeExtension(pathRelativeToOutdir))
+
+	if (basePath) {
+		const cleanBase = cleanPath(basePath).replace(/^\.\//, '')
+		if (cleanBase && normalized.startsWith(`${cleanBase}/`)) {
+			normalized = normalized.slice(cleanBase.length + 1)
+		} else if (normalized === cleanBase) {
+			normalized = ''
+		}
+	}
+
+	const pathSegments = normalized.split('/').filter(Boolean)
 	const fileName = pathSegments[pathSegments.length - 1]
 
 	if (fileName === 'index') {

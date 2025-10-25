@@ -615,6 +615,29 @@ console.log(logo);
 
 For more information, see the [Bun documentation on publicPath](https://bun.com/docs/bundler#publicpath).
 
+## Root Directory
+
+You can specify the ancestor for entry points to determine the output file structure:
+
+::: code-group
+
+```sh [CLI]
+bunup --root ./src
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+	root: './src',
+});
+
+:::
+
+Without a `root`, a single entry such as `src/subpath/index.ts` can collapse to an output like `dist/index.js`, making it harder to keep nested entry points aligned with their source layout. Setting `root: './src'` fixes that by preserving the relative structure so the same file emits to `dist/subpath/index.js`.
+
+If you leave `root` unspecified, Bunup falls back to the first common ancestor directory of all entry points files.
+
+For more information, see the [Bun documentation on root](https://bun.com/docs/bundler#root).
+
 ## JSX
 
 Configure JSX transform behavior:

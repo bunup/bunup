@@ -134,6 +134,7 @@ export async function build(
 			banner: options.banner,
 			footer: options.footer,
 			publicPath: options.publicPath,
+			root: options.root,
 			env: resolvedEnv,
 			ignoreDCEAnnotations: options.ignoreDCEAnnotations,
 			emitDCEAnnotations: options.emitDCEAnnotations,

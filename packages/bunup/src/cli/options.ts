@@ -393,6 +393,14 @@ const program = cli()
 			.example('https://cdn.example.com/')
 			.optional(),
 	)
+	.option(
+		'root',
+		z
+			.string()
+			.describe('Root directory of the project')
+			.example('./src')
+			.optional(),
+	)
 
 	.option(
 		'jsx',

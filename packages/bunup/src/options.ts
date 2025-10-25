@@ -389,6 +389,17 @@ export interface BuildOptions {
 	 * publicPath: 'https://cdn.example.com/'
 	 */
 	publicPath?: string
+	/**
+	 * The root directory for the project.
+	 *
+	 * It is computed to be the first common ancestor of all entrypoint files.
+	 *
+	 * @see https://bun.com/docs/bundler#root
+	 *
+	 * @example
+	 * root: './src'
+	 */
+	root?: string
 
 	/**
 	 * Controls how environment variables are handled during bundling.

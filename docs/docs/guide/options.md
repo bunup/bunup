@@ -79,6 +79,28 @@ Glob pattern features:
 - Prefix patterns with `!` to exclude files that match the pattern
 - Patterns are resolved relative to the project root
 
+## Output Directory
+
+You can specify where Bunup should output the bundled files:
+
+::: code-group
+
+```sh [CLI]
+bunup --out-dir build
+# or using alias
+bunup -o build
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+    outDir: 'build',
+});
+```
+
+:::
+
+The default output directory is `dist`.
+
 ## Output Formats
 
 Bunup supports three output formats:
@@ -134,28 +156,6 @@ The file extensions are determined automatically based on the format and your pa
 | esm    | `.mjs`               | `.d.mts`                         |
 | cjs    | `.js`                | `.d.ts`                          |
 | iife   | `.global.js`         | `.global.d.ts`                   |
-
-## Output Directory
-
-You can specify where Bunup should output the bundled files:
-
-::: code-group
-
-```sh [CLI]
-bunup --out-dir build
-# or using alias
-bunup -o build
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-    outDir: 'build',
-});
-```
-
-:::
-
-The default output directory is `dist`.
 
 ## External Dependencies
 
@@ -225,47 +225,35 @@ export default defineConfig({
 Both `external` and `no-external` support exact strings and regular expressions for flexible dependency management.
 :::
 
-## Tree Shaking
+## Target Environments
 
-Bunup tree-shakes your code by default. No configuration is needed.
-
-## Code Splitting
-
-Code splitting allows Bunup to split your code into multiple chunks for better performance and caching.
-
-### Default Behavior
-
-- Code splitting is **enabled by default** for ESM format
-- Code splitting is **disabled by default** for CJS and IIFE formats
-
-### Configuring Code Splitting
-
-You can explicitly enable or disable code splitting:
-
-#### Using the CLI
+Bunup allows you to specify the target environment for your bundle:
 
 ::: code-group
 
 ```sh [CLI]
-# Enable code splitting
-bunup --splitting
-
-# Disable code splitting
-bunup --no-splitting
+bunup --target browser
+# or using alias
+bunup -t browser
 ```
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-	format: 'esm',
-	// Enable for all formats
-	splitting: true,
-
-	// Or disable for all formats
-	// splitting: false,
+    target: 'browser',
 });
 ```
 
 :::
+
+Available targets:
+
+- `node` (default): Optimized for Node.js
+- `browser`: Optimized for browsers
+- `bun`: For generating bundles that are intended to be run by the Bun runtime.
+
+If a file contains a Bun shebang (`#!/usr/bin/env bun`), the `bun` target will be used automatically for that file.
+
+When targeting `bun`, bundles are marked with a special `// @bun` pragma that tells the Bun runtime not to re-transpile the file before execution. While bundling isn't always necessary for server-side code, it can improve startup times and runtime performance.
 
 ## Minification
 
@@ -351,6 +339,260 @@ Available sourcemap values:
 - `true` (equivalent to 'inline')
 
 For detailed explanations of these values, see the [Bun documentation on source maps](https://bun.com/docs/bundler#sourcemap).
+
+## Environment Variables
+
+Bunup provides flexible options for handling environment variables in your bundled code:
+
+::: code-group
+```sh [CLI]
+# Inline all environment variables available at build time
+FOO=bar API_KEY=secret bunup --env inline
+
+# Disable all environment variable inlining
+bunup --env disable
+
+# Only inline environment variables with a specific prefix (e.g., PUBLIC_)
+PUBLIC_URL=https://example.com bunup --env PUBLIC_*
+
+# Explicitly provide specific environment variables
+bunup --env.NODE_ENV="production" --env.API_URL="https://api.example.com"
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+	// Inline all available environment variables at build time
+	env: 'inline',
+
+	// Or disable inlining entirely (keep process.env.FOO in the output)
+	// env: "disable",
+
+	// Or inline only variables that start with a specific prefix
+	// env: "PUBLIC_*",
+
+	// Or explicitly provide specific environment variables
+	// These will replace both process.env.FOO and import.meta.env.FOO
+	// env: {
+	//   API_URL: "https://api.example.com",
+	//   DEBUG: "false",
+	// },
+});
+```
+:::
+
+### How it Works
+
+The `env` option controls how `process.env.*` and `import.meta.env.*` expressions are replaced at build time:
+
+| Value            | Behavior                                                                                                                               |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `"inline"`       | Replaces all `process.env.VAR` references in your code with the actual values of those environment variables at the time of the build. |
+| `"disable"`      | Disables environment variable replacement. Keeps `process.env.VAR` as-is in output.                                                    |
+| `"PREFIX_*"`     | Only inlines environment variables matching the given prefix (e.g. `PUBLIC_*`).                                                        |
+| `{ key: value }` | Replaces both `process.env.KEY` and `import.meta.env.KEY` with the provided values, regardless of the environment.                     |
+
+For more information, see the [Bun documentation on environment variables](https://bun.com/docs/bundler#env).
+
+## JSX
+
+Configure JSX transform behavior:
+
+::: code-group
+
+```sh [CLI]
+# Set JSX runtime mode
+bunup --jsx.runtime automatic
+
+# Configure import source
+bunup --jsx.import-source preact
+
+# Configure factory and fragment
+bunup --jsx.factory h --jsx.fragment Fragment
+
+# Configure side effects
+bunup --jsx.side-effects
+
+# Enable development mode
+bunup --jsx.development
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+	jsx: {
+		runtime: 'automatic', // or 'classic'
+		importSource: 'preact',
+		factory: 'h',
+		fragment: 'Fragment',
+		sideEffects: false,
+		development: false,
+	},
+});
+```
+
+:::
+
+Available JSX options:
+
+- **runtime**: JSX runtime mode (`automatic` or `classic`, default: `automatic`)
+- **importSource**: Import source for JSX functions (default: `react`)
+- **factory**: JSX factory function name (default: `React.createElement`)
+- **fragment**: JSX fragment function name (default: `React.Fragment`)
+- **sideEffects**: Whether JSX functions have side effects (default: `false`)
+- **development**: Use jsx-dev runtime for development (default: `false`)
+
+For more information, see the [Bun documentation on JSX](https://bun.com/docs/bundler#jsx).
+
+## Tree Shaking
+
+Bunup tree-shakes your code by default. No configuration is needed.
+
+## Code Splitting
+
+Code splitting allows Bunup to split your code into multiple chunks for better performance and caching.
+
+### Default Behavior
+
+- Code splitting is **enabled by default** for ESM format
+- Code splitting is **disabled by default** for CJS and IIFE formats
+
+### Configuring Code Splitting
+
+You can explicitly enable or disable code splitting:
+
+::: code-group
+
+```sh [CLI]
+# Enable code splitting
+bunup --splitting
+
+# Disable code splitting
+bunup --no-splitting
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+	format: 'esm',
+	// Enable for all formats
+	splitting: true,
+
+	// Or disable for all formats
+	// splitting: false,
+});
+```
+
+:::
+
+## Custom Tsconfig Path
+
+You can specify a custom tsconfig file to use for both build path resolution and TypeScript declaration generation:
+
+::: code-group
+
+```sh [CLI]
+bunup --preferred-tsconfig ./tsconfig.build.json
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+  entry: "src/index.ts",
+  preferredTsconfig: "./tsconfig.build.json",
+});
+```
+
+:::
+
+This option is useful when you want to use a different TypeScript configuration for your build than your development environment. The specified tsconfig is used for path resolution during both bundling and TypeScript declaration generation.
+
+By default, the nearest `tsconfig.json` file will be used if this option is not specified.
+
+## Post-build Operations
+
+The `onSuccess` option runs after the build process successfully completes. It supports three different formats:
+
+### Function Callback
+
+Execute custom JavaScript code after a successful build:
+
+```typescript
+export default defineConfig({
+	onSuccess: (options) => {
+		console.log('Build completed!');
+
+		const server = startDevServer();
+
+		// Optional: return a cleanup function for watch mode
+		return () => server.close();
+	},
+});
+```
+
+### Simple Command
+
+Execute a shell command as a string:
+
+::: code-group
+
+```sh [CLI]
+bunup --on-success "bun run ./scripts/server.ts"
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+	onSuccess: 'bun run ./scripts/server.ts',
+});
+```
+
+:::
+
+### Advanced Command Options
+
+For more control over command execution:
+
+```typescript
+export default defineConfig({
+	onSuccess: {
+		cmd: 'bun run ./scripts/server.ts',
+		options: {
+			cwd: './app',
+			env: { ...process.env, FOO: 'bar' },
+			timeout: 30000, // 30 seconds
+			killSignal: 'SIGKILL',
+		},
+	},
+});
+```
+
+Available command options:
+- **cwd**: Working directory for the command
+- **env**: Environment variables (defaults to `process.env`)
+- **timeout**: Maximum execution time in milliseconds
+- **killSignal**: Signal used to terminate the process (defaults to `'SIGTERM'`)
+
+::: info
+In watch mode, `onSuccess` runs after each successful rebuild.
+:::
+
+::: warning
+The function callback and advanced command options for `onSuccess` are only available in the configuration file, not via CLI flags.
+:::
+
+## Cleaning the Output Directory
+
+By default, Bunup cleans the output directory before each build. You can disable this behavior:
+
+::: code-group
+
+```sh [CLI]
+bunup --no-clean
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+    clean: false,
+});
+```
+
+:::
 
 ## Define Global Constants
 
@@ -755,108 +997,6 @@ This ensures your built files maintain the same organizational structure as your
 
 For more information, see the [Bun documentation on root](https://bun.com/docs/bundler#root).
 
-## JSX
-
-Configure JSX transform behavior:
-
-::: code-group
-
-```sh [CLI]
-# Set JSX runtime mode
-bunup --jsx.runtime automatic
-
-# Configure import source
-bunup --jsx.import-source preact
-
-# Configure factory and fragment
-bunup --jsx.factory h --jsx.fragment Fragment
-
-# Configure side effects
-bunup --jsx.side-effects
-
-# Enable development mode
-bunup --jsx.development
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-	jsx: {
-		runtime: 'automatic', // or 'classic'
-		importSource: 'preact',
-		factory: 'h',
-		fragment: 'Fragment',
-		sideEffects: false,
-		development: false,
-	},
-});
-```
-
-:::
-
-Available JSX options:
-
-- **runtime**: JSX runtime mode (`automatic` or `classic`, default: `automatic`)
-- **importSource**: Import source for JSX functions (default: `react`)
-- **factory**: JSX factory function name (default: `React.createElement`)
-- **fragment**: JSX fragment function name (default: `React.Fragment`)
-- **sideEffects**: Whether JSX functions have side effects (default: `false`)
-- **development**: Use jsx-dev runtime for development (default: `false`)
-
-For more information, see the [Bun documentation on JSX](https://bun.com/docs/bundler#jsx).
-
-## Environment Variables
-
-Bunup provides flexible options for handling environment variables in your bundled code:
-
-::: code-group
-```sh [CLI]
-# Inline all environment variables available at build time
-FOO=bar API_KEY=secret bunup --env inline
-
-# Disable all environment variable inlining
-bunup --env disable
-
-# Only inline environment variables with a specific prefix (e.g., PUBLIC_)
-PUBLIC_URL=https://example.com bunup --env PUBLIC_*
-
-# Explicitly provide specific environment variables
-bunup --env.NODE_ENV="production" --env.API_URL="https://api.example.com"
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-	// Inline all available environment variables at build time
-	env: 'inline',
-
-	// Or disable inlining entirely (keep process.env.FOO in the output)
-	// env: "disable",
-
-	// Or inline only variables that start with a specific prefix
-	// env: "PUBLIC_*",
-
-	// Or explicitly provide specific environment variables
-	// These will replace both process.env.FOO and import.meta.env.FOO
-	// env: {
-	//   API_URL: "https://api.example.com",
-	//   DEBUG: "false",
-	// },
-});
-```
-:::
-
-### How it Works
-
-The `env` option controls how `process.env.*` and `import.meta.env.*` expressions are replaced at build time:
-
-| Value            | Behavior                                                                                                                               |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `"inline"`       | Replaces all `process.env.VAR` references in your code with the actual values of those environment variables at the time of the build. |
-| `"disable"`      | Disables environment variable replacement. Keeps `process.env.VAR` as-is in output.                                                    |
-| `"PREFIX_*"`     | Only inlines environment variables matching the given prefix (e.g. `PUBLIC_*`).                                                        |
-| `{ key: value }` | Replaces both `process.env.KEY` and `import.meta.env.KEY` with the provided values, regardless of the environment.                     |
-
-For more information, see the [Bun documentation on environment variables](https://bun.com/docs/bundler#env).
-
 ## Shims
 
 Bunup can automatically provide compatibility layers for Node.js globals and ESM/CJS interoperability. When enabled, it detects usage of environment-specific features in your code and adds appropriate shims:
@@ -883,145 +1023,3 @@ When shims are enabled, Bunup automatically transforms environment-specific code
 - **For ESM output**: `__dirname` and `__filename` references are transformed to use `dirname(fileURLToPath(import.meta.url))`
 
 This ensures your code works consistently across different module formats and environments without requiring manual compatibility code.
-
-## Target Environments
-
-Bunup allows you to specify the target environment for your bundle:
-
-::: code-group
-
-```sh [CLI]
-bunup --target browser
-# or using alias
-bunup -t browser
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-    target: 'browser',
-});
-```
-
-:::
-
-Available targets:
-
-- `node` (default): Optimized for Node.js
-- `browser`: Optimized for browsers
-- `bun`: For generating bundles that are intended to be run by the Bun runtime.
-
-If a file contains a Bun shebang (`#!/usr/bin/env bun`), the `bun` target will be used automatically for that file.
-
-When targeting `bun`, bundles are marked with a special `// @bun` pragma that tells the Bun runtime not to re-transpile the file before execution. While bundling isn't always necessary for server-side code, it can improve startup times and runtime performance.
-
-## Custom Tsconfig Path
-
-You can specify a custom tsconfig file to use for both build path resolution and TypeScript declaration generation:
-
-::: code-group
-
-```sh [CLI]
-bunup --preferred-tsconfig ./tsconfig.build.json
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-  entry: "src/index.ts",
-  preferredTsconfig: "./tsconfig.build.json",
-});
-```
-
-:::
-
-This option is useful when you want to use a different TypeScript configuration for your build than your development environment. The specified tsconfig is used for path resolution during both bundling and TypeScript declaration generation.
-
-By default, the nearest `tsconfig.json` file will be used if this option is not specified.
-
-## Cleaning the Output Directory
-
-By default, Bunup cleans the output directory before each build. You can disable this behavior:
-
-::: code-group
-
-```sh [CLI]
-bunup --no-clean
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-    clean: false,
-});
-```
-
-:::
-
-## Post-build Operations
-
-The `onSuccess` option runs after the build process successfully completes. It supports three different formats:
-
-### Function Callback
-
-Execute custom JavaScript code after a successful build:
-
-```typescript
-export default defineConfig({
-	onSuccess: (options) => {
-		console.log('Build completed!');
-
-		const server = startDevServer();
-
-		// Optional: return a cleanup function for watch mode
-		return () => server.close();
-	},
-});
-```
-
-### Simple Command
-
-Execute a shell command as a string:
-
-::: code-group
-
-```sh [CLI]
-bunup --on-success "bun run ./scripts/server.ts"
-```
-
-```ts [bunup.config.ts]
-export default defineConfig({
-	onSuccess: 'bun run ./scripts/server.ts',
-});
-```
-
-:::
-
-### Advanced Command Options
-
-For more control over command execution:
-
-```typescript
-export default defineConfig({
-	onSuccess: {
-		cmd: 'bun run ./scripts/server.ts',
-		options: {
-			cwd: './app',
-			env: { ...process.env, FOO: 'bar' },
-			timeout: 30000, // 30 seconds
-			killSignal: 'SIGKILL',
-		},
-	},
-});
-```
-
-Available command options:
-- **cwd**: Working directory for the command
-- **env**: Environment variables (defaults to `process.env`)
-- **timeout**: Maximum execution time in milliseconds
-- **killSignal**: Signal used to terminate the process (defaults to `'SIGTERM'`)
-
-::: info
-In watch mode, `onSuccess` runs after each successful rebuild.
-:::
-
-::: warning
-The function callback and advanced command options for `onSuccess` are only available in the configuration file, not via CLI flags.
-:::

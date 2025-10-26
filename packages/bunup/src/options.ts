@@ -663,7 +663,7 @@ export function getResolvedCompile(
 			name.push(`-${format}`)
 		}
 
-		if (target) {
+		if (target && !compileObj.outfile) {
 			name.push(`-${target.replace('bun-', '')}`)
 		}
 

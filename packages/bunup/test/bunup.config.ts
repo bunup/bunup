@@ -4,13 +4,11 @@ export default defineConfig([
 	{
 		name: 'main',
 		entry: 'fixtures/main.ts',
-		compile: 'bun-darwin-x64-baseline',
+		compile: 'bun-windows-x64',
 	},
 	{
 		name: 'root',
 		entry: 'fixtures/nice/index.ts',
-		compile: {
-			outfile: 'cool',
-		},
+		compile: true,
 	},
 ])

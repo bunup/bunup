@@ -628,54 +628,6 @@ export function resolvePlugins(
 	return plugins
 }
 
-export function getResolvedCompile(
-	entry: string[],
-	compile: Compile | undefined,
-	format: Format,
-): Compile | undefined {
-	if (compile) {
-		let resolvedEntry: string
-
-		const compileObj = typeof compile === 'object' ? compile : {}
-
-		const target = typeof compile === 'string' ? compile : compileObj.target
-
-		if (entry.length > 1) {
-			throw new BunupBuildError(
-				'Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entrypoints for more information.',
-			)
-		} else {
-			resolvedEntry = entry[0] as string
-		}
-
-		const { name: entryName } = path.parse(resolvedEntry)
-		const parentDirName = path.basename(path.dirname(resolvedEntry))
-
-		const execName =
-			compileObj.outfile ??
-			(entryName === 'index' && parentDirName !== 'src'
-				? parentDirName
-				: entryName)
-
-		const name = [execName]
-
-		if (format !== 'esm') {
-			name.push(`-${format}`)
-		}
-
-		if (target && !compileObj.outfile) {
-			name.push(`-${target.replace('bun-', '')}`)
-		}
-
-		return {
-			...compileObj,
-			outfile: name.join(''),
-		}
-	}
-
-	return undefined
-}
-
 export function getResolvedMinify(options: BuildOptions): {
 	whitespace: boolean
 	identifiers: boolean
@@ -728,6 +680,48 @@ export function getResolvedDefine(
 
 export function getDefaultChunkNaming(name: string | undefined) {
 	return `shared/${name ?? 'chunk'}-[hash].[ext]`
+}
+
+export function getCompileNaming(
+	entry: string[],
+	compile: Compile | undefined,
+	format: Format,
+): string {
+	let resolvedEntry: string
+
+	const compileObj = typeof compile === 'object' ? compile : {}
+
+	const target = typeof compile === 'string' ? compile : compileObj.target
+
+	if (entry.length > 1) {
+		throw new BunupBuildError(
+			'Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entrypoints for more information.',
+		)
+	} else {
+		resolvedEntry = entry[0] as string
+	}
+
+	const { name: entryName } = path.parse(resolvedEntry)
+
+	const parentDirName = path.basename(path.dirname(resolvedEntry))
+
+	const execName =
+		compileObj.outfile ??
+		(entryName === 'index' && parentDirName !== 'src'
+			? parentDirName
+			: entryName)
+
+	const name = [execName]
+
+	if (format !== 'esm') {
+		name.push(`-${format}`)
+	}
+
+	if (target) {
+		name.push(`-${target.replace('bun-', '')}`)
+	}
+
+	return `[dir]/${name.join('')}-[hash].[ext]`
 }
 
 // If splitting is undefined, it will be true if the format is esm

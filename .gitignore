@@ -46,6 +46,7 @@ node_modules/
 
 # Build output
 **/dist
+**/bin
 .output
 
 # Test files

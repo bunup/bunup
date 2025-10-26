@@ -394,10 +394,10 @@ const program = cli()
 			.optional(),
 	)
 	.option(
-		'root',
+		'source-base',
 		z
 			.string()
-			.describe('Root directory of the project')
+			.describe('Base directory for entry points to control output structure')
 			.example('./src')
 			.optional(),
 	)

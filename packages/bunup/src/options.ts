@@ -390,16 +390,18 @@ export interface BuildOptions {
 	 */
 	publicPath?: string
 	/**
-	 * The root directory for the project.
+	 * The base directory for your entry points to control the output file structure.
 	 *
-	 * It is computed to be the first common ancestor of all entrypoint files.
+	 * Sets the base directory from which relative paths are calculated.
+	 * Preserves your source directory structure in the output.
+	 * If not specified, Bunup automatically uses the lowest common ancestor directory of all entry points.
 	 *
 	 * @see https://bun.com/docs/bundler#root
 	 *
 	 * @example
-	 * root: './src'
+	 * sourceBase: './src'
 	 */
-	root?: string
+	sourceBase?: string
 
 	/**
 	 * Controls how environment variables are handled during bundling.

@@ -134,7 +134,7 @@ export async function build(
 			banner: options.banner,
 			footer: options.footer,
 			publicPath: options.publicPath,
-			root: options.root,
+			root: options.sourceBase,
 			env: resolvedEnv,
 			ignoreDCEAnnotations: options.ignoreDCEAnnotations,
 			emitDCEAnnotations: options.emitDCEAnnotations,
@@ -214,6 +214,7 @@ export async function build(
 				naming: {
 					chunk: getDefaultChunkNaming(options.name),
 				},
+				root: options.sourceBase,
 				...dtsOptions,
 			})
 

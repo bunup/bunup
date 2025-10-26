@@ -23,12 +23,12 @@
     },
     "packages/bunup": {
       "name": "bunup",
-      "version": "0.15.6",
+      "version": "0.15.7",
       "bin": {
         "bunup": "dist/cli/index.js",
       },
       "dependencies": {
-        "@bunup/dts": "^0.14.34",
+        "@bunup/dts": "^0.14.36",
         "@bunup/shared": "workspace:*",
         "chokidar": "^4.0.3",
         "coffi": "^0.1.37",
@@ -83,7 +83,7 @@
     },
     "packages/plugin-tailwindcss": {
       "name": "@bunup/plugin-tailwindcss",
-      "version": "0.15.6",
+      "version": "0.15.7",
       "dependencies": {
         "@bunup/shared": "workspace:*",
         "@tailwindcss/postcss": "^4.1.15",
@@ -99,7 +99,7 @@
     },
     "packages/shared": {
       "name": "@bunup/shared",
-      "version": "0.15.6",
+      "version": "0.15.7",
       "peerDependencies": {
         "typescript": ">=4.5.0",
       },
@@ -177,7 +177,7 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.2.6", "", { "os": "win32", "cpu": "x64" }, "sha512-yx0CqeOhPjYQ5ZXgPfu8QYkgBhVJyvWe36as7jRuPrKPO5ylVDfwVtPQ+K/mooNTADW0IhxOZm3aPu16dP8yNQ=="],
 
-    "@bunup/dts": ["@bunup/dts@0.14.34", "", { "dependencies": { "@babel/parser": "^7.28.4", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.9.0", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.9.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-83g9C34ZyUD8Hvvf5EFPPGGdmi6YeQU7BIvKU9iNQ80OPPHfD1M0L34OczanUjhKmQC9j/um6BmT6EkJxc9QZQ=="],
+    "@bunup/dts": ["@bunup/dts@0.14.36", "", { "dependencies": { "@babel/parser": "^7.28.4", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.9.0", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.9.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-SLXar/fvh0JuAp/3Tz5qiNKSN3g3IFfKawhVBLKdcbdpziYfQguN33FooGpN1Ua3hMnrv7UPumGhIsU2vkvlkA=="],
 
     "@bunup/plugin-tailwindcss": ["@bunup/plugin-tailwindcss@workspace:packages/plugin-tailwindcss"],
 

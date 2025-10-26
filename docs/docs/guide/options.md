@@ -615,26 +615,143 @@ console.log(logo);
 
 For more information, see the [Bun documentation on publicPath](https://bun.com/docs/bundler#publicpath).
 
-## Root Directory
+## Source Base Directory
 
-You can specify the ancestor for entry points to determine the output file structure:
+You can specify the base directory for your entry points to control the output file structure:
 
 ::: code-group
 
 ```sh [CLI]
-bunup --root ./src
+bunup --source-base ./src
 ```
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-	root: './src',
+	sourceBase: './src',
 });
+```
 
 :::
 
-Without a `root`, a single entry such as `src/subpath/index.ts` can collapse to an output like `dist/index.js`, making it harder to keep nested entry points aligned with their source layout. Setting `root: './src'` fixes that by preserving the relative structure so the same file emits to `dist/subpath/index.js`.
+### What does it do?
 
-If you leave `root` unspecified, Bunup falls back to the first common ancestor directory of all entry points files.
+The `sourceBase` option controls how Bunup preserves your source directory structure in the output. It acts as the "root" from which all relative output paths are calculated.
+
+### Example 1: Single Entry Point
+
+Consider this project structure:
+
+```
+my-project/
+├── src/
+│   └── components/
+│       └── Button/
+│           └── index.ts
+└── package.json
+```
+
+**Without `sourceBase`:**
+
+```ts
+export default defineConfig({
+  entry: 'src/components/Button/index.ts',
+  outDir: 'dist',
+});
+```
+
+Output structure:
+```
+my-project/
+└── dist/
+    └── index.js  // Collapsed to just the filename
+```
+
+**With `sourceBase: './src'`:**
+
+```ts
+export default defineConfig({
+  entry: 'src/components/Button/index.ts',
+  sourceBase: './src',
+  outDir: 'dist',
+});
+```
+
+Output structure:
+```
+my-project/
+└── dist/
+    └── components/
+        └── Button/
+            └── index.js  // Structure preserved!
+```
+
+### Example 2: Multiple Entry Points
+
+This is where `sourceBase` really shines. Consider bundling multiple files:
+
+```
+my-project/
+├── src/
+│   ├── components/
+│   │   ├── Button.ts
+│   │   └── Input.ts
+│   └── utils/
+│       └── format.ts
+└── package.json
+```
+
+**Without `sourceBase` (auto-detected):**
+
+```ts
+export default defineConfig({
+  entry: ['src/components/**/*.ts', 'src/utils/**/*.ts'],
+  outDir: 'dist',
+});
+```
+
+Bunup automatically uses `src/` as the lowest common ancestor:
+
+```
+my-project/
+└── dist/
+    ├── components/
+    │   ├── Button.js
+    │   └── Input.js
+    └── utils/
+        └── format.js
+```
+
+**With explicit `sourceBase: '.'` (project root):**
+
+```ts
+export default defineConfig({
+  entry: ['src/components/**/*.ts', 'src/utils/**/*.ts'],
+  sourceBase: '.',
+  outDir: 'dist',
+});
+```
+
+Output includes the `src/` directory:
+
+```
+my-project/
+└── dist/
+    └── src/
+        ├── components/
+        │   ├── Button.js
+        │   └── Input.js
+        └── utils/
+            └── format.js
+```
+
+### How it works
+
+- Sets the base directory from which relative output paths are calculated
+- Preserves your source directory structure in the output relative to this base
+- If not specified, Bunup automatically uses the lowest common ancestor directory of all entry points
+- Useful when you want to maintain a specific folder structure in your build output
+
+This ensures your built files maintain the same organizational structure as your source code, making it easier to understand the relationship between source and output files.
 
 For more information, see the [Bun documentation on root](https://bun.com/docs/bundler#root).
 

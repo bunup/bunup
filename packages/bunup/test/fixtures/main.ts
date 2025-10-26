@@ -1,1 +1,3 @@
-console.log('main')
+import { fetch } from 'undici'
+
+fetch('')

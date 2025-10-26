@@ -10,12 +10,32 @@ The `compile` option is useful when you want to:
 - Create standalone executables for scripts and utilities
 - Package your code with all dependencies included
 
+## Output Directory
+
+::: info
+Compiled executables output to `bin/` by default, unlike normal builds which output to `dist/` by default. If you want to change the output location, you can use the `outDir` option to specify a different directory like `dist/` or any other location.
+:::
+
 ## Basic Usage
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
   entry: 'src/cli.ts',
   compile: true, // Create executable for current platform
+});
+```
+
+This will output the executable to the `bin/` directory.
+
+## Customizing Output Directory
+
+You can change the output directory using the `outDir` option:
+
+```typescript [bunup.config.ts]
+export default defineConfig({
+  entry: 'src/cli.ts',
+  compile: true,
+  outDir: 'dist', // Output to dist/ instead of bin/
 });
 ```
 

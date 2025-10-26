@@ -642,7 +642,7 @@ export function getResolvedCompile(
 
 		if (entry.length > 1) {
 			throw new BunupBuildError(
-				'Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entries for more information.',
+				'Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entrypoints for more information.',
 			)
 		} else {
 			resolvedEntry = entry[0] as string

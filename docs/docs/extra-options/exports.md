@@ -72,7 +72,7 @@ export default defineConfig({
 
 The `exclude` option allows you to filter out specific export keys from the generated exports field in your package.json. This operates on the final export keys (like `"."`, `"./utils"`, `"./components"`) that appear in the exports object.
 
-You can provide either an array of glob patterns or exact export key strings, or a function that returns such an array.
+You can provide an array of strings (using exact export keys, wildcards, or a mix of both), or a function that returns such an array.
 
 ::: code-group
 
@@ -83,8 +83,11 @@ bunup --exports.exclude=./internal
 # Multiple exclusions
 bunup --exports.exclude=./utils,./internal
 
-# Using glob patterns - exclude all exports under "./private"
+# Using wildcards - exclude all exports under "./private"
 bunup --exports.exclude="./private/*"
+
+# Mix both - exact keys and wildcards
+bunup --exports.exclude="./internal,./private/*"
 ```
 
 ```ts [bunup.config.ts]
@@ -136,11 +139,6 @@ export default defineConfig({
 	},
 });
 ```
-
-**Common patterns:**
-- Exclude specific exports: `["./internal", "./utils"]`
-- Exclude with wildcards: `["./internal/*", "./private-*"]`
-- Exclude nested paths: `["./components/internal"]`
 
 ## Exclude CLI
 

@@ -1,1 +1,1 @@
-console.log('nice')
+export const hello = ''

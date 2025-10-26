@@ -79,7 +79,10 @@ export async function printBuildReport(
 
 	const hasExecutable = files.some((f) => f.isExecutable)
 
-	const labels = [...ensureArray(options.format), hasExecutable && 'executable']
+	const labels = [
+		...ensureArray(options.format),
+		...(hasExecutable ? ['executable'] : []),
+	]
 
 	const showLabel = labels.length > 1 || labels[0] === 'cjs' || hasExecutable
 

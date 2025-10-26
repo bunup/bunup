@@ -4,21 +4,7 @@
 	"files": [
 		"dist"
 	],
-	"module": "./dist/main.mjs",
-	"types": "./dist/main.d.mts",
 	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/main.d.mts",
-				"default": "./dist/main.mjs"
-			}
-		},
-		"./nice": {
-			"import": {
-				"types": "./dist/nice/index.d.mts",
-				"default": "./dist/nice/index.mjs"
-			}
-		},
 		"./package.json": "./package.json"
 	},
 	"bin": {

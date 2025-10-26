@@ -12,9 +12,7 @@ The `compile` option is useful when you want to:
 
 ## Output Directory
 
-::: info
 Compiled executables output to `bin/` by default, unlike normal builds which output to `dist/` by default. If you want to change the output location, you can use the `outDir` option to specify a different directory like `dist/` or any other location.
-:::
 
 ## Basic Usage
 

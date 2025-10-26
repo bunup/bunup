@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'bun:test'
 import { exports } from '../../src/plugins'
-import type { BuildContext } from '../../src/plugins/types'
 import { cleanProjectDir, createProject, runBuild } from '../utils'
 
 describe('exports plugin', () => {
@@ -294,7 +293,7 @@ describe('exports plugin', () => {
 		)
 	})
 
-	it('should exclude specified entry points', async () => {
+	it('should exclude specified export keys', async () => {
 		createProject({
 			'package.json': JSON.stringify({
 				name: 'test-package',
@@ -309,7 +308,7 @@ describe('exports plugin', () => {
 			format: 'esm',
 			plugins: [
 				exports({
-					exclude: ['src/internal.ts'],
+					exclude: ['./internal'],
 				}),
 			],
 		})
@@ -334,11 +333,8 @@ describe('exports plugin', () => {
 			format: 'esm',
 			plugins: [
 				exports({
-					exclude: (ctx: BuildContext) => {
-						const entries = Array.isArray(ctx.options.entry)
-							? ctx.options.entry
-							: [ctx.options.entry]
-						return entries.filter((entry) => entry.includes('internal'))
+					exclude: () => {
+						return ['./internal']
 					},
 				}),
 			],
@@ -543,7 +539,7 @@ describe('exports plugin', () => {
 		expect(result.packageJson.data.exports['./src/cli']).toBeUndefined()
 	})
 
-	it('should merge user exclusions with default CLI exclusions', async () => {
+	it('should work with user exclusions alongside default CLI exclusions', async () => {
 		createProject({
 			'package.json': JSON.stringify({
 				name: 'test-package',
@@ -559,7 +555,7 @@ describe('exports plugin', () => {
 			format: 'esm',
 			plugins: [
 				exports({
-					exclude: ['src/internal.ts'],
+					exclude: ['./internal'],
 				}),
 			],
 		})
@@ -666,7 +662,7 @@ describe('exports plugin', () => {
 			plugins: [
 				exports({
 					excludeCli: false,
-					exclude: ['src/internal.ts'],
+					exclude: ['./internal'],
 				}),
 			],
 		})
@@ -1065,7 +1061,7 @@ describe('exports plugin', () => {
 				dts: true,
 				plugins: [
 					exports({
-						exclude: ['src/cli.ts'],
+						exclude: ['./utils'],
 						excludeCss: false,
 						includePackageJson: true,
 						customExports: () => ({
@@ -1077,7 +1073,7 @@ describe('exports plugin', () => {
 
 			expect(result.success).toBe(true)
 			expect(result.packageJson.data.exports['.']).toBeDefined()
-			expect(result.packageJson.data.exports['./utils']).toBeDefined()
+			expect(result.packageJson.data.exports['./utils']).toBeUndefined()
 			expect(result.packageJson.data.exports['./cli']).toBeUndefined()
 			expect(result.packageJson.data.exports['./styles.css']).toBeDefined()
 			expect(result.packageJson.data.exports['./custom']).toBe('./custom.js')

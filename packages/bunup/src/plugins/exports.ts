@@ -34,7 +34,26 @@ export interface ExportsOptions {
 	 */
 	customExports?: (ctx: BuildContext) => CustomExports | undefined
 	/**
-	 * Entry points to exclude from the exports field
+	 * Export keys to exclude from the generated exports field in package.json
+	 *
+	 * This option filters out specific export keys from the final exports object
+	 * after all exports have been internally generated. Use glob patterns or exact
+	 * export key strings (e.g., ".", "./utils", "./components/*") to match the
+	 * export keys you want to exclude.
+	 *
+	 * @example
+	 * ```ts
+	 * // Exclude specific export keys
+	 * exclude: ["./internal", "./utils"]
+	 *
+	 * // Exclude using glob patterns
+	 * exclude: ["./internal/*", "./private-*"]
+	 *
+	 * // Dynamic exclusion based on build context
+	 * exclude: (ctx) => {
+	 *   return ["./debug"]
+	 * }
+	 * ```
 	 *
 	 * @see https://bunup.dev/docs/extra-options/exports#exclude
 	 */
@@ -186,7 +205,7 @@ function generateExportsFields(
 	exportsField: ExportsField
 	entryPoints: Partial<Record<EntryPoint, string>>
 } {
-	const filteredFiles = filterFiles(files, exclude, excludeCli, ctx)
+	const filteredFiles = filterFiles(files, excludeCli)
 	const { filesByExportKey, allDtsFiles, cssFiles } =
 		groupFilesByExportKey(filteredFiles)
 	const exportsField = createExportEntries(filesByExportKey)
@@ -195,9 +214,15 @@ function generateExportsFields(
 		addCssToExports(exportsField, cssFiles)
 	}
 
-	const entryPoints = extractEntryPoints(exportsField, allDtsFiles)
+	const filteredExportsField = filterExportKeys(exportsField, exclude, ctx)
+	const filteredAllDtsFiles = filterDtsFiles(allDtsFiles, exclude, ctx)
 
-	return { exportsField, entryPoints }
+	const entryPoints = extractEntryPoints(
+		filteredExportsField,
+		filteredAllDtsFiles,
+	)
+
+	return { exportsField: filteredExportsField, entryPoints }
 }
 
 function groupFilesByExportKey(files: BuildOutputFile[]) {
@@ -298,7 +323,6 @@ function extractEntryPoints(
 		return entryPoints
 	}
 
-	// Extract entry points from the "." export
 	for (const [field, value] of Object.entries(dotExport)) {
 		if (field === 'types') continue
 
@@ -311,7 +335,6 @@ function extractEntryPoints(
 		}
 	}
 
-	// Handle root types field
 	const dotEntryDtsFiles = allDtsFiles.get('.')
 	if (dotEntryDtsFiles?.length) {
 		const standardDts = findStandardDtsFile(dotEntryDtsFiles)
@@ -444,9 +467,7 @@ function createUpdatedPackageJson(
 
 function filterFiles(
 	files: BuildOutputFile[],
-	exclude: Exclude | undefined,
 	excludeCli: boolean | undefined,
-	ctx: OnBuildDoneCtx,
 ): BuildOutputFile[] {
 	return files.filter(
 		(file) =>
@@ -455,8 +476,7 @@ function filterFiles(
 			(file.format === 'esm' ||
 				file.format === 'cjs' ||
 				CSS_RE.test(file.fullPath)) &&
-			(!file.entrypoint ||
-				!isExcluded(file.entrypoint, exclude, excludeCli, ctx)),
+			(!file.entrypoint || !isCliEntrypoint(file.entrypoint, excludeCli)),
 	)
 }
 
@@ -471,20 +491,78 @@ const CLI_EXCLUSION_PATTERNS = [
 	'**/bin/index.{ts,tsx,js,jsx,mjs,cjs}',
 ]
 
-function isExcluded(
+function isCliEntrypoint(
 	entrypoint: string,
-	exclude: Exclude | undefined,
 	excludeCli: boolean | undefined,
-	ctx: OnBuildDoneCtx,
 ): boolean {
+	const cliPatterns = excludeCli !== false ? CLI_EXCLUSION_PATTERNS : []
+	return cliPatterns.some((pattern) => new Bun.Glob(pattern).match(entrypoint))
+}
+
+function filterExportKeys(
+	exportsField: ExportsField,
+	exclude: Exclude | undefined,
+	ctx: OnBuildDoneCtx,
+): ExportsField {
+	if (!exclude) {
+		return exportsField
+	}
+
 	const userPatterns =
 		typeof exclude === 'function'
 			? exclude({ options: ctx.options, meta: ctx.meta })
 			: exclude
-	const cliPatterns = excludeCli !== false ? CLI_EXCLUSION_PATTERNS : []
-	const allPatterns = [...cliPatterns, ...(userPatterns ?? [])]
 
-	return allPatterns.some((pattern) => new Bun.Glob(pattern).match(entrypoint))
+	if (!userPatterns || userPatterns.length === 0) {
+		return exportsField
+	}
+
+	const filteredExports: ExportsField = {}
+
+	for (const [exportKey, value] of Object.entries(exportsField)) {
+		const shouldExclude = userPatterns.some((pattern) =>
+			new Bun.Glob(pattern).match(exportKey),
+		)
+
+		if (!shouldExclude) {
+			filteredExports[exportKey] = value
+		}
+	}
+
+	return filteredExports
+}
+
+function filterDtsFiles(
+	allDtsFiles: Map<string, BuildOutputFile[]>,
+	exclude: Exclude | undefined,
+	ctx: OnBuildDoneCtx,
+): Map<string, BuildOutputFile[]> {
+	if (!exclude) {
+		return allDtsFiles
+	}
+
+	const userPatterns =
+		typeof exclude === 'function'
+			? exclude({ options: ctx.options, meta: ctx.meta })
+			: exclude
+
+	if (!userPatterns || userPatterns.length === 0) {
+		return allDtsFiles
+	}
+
+	const filteredDtsFiles = new Map<string, BuildOutputFile[]>()
+
+	for (const [exportKey, files] of allDtsFiles.entries()) {
+		const shouldExclude = userPatterns.some((pattern) =>
+			new Bun.Glob(pattern).match(exportKey),
+		)
+
+		if (!shouldExclude) {
+			filteredDtsFiles.set(exportKey, files)
+		}
+	}
+
+	return filteredDtsFiles
 }
 
 function getExportKey(pathRelativeToOutdir: string): string {

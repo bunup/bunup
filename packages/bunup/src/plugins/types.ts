@@ -20,7 +20,13 @@ export type BuildOutputFile = {
 	 */
 	entrypoint: string | undefined
 	/** The kind of the file */
-	kind: 'entry-point' | 'chunk' | 'asset' | 'sourcemap' | 'bytecode'
+	kind:
+		| 'entry-point'
+		| 'chunk'
+		| 'asset'
+		| 'sourcemap'
+		| 'bytecode'
+		| 'executable'
 	/** Absolute path to the generated file */
 	fullPath: string
 	/** Path to the generated file relative to the root directory */

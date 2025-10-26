@@ -15,6 +15,7 @@ import {
 	type BuildOptions,
 	DEFAULT_ENTYPOINTS,
 	getDefaultChunkNaming,
+	getResolvedCompile,
 	getResolvedDefine,
 	getResolvedDtsSplitting,
 	getResolvedEnv,
@@ -141,6 +142,11 @@ export async function build(
 			ignoreDCEAnnotations: options.ignoreDCEAnnotations,
 			emitDCEAnnotations: options.emitDCEAnnotations,
 			jsx: options.jsx,
+			// @ts-expect-error - compile option is a different interface in Bun.build api, but it's valid as is
+			compile: getResolvedCompile(entryArray, options.compile, fmt),
+			// for compiled executables, let Bun handle writing to the outdir unlike we handle writing for js output files manually
+			// for those who don't know, if we provide outdir to Bun.build, Bun will handle writing files to output. if we don't provide it, we can handle it manually using the output result from Bun.build
+			outdir: options.compile ? options.outDir : undefined,
 			throw: false,
 			plugins: bunPlugins,
 			tsconfig: options.preferredTsconfig
@@ -157,9 +163,37 @@ export async function build(
 			else if (log.level === 'info') logger.info(log.message)
 		}
 
+		// track entrypoint index to get the entrypoint of an output file
+		// this is a little hack until Bun adds an entrypoint field in output file
+		// upstream: https://github.com/oven-sh/bun/issues/15033
 		let entrypointIndex = 0
 
 		for (const file of result.outputs) {
+			// for executables, we don't need to handle the output file writing manually
+			// for compile, we provided the outdir in the Bun.build, so Bun will handle the writing to output.
+			// this manual handling is only for js output files.
+			if (options.compile) {
+				const fullPath = file.path
+
+				const pathRelativeToRootDir = path.relative(rootDir, fullPath)
+
+				const pathRelativeToOutdir = path.relative(options.outDir, fullPath)
+
+				buildOutputFiles.push({
+					fullPath,
+					pathRelativeToRootDir,
+					pathRelativeToOutdir,
+					dts: false,
+					format: fmt,
+					kind: 'executable',
+					entrypoint: entryArray[0],
+					// using Bun.file instead of file.size because file.size is not giving the actual executable size
+					size: Bun.file(fullPath).size,
+				})
+
+				continue
+			}
+
 			const content = await file.text()
 
 			const pathRelativeToOutdir = cleanPath(
@@ -204,7 +238,11 @@ export async function build(
 
 	await Promise.all(buildPromises)
 
-	if (options.dts) {
+	if (
+		options.dts &&
+		// no need to generate dts when compile is provided
+		!options.compile
+	) {
 		try {
 			const { entry, splitting, ...dtsOptions } =
 				typeof options.dts === 'object' ? options.dts : {}

@@ -1,5 +1,1 @@
-export function sum(a: number, b: number): number {
-	return a + b
-}
-
-export const scae = 'case'
+console.log('main')

@@ -1,1 +1,1 @@
-export default ''
+console.log('nice')

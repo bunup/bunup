@@ -1,6 +1,7 @@
 import { basename, extname, join } from 'node:path'
 import type { BuildOptions } from '../options'
 import { logger } from '../printer/logger'
+import type { Arrayable } from '../types'
 import { ensureArray } from '../utils/common'
 import { isGlobPattern } from '../utils/file'
 import type { BunupPlugin, BunupPluginHooks } from './types'
@@ -49,7 +50,7 @@ type TransformFunction = (
  *
  * @see https://bunup.dev/docs/builtin-plugins/copy
  */
-export function copy(pattern: string | string[]): BunupPlugin & CopyBuilder {
+export function copy(pattern: Arrayable<string>): BunupPlugin & CopyBuilder {
 	return new CopyBuilder(pattern)
 }
 
@@ -60,7 +61,7 @@ class CopyBuilder {
 	private _transform?: TransformFunction
 	private _fileCache = new Map<string, number>()
 
-	constructor(pattern: string | string[]) {
+	constructor(pattern: Arrayable<string>) {
 		this._patterns = ensureArray(pattern)
 	}
 

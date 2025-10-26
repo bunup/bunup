@@ -86,6 +86,10 @@ export default defineConfig({
 						text: 'Programmatic Usage',
 						link: '/docs/advanced/programmatic-usage',
 					},
+					{
+						text: 'Compile to Executable',
+						link: '/docs/advanced/compile',
+					},
 				],
 			},
 		],

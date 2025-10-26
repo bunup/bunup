@@ -1,6 +1,7 @@
 import { promisify } from 'node:util'
 import { brotliCompress } from 'node:zlib'
 import pc from 'picocolors'
+import { BunupBuildError } from '../errors'
 import type { BuildResult } from '../plugins/types'
 import { ensureArray } from '../utils/common'
 import { isJavascriptFile, isTypeScriptFile } from '../utils/file'
@@ -12,7 +13,17 @@ export async function printBuildReport(
 	buildResult: BuildResult,
 ): Promise<void> {
 	const options = buildResult.build.options
-	const { gzip = true, brotli = false, maxBundleSize } = options.report ?? {}
+	const {
+		gzip = !options.compile,
+		brotli = false,
+		maxBundleSize,
+	} = options.report ?? {}
+
+	if (options.compile && (brotli || gzip)) {
+		throw new BunupBuildError(
+			'Brotli or Gzip size report is not available when the compile option is enabled.',
+		)
+	}
 
 	const showCompression = gzip || brotli
 
@@ -24,6 +35,9 @@ export async function printBuildReport(
 
 			const isJs =
 				isTypeScriptFile(file.fullPath) || isJavascriptFile(file.fullPath)
+
+			const isExecutable = file.kind === 'executable'
+
 			let gzipSize: number | undefined
 			let brotliSize: number | undefined
 
@@ -47,6 +61,7 @@ export async function printBuildReport(
 				format: file.format,
 				isDts,
 				isJs,
+				isExecutable,
 			}
 		}),
 	)
@@ -62,10 +77,14 @@ export async function printBuildReport(
 		0,
 	)
 
-	const formats = ensureArray(options.format)
-	const showFormat = formats.length > 1 || formats[0] === 'cjs'
-	const formatLabelWidth = showFormat
-		? Math.max(...formats.map((f) => `[${f}] `.length))
+	const labels = [...ensureArray(options.format), 'executable']
+
+	const hasExecutable = files.some((f) => f.isExecutable)
+
+	const showLabel = labels.length > 1 || labels[0] === 'cjs' || hasExecutable
+
+	const labelWidth = showLabel
+		? Math.max(...labels.map((f) => `[${f}] `.length))
 		: 0
 
 	const pathWidth = Math.max(
@@ -103,7 +122,7 @@ export async function printBuildReport(
 	console.log('')
 
 	const headers = [
-		pad('  Output', pathWidth + formatLabelWidth + 2),
+		pad('  Output', pathWidth + labelWidth + 2),
 		pad('Raw', sizeWidth, 'right'),
 	]
 
@@ -114,21 +133,24 @@ export async function printBuildReport(
 	console.log('')
 
 	for (const file of files) {
-		let formatLabel = ''
+		let label = ''
 
-		if (showFormat) {
-			let plainFormatLabel = ''
+		if (showLabel) {
+			let plainLabel = ''
 			if (file.isJs) {
-				plainFormatLabel = `[${file.format}] `
+				plainLabel = `[${file.format}] `
 			}
-			formatLabel = pc.dim(pad(plainFormatLabel, formatLabelWidth))
+			if (file.isExecutable) {
+				plainLabel = `[executable] `
+			}
+			label = pc.dim(pad(plainLabel, labelWidth))
 		}
 
 		const outDirWithSlash = `${options.outDir}/`
 		const fileName = file.isDts ? pc.green(pc.bold(file.path)) : file.path
 		const styledPath = `${pc.dim(outDirWithSlash)}${fileName}`
 		const plainPath = `${outDirWithSlash}${file.path}`
-		const filePathColumn = `  ${formatLabel}${styledPath}${' '.repeat(Math.max(0, pathWidth - plainPath.length))}`
+		const filePathColumn = `  ${label}${styledPath}${' '.repeat(Math.max(0, pathWidth - plainPath.length))}`
 		const fileRow = [
 			filePathColumn,
 			pad(formatFileSize(file.size), sizeWidth, 'right'),
@@ -154,7 +176,7 @@ export async function printBuildReport(
 	console.log('')
 
 	const summaryRow = [
-		`  ${pc.bold(pad(`${files.length} files`, pathWidth + formatLabelWidth))}`,
+		`  ${pc.bold(pad(`${files.length} ${files.length === 1 ? 'file' : 'files'}`, pathWidth + labelWidth))}`,
 		pc.bold(pad(formatFileSize(totalSize), sizeWidth, 'right')),
 	]
 	if (gzip && totalGzipSize > 0) {

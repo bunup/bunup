@@ -1,3 +1,4 @@
+import { isJavascriptFile } from '../../utils/file'
 import type { BunupPlugin } from '../types'
 
 /**
@@ -16,7 +17,11 @@ export function useClient(): BunupPlugin {
 		name: 'use-client',
 		hooks: {
 			onBuildDone: async ({ files }) => {
-				for (const file of files) {
+				const filteredFiles = files.filter((file) =>
+					isJavascriptFile(file.fullPath),
+				)
+
+				for (const file of filteredFiles) {
 					let text = await Bun.file(file.fullPath).text()
 
 					const hasUseClient = text

@@ -1,6 +1,8 @@
+import path from 'node:path'
 import type { GenerateDtsOptions } from '@bunup/dts'
-import type { BuildConfig, BunPlugin } from 'bun'
+import type { BuildConfig, BunPlugin, CompileBuildOptions } from 'bun'
 import { ensureBunVersion } from './ensure-bun-version'
+import { BunupBuildError } from './errors'
 import { cssTypedModulesPlugin } from './plugins/css-typed-modules'
 import { type ExportsOptions, exports } from './plugins/exports'
 import { type InjectStylesOptions, injectStyles } from './plugins/inject-styles'
@@ -9,7 +11,7 @@ import { useClient } from './plugins/internal/use-client'
 import { shims } from './plugins/shims'
 import type { BunupPlugin } from './plugins/types'
 import { type UnusedOptions, unused } from './plugins/unused'
-import type { MaybePromise, WithRequired } from './types'
+import type { Arrayable, MaybePromise, WithRequired } from './types'
 import { ensureObject } from './utils/common'
 
 export type Loader =
@@ -55,6 +57,8 @@ type CSSOptions = {
 	 */
 	inject?: boolean | InjectStylesOptions
 }
+
+export type Compile = boolean | Bun.Build.Target | CompileBuildOptions
 
 export type OnSuccess =
 	| ((options: Partial<BuildOptions>) => MaybePromise<void> | (() => void))
@@ -166,7 +170,7 @@ export interface BuildOptions {
 	 *
 	 * @see https://bunup.dev/docs/guide/options#entry-points
 	 */
-	entry: string | string[]
+	entry: Arrayable<string>
 
 	/**
 	 * Output directory for the bundled files
@@ -223,7 +227,7 @@ export interface BuildOptions {
 	 *
 	 * https://nodejs.org/api/packages.html#exports
 	 */
-	conditions?: string | string[]
+	conditions?: Arrayable<string>
 
 	/**
 	 * Whether to generate TypeScript declaration files (.d.ts)
@@ -236,7 +240,7 @@ export interface BuildOptions {
 				GenerateDtsOptions,
 				'resolve' | 'splitting' | 'minify' | 'inferTypes' | 'tsgo'
 		  > & {
-				entry?: string | string[]
+				entry?: Arrayable<string>
 		  })
 
 	/**
@@ -512,6 +516,36 @@ export interface BuildOptions {
 	 * @see https://bunup.dev/docs/extra-options/unused
 	 */
 	unused?: boolean | UnusedOptions
+
+	/**
+	 * Create a standalone executable from your code.
+	 *
+	 * When `true`, creates an executable for the current platform.
+	 * When a target string is provided, creates an executable for that specific platform.
+	 * When an object is provided, allows for advanced configuration including cross-compilation options.
+	 *
+	 * @see https://bunup.dev/docs/advanced/compile
+	 *
+	 * @example
+	 * // Create executable for current platform
+	 * compile: true
+	 *
+	 * @example
+	 * // Cross-compile for Linux x64
+	 * compile: 'bun-linux-x64'
+	 *
+	 * @example
+	 * // Advanced configuration with options
+	 * compile: {
+	 *   target: 'bun-linux-x64',
+	 *   outfile: './my-cli',
+	 *   windows: {
+	 *     hideConsole: true,
+	 *     icon: './icon.ico'
+	 *   }
+	 * }
+	 */
+	compile?: Compile
 }
 
 // It's safe to provide multiple entry points as default since we use Bun.glob, so it only returns the available files. No errors will be thrown if the entries are not found or can't be resolved. For these entries, users don't need to provide the entry.
@@ -525,10 +559,12 @@ export const DEFAULT_ENTYPOINTS: string[] = [
 	'src/cli/index.ts',
 ]
 
-const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {
+const DEFAULT_OUT_DIR = 'dist'
+export const DEFAULT_EXECUTABLE_OUT_DIR = 'bin'
+
+const DEFAULT_OPTIONS: Omit<WithRequired<BuildOptions, 'clean'>, 'outDir'> = {
 	entry: DEFAULT_ENTYPOINTS,
 	format: 'esm',
-	outDir: 'dist',
 	target: 'node',
 	dts: true,
 	clean: true,
@@ -537,13 +573,18 @@ const DEFAULT_OPTIONS: WithRequired<BuildOptions, 'clean'> = {
 export function resolveBuildOptions(
 	userOptions: Partial<BuildOptions>,
 ): BuildOptions {
-	const options = {
+	const options: BuildOptions = {
 		...DEFAULT_OPTIONS,
+		outDir: userOptions.compile ? DEFAULT_EXECUTABLE_OUT_DIR : DEFAULT_OUT_DIR,
 		...userOptions,
 	}
 
 	if (options.jsx) {
 		ensureBunVersion('1.2.23', 'jsx option')
+	}
+
+	if (options.compile) {
+		ensureBunVersion('1.3.0', 'compile option')
 	}
 
 	return options
@@ -585,6 +626,54 @@ export function resolvePlugins(
 	plugins.push(externalOptionPlugin(options, packageJsonData))
 
 	return plugins
+}
+
+export function getResolvedCompile(
+	entry: string[],
+	compile: Compile | undefined,
+	format: Format,
+): Compile | undefined {
+	if (compile) {
+		let resolvedEntry: string
+
+		const compileObj = typeof compile === 'object' ? compile : {}
+
+		const target = typeof compile === 'string' ? compile : compileObj.target
+
+		if (entry.length > 1) {
+			throw new BunupBuildError(
+				'Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entries for more information.',
+			)
+		} else {
+			resolvedEntry = entry[0] as string
+		}
+
+		const { name: entryName } = path.parse(resolvedEntry)
+		const parentDirName = path.basename(path.dirname(resolvedEntry))
+
+		const execName =
+			compileObj.outfile ??
+			(entryName === 'index' && parentDirName !== 'src'
+				? parentDirName
+				: entryName)
+
+		const name = [execName]
+
+		if (format !== 'esm') {
+			name.push(`-${format}`)
+		}
+
+		if (target) {
+			name.push(`-${target.replace('bun-', '')}`)
+		}
+
+		return {
+			...compileObj,
+			outfile: name.join(''),
+		}
+	}
+
+	return undefined
 }
 
 export function getResolvedMinify(options: BuildOptions): {

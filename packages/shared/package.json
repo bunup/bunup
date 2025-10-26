@@ -40,7 +40,7 @@
 	"funding": "https://github.com/sponsors/arshad-yaseen",
 	"homepage": "https://bunup.dev",
 	"peerDependencies": {
-		"typescript": ">=4.5.0"
+		"typescript": "latest"
 	},
 	"peerDependenciesMeta": {
 		"typescript": {

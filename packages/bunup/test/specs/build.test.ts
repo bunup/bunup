@@ -741,4 +741,181 @@ export function Counter() {
 			false,
 		)
 	})
+
+	describe('sourceBase option', () => {
+		it('should preserve directory structure relative to sourceBase', async () => {
+			createProject({
+				'src/index.ts': 'export const main = "main";',
+				'src/utils/helper.ts': 'export const helper = () => "helper";',
+				'src/components/button.ts': 'export const Button = () => "button";',
+			})
+
+			const result = await runBuild({
+				entry: [
+					'src/index.ts',
+					'src/utils/helper.ts',
+					'src/components/button.ts',
+				],
+				format: 'esm',
+				sourceBase: './src',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: [
+						'index.mjs',
+						'utils/helper.mjs',
+						'components/button.mjs',
+					],
+				}),
+			).toBe(true)
+		})
+
+		it('should flatten structure when sourceBase is not specified', async () => {
+			createProject({
+				'packages/core/index.ts': 'export const core = "core";',
+				'packages/utils/index.ts': 'export const utils = "utils";',
+			})
+
+			const result = await runBuild({
+				entry: ['packages/core/index.ts', 'packages/utils/index.ts'],
+				format: 'esm',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: ['core/index.mjs', 'utils/index.mjs'],
+				}),
+			).toBe(true)
+		})
+
+		it('should work with sourceBase for deeply nested files', async () => {
+			createProject({
+				'app/src/features/auth/login.ts': 'export const login = () => "login";',
+				'app/src/features/auth/signup.ts':
+					'export const signup = () => "signup";',
+				'app/src/features/dashboard/index.ts':
+					'export const dashboard = () => "dashboard";',
+			})
+
+			const result = await runBuild({
+				entry: [
+					'app/src/features/auth/login.ts',
+					'app/src/features/auth/signup.ts',
+					'app/src/features/dashboard/index.ts',
+				],
+				format: 'esm',
+				sourceBase: './app/src/features',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: [
+						'auth/login.mjs',
+						'auth/signup.mjs',
+						'dashboard/index.mjs',
+					],
+				}),
+			).toBe(true)
+		})
+
+		it('should work with sourceBase and DTS generation', async () => {
+			createProject({
+				'src/lib/core/types.ts': 'export type User = { name: string; };',
+				'src/lib/core/utils.ts': 'export const util = () => "util";',
+				'src/lib/helpers/format.ts': 'export const format = (s: string) => s;',
+			})
+
+			const result = await runBuild({
+				entry: [
+					'src/lib/core/types.ts',
+					'src/lib/core/utils.ts',
+					'src/lib/helpers/format.ts',
+				],
+				format: 'esm',
+				dts: true,
+				sourceBase: './src/lib',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: [
+						'core/types.mjs',
+						'core/utils.mjs',
+						'helpers/format.mjs',
+						'core/types.d.mts',
+						'core/utils.d.mts',
+						'helpers/format.d.mts',
+					],
+				}),
+			).toBe(true)
+		})
+
+		it('should work with sourceBase and multiple formats', async () => {
+			createProject({
+				'source/index.ts': 'export const x = 1;',
+				'source/utils.ts': 'export const util = () => "util";',
+			})
+
+			const result = await runBuild({
+				entry: ['source/index.ts', 'source/utils.ts'],
+				format: ['esm', 'cjs'],
+				sourceBase: './source',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: ['index.mjs', 'utils.mjs', 'index.js', 'utils.js'],
+				}),
+			).toBe(true)
+		})
+
+		it('should handle sourceBase with single entry point', async () => {
+			createProject({
+				'lib/main/index.ts': 'export const main = "main";',
+			})
+
+			const result = await runBuild({
+				entry: 'lib/main/index.ts',
+				format: 'esm',
+				sourceBase: './lib/main',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: ['index.mjs'],
+				}),
+			).toBe(true)
+		})
+
+		it('should respect sourceBase when calculating output paths for exports', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/index.ts': 'export const main = "main";',
+				'src/utils.ts': 'export const util = "util";',
+			})
+
+			const result = await runBuild({
+				entry: ['src/index.ts', 'src/utils.ts'],
+				format: 'esm',
+				sourceBase: './src',
+			})
+
+			expect(result.success).toBe(true)
+			expect(
+				validateBuildFiles(result, {
+					expectedFiles: ['index.mjs', 'utils.mjs'],
+				}),
+			).toBe(true)
+		})
+	})
 })

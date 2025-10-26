@@ -492,11 +492,15 @@ function getExportKey(pathRelativeToOutdir: string): string {
 		'/',
 	)
 
-	if (pathSegments.length === 1 && pathSegments[0]?.startsWith('index')) {
+	if (
+		pathSegments.length === 1 &&
+		(pathSegments[0]?.startsWith('index') ||
+			pathSegments[0]?.startsWith('main'))
+	) {
 		return '.'
 	}
 
-	return `./${pathSegments.filter((segment) => !segment.startsWith('index')).join('/')}`
+	return `./${pathSegments.filter((segment) => !segment.startsWith('index') && !segment.startsWith('main')).join('/')}`
 }
 
 function removeExtension(filePath: string): string {

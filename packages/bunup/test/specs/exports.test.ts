@@ -1344,4 +1344,150 @@ describe('exports plugin', () => {
 			expect(result.packageJson.data.exports['./package.json']).toBeUndefined()
 		})
 	})
+
+	describe('main.ts/main.mjs handling', () => {
+		it('should treat main.ts as root export (.)', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/main.ts': 'export const hello: string = "world";',
+			})
+
+			const result = await runBuild({
+				entry: 'src/main.ts',
+				format: 'esm',
+				plugins: [exports()],
+			})
+
+			expect(result.success).toBe(true)
+			expect(result.packageJson.data.exports['.']).toBeDefined()
+			expect(result.packageJson.data.exports['.'].import).toContain(
+				'.output/main.mjs',
+			)
+			expect(result.packageJson.data.module).toContain('.output/main.mjs')
+		})
+
+		it('should handle both main.ts and other entry points', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/main.ts': 'export const main = "main";',
+				'src/utils.ts': 'export const util = "util";',
+			})
+
+			const result = await runBuild({
+				entry: ['src/main.ts', 'src/utils.ts'],
+				format: 'esm',
+				plugins: [exports()],
+			})
+
+			expect(result.success).toBe(true)
+			expect(result.packageJson.data.exports['.']).toBeDefined()
+			expect(result.packageJson.data.exports['.'].import).toContain(
+				'.output/main.mjs',
+			)
+			expect(result.packageJson.data.exports['./utils']).toBeDefined()
+			expect(result.packageJson.data.exports['./utils'].import).toContain(
+				'.output/utils.mjs',
+			)
+		})
+
+		it('should handle nested main.ts files correctly', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/index.ts': 'export const root = "root";',
+				'src/components/main.ts': 'export const components = "components";',
+			})
+
+			const result = await runBuild({
+				entry: ['src/index.ts', 'src/components/main.ts'],
+				format: 'esm',
+				plugins: [exports()],
+			})
+
+			expect(result.success).toBe(true)
+			expect(result.packageJson.data.exports['.']).toBeDefined()
+			expect(result.packageJson.data.exports['./components']).toBeDefined()
+			expect(result.packageJson.data.exports['./components'].import).toContain(
+				'.output/components/main.mjs',
+			)
+		})
+
+		it('should handle main.ts with TypeScript declarations', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/main.ts': 'export const hello: string = "world";',
+			})
+
+			const result = await runBuild({
+				entry: 'src/main.ts',
+				format: 'esm',
+				dts: true,
+				plugins: [exports()],
+			})
+
+			expect(result.success).toBe(true)
+			expect(result.packageJson.data.exports['.']).toBeDefined()
+			expect(result.packageJson.data.exports['.'].import.types).toBeDefined()
+			expect(result.packageJson.data.exports['.'].import.types).toContain(
+				'.d.mts',
+			)
+			expect(result.packageJson.data.types).toBeDefined()
+		})
+
+		it('should handle main.ts with both ESM and CJS formats', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/main.ts': 'export const hello: string = "world";',
+			})
+
+			const result = await runBuild({
+				entry: 'src/main.ts',
+				format: ['esm', 'cjs'],
+				plugins: [exports()],
+			})
+
+			expect(result.success).toBe(true)
+			expect(result.packageJson.data.exports['.']).toBeDefined()
+			expect(result.packageJson.data.exports['.'].import).toContain(
+				'.output/main.mjs',
+			)
+			expect(result.packageJson.data.exports['.'].require).toContain(
+				'.output/main.js',
+			)
+		})
+
+		it('should prefer index.ts over main.ts when both exist', async () => {
+			createProject({
+				'package.json': JSON.stringify({
+					name: 'test-package',
+					version: '1.0.0',
+				}),
+				'src/index.ts': 'export const index = "index";',
+				'src/main.ts': 'export const main = "main";',
+			})
+
+			const result = await runBuild({
+				entry: ['src/index.ts', 'src/main.ts'],
+				format: 'esm',
+				plugins: [exports()],
+			})
+
+			expect(result.success).toBe(true)
+			expect(result.packageJson.data.exports['.']).toBeDefined()
+		})
+	})
 })

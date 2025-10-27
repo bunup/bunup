@@ -72,7 +72,7 @@ const program = cli()
 		'filter',
 		z
 			.array(z.string())
-			.describe('Filter workspace packages by name')
+			.describe('Filter workspace packages or config array items by name')
 			.optional(),
 	)
 

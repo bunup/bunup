@@ -58,48 +58,28 @@ export default defineConfig([
     name: 'cli',
     format: ['esm'],
   },
+  {
+    entry: "src/browser.ts",
+    name: 'browser',
+    format: ['esm', 'iife'],
+    outDir: 'dist/browser'
+  },
 ]);
 ```
 
+## Filtering Configurations
 
-## Named Configurations
-
-Each build configuration can have a **name**. This improves log readability, especially when running multiple builds.
-
-::: code-group
+When you have multiple configurations in an array, you can use the `--filter` option to build only specific configurations by name:
 
 ```sh [CLI]
-bunup --name my-library
+# Single
+bunup --filter main
+
+# Multiple
+bunup --filter main,browser
 ```
 
-```ts [bunup.config.ts]
-export default defineConfig({
-  name: 'my-library',
-});
-```
-
-:::
-
-When working with multiple configurations, naming helps identify each build clearly:
-
-```ts [bunup.config.ts]
-export default defineConfig([
-  {
-    name: 'node-build',
-    entry: "src/index.ts",
-    format: 'esm',
-    target: 'node',
-    // ...other options
-  },
-  {
-    name: 'browser-build',
-    entry: "src/browser.ts",
-    format: ['esm', 'iife'],
-    target: 'browser',
-    // ...other options
-  },
-]);
-```
+Only the configurations matching these names will be built - perfect for testing specific builds without running the entire suite.
 
 ## Custom Configuration Path
 

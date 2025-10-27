@@ -29,9 +29,23 @@ export async function processLoadedConfigs(
 		: [
 				{
 					rootDir: cwd,
-					options: config as Arrayable<BuildOptions>,
+					options: filterConfigArrayByName(
+						config as Arrayable<BuildOptions>,
+						filter,
+					),
 				},
 			]
+}
+
+function filterConfigArrayByName(
+	config: Arrayable<BuildOptions>,
+	filter: string[] | undefined,
+) {
+	if (Array.isArray(config) && filter) {
+		return config.filter((c) => (c.name ? filter.includes(c.name) : true))
+	}
+
+	return config
 }
 
 function setOrSuffixField<T extends Record<string, unknown>, F extends string>(

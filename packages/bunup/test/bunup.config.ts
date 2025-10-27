@@ -4,9 +4,9 @@ export default defineConfig([
 	{
 		name: 'root',
 		entry: ['fixtures/nice/index.ts'],
-		sourceBase: 'fixtures/nice',
-		exports: {
-			exclude: ['./fixtures/**/**'],
-		},
+	},
+	{
+		name: 'main',
+		entry: ['fixtures/main.ts'],
 	},
 ])

@@ -149,7 +149,9 @@ export async function build(
 			compile: options.compile,
 			// for compiled executables, let Bun handle writing to the outdir unlike we handle writing for js output files manually
 			// for those who don't know, if we provide outdir to Bun.build, Bun will handle writing files to output. if we don't provide it, we can handle it manually using the output result from Bun.build
-			outdir: options.compile ? options.outDir : undefined,
+			outdir: options.compile
+				? path.resolve(rootDir, options.outDir)
+				: undefined,
 			throw: false,
 			plugins: bunPlugins,
 			tsconfig: options.preferredTsconfig
@@ -180,7 +182,8 @@ export async function build(
 
 				const pathRelativeToRootDir = path.relative(rootDir, fullPath)
 
-				const pathRelativeToOutdir = path.relative(options.outDir, fullPath)
+				const absoluteOutDir = path.resolve(rootDir, options.outDir)
+				const pathRelativeToOutdir = path.relative(absoluteOutDir, fullPath)
 
 				buildOutputFiles.push({
 					fullPath,

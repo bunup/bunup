@@ -4,10 +4,23 @@
 	"version": "0.15.11",
 	"type": "module",
 	"files": [
-		"dist",
-		"bin"
+		"dist"
 	],
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./plugins": {
+			"import": {
+				"types": "./dist/plugins.d.ts",
+				"default": "./dist/plugins.js"
+			}
+		},
 		"./package.json": "./package.json"
 	},
 	"license": "MIT",

@@ -157,37 +157,55 @@ The file extensions are determined automatically based on the format and your pa
 | cjs    | `.js`                | `.d.ts`                          |
 | iife   | `.global.js`         | `.global.d.ts`                   |
 
-## External Dependencies
+Here's the rewritten documentation with better clarity and structure:
 
-When you build a library with Bunup, you need to decide which packages should be included in your bundle and which should be left out. This section explains how to control this behavior.
+## Managing Dependencies in Your Bundle
 
-### What Happens by Default
+When building a library with Bunup, not all packages need to be included in your final bundle. Bunup automatically handles this for you based on your `package.json` configuration, but you can also customize this behavior when needed.
 
-Bunup looks at your `package.json` file and automatically decides what to bundle:
+### How Bunup Automatically Handles Dependencies
 
-- **Packages in `dependencies`**: These are **not included** in your bundle. These will be installed automatically when your package is installed.
-- **Packages in `peerDependencies`**: These are also **not included**. Users of your library are expected to install these dependencies manually.
-- **Packages in `devDependencies`**: These **are included** if you actually use them in your code.
+Bunup examines your `package.json` file and makes decisions about what to include:
 
-### Why This Matters
+- **Dependencies**: Automatically excluded from your bundle. These packages will be installed when users install your library.
+- **Peer Dependencies**: Automatically excluded from your bundle. Users are expected to have these packages already installed.
+- **Dev Dependencies**: Only included in your bundle if your code actually imports and uses them.
 
-Imagine you're building a library that uses `lodash`:
+This automatic behavior keeps your library lightweight and prevents version conflicts.
 
-- If you put `lodash` in `dependencies`, it won't be bundled with your library
-- `lodash` will be installed automatically when your package is installed
-- This keeps your library smaller and avoids version conflicts
+### Example Scenario
 
-### Making Packages External
+Let's say you're building a utility library that uses `lodash`:
 
-If you want to make sure a package is not bundled (even if it's not in your `package.json`):
+```json
+{
+  "name": "my-utility-lib",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
+```
+
+With this setup:
+- `lodash` will not be bundled into your library; it will be treated as an external dependency and imported at runtime.
+- When someone installs your library, `lodash` is installed automatically.
+- This keeps your bundle small and efficient.
+
+### Customizing Dependency Handling
+
+Sometimes you need to override the automatic behavior:
+
+#### Making Additional Packages External
+
+To exclude packages that aren't in your `package.json` dependencies:
 
 ::: code-group
 
 ```sh [CLI]
-# Single package
+# Exclude a single package
 bunup --external lodash
 
-# Multiple packages
+# Exclude multiple packages
 bunup --external lodash,react,vue
 ```
 
@@ -199,17 +217,17 @@ export default defineConfig({
 
 :::
 
-### Forcing Packages to Be Bundled
+#### Including Dependencies in Your Bundle
 
-If you want to include a package in your bundle (even if it's normally external):
+To force packages into your bundle (even if they're normally excluded):
 
 ::: code-group
 
 ```sh [CLI]
-# Single package
+# Include a single package
 bunup --no-external lodash
 
-# Multiple packages
+# Include multiple packages
 bunup --no-external lodash,react,vue
 ```
 
@@ -222,7 +240,7 @@ export default defineConfig({
 :::
 
 ::: info
-Both `external` and `no-external` support exact strings and regular expressions for flexible dependency management.
+Both `external` and `no-external` options support exact package names and regular expressions for flexible dependency management.
 :::
 
 ## Target Environments

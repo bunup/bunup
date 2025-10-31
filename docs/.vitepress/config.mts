@@ -92,6 +92,15 @@ export default defineConfig({
 					},
 				],
 			},
+			{
+				text: 'Notes',
+				items: [
+					{
+						text: "Why Choose Bunup Over Bun's Bundler?",
+						link: '/notes/why-bunup',
+					},
+				],
+			},
 		],
 		editLink: {
 			pattern: 'https://github.com/bunup/bunup/edit/main/docs/:path',

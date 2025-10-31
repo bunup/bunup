@@ -21,7 +21,6 @@ export function isExternalFromPackageJson(
 	const packageDepsPatterns = getPackageDepsPatterns(packageJson)
 
 	if (options.packages === 'bundle') {
-		// bundle all by default, but respect explicit external
 		const explicitlyExternal = options.external?.some((pattern) =>
 			matchesPattern(path, pattern),
 		)
@@ -29,13 +28,14 @@ export function isExternalFromPackageJson(
 	}
 
 	if (options.packages === 'external') {
-		// externalize all by default, but respect explicit noExternal
 		const explicitlyBundled = options.noExternal?.some((pattern) =>
 			matchesPattern(path, pattern),
 		)
+
 		if (explicitlyBundled) {
 			return false
 		}
+
 		return packageDepsPatterns.some((pattern) => pattern.test(path))
 	}
 

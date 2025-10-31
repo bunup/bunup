@@ -1,6 +1,6 @@
 # Introduction
 
-Bunup is the **blazing-fast build tool** for TypeScript libraries, designed for flawless developer experience and speed, **powered by Bun**.
+Bunup is the **blazing-fast build tool** for TypeScript libraries, designed for flawless developer experience and speed, **powered by Bun's native bundler**.
 
 ## Performance
 

@@ -157,25 +157,25 @@ The file extensions are determined automatically based on the format and your pa
 | cjs    | `.js`                | `.d.ts`                          |
 | iife   | `.global.js`         | `.global.d.ts`                   |
 
-Here's the rewritten documentation with better clarity and structure:
-
 ## Managing Dependencies in Your Bundle
 
-When building a library with Bunup, not all packages need to be included in your final bundle. Bunup automatically handles this for you based on your `package.json` configuration, but you can also customize this behavior when needed.
+Bunup automatically determines which packages to include in your bundle based on your `package.json` configuration. You can also customize this behavior when needed.
 
-### How Bunup Automatically Handles Dependencies
+### Default Dependency Handling
 
-Bunup examines your `package.json` file and makes decisions about what to include:
+Bunup examines your `package.json` and follows these rules:
 
-- **Dependencies**: Automatically excluded from your bundle. These packages will be installed when users install your library.
-- **Peer Dependencies**: Automatically excluded from your bundle. Users are expected to have these packages already installed.
-- **Dev Dependencies**: Only included in your bundle if your code actually imports and uses them.
+| Dependency Type | Default Behavior | Result |
+|-----------------|------------------|---------|
+| `dependencies` | Excluded from bundle | Installed when users install your library |
+| `peerDependencies` | Excluded from bundle | Users must install these separately |
+| `devDependencies` | Included only if imported | Bundled when your code uses them |
 
-This automatic behavior keeps your library lightweight and prevents version conflicts.
+This keeps your library lightweight and prevents version conflicts.
 
-### Example Scenario
+### Example
 
-Let's say you're building a utility library that uses `lodash`:
+Building a utility library with Lodash:
 
 ```json
 {
@@ -186,62 +186,102 @@ Let's say you're building a utility library that uses `lodash`:
 }
 ```
 
-With this setup:
-- `lodash` will not be bundled into your library; it will be treated as an external dependency and imported at runtime.
-- When someone installs your library, `lodash` is installed automatically.
-- This keeps your bundle small and efficient.
+**Result:**
+- Lodash is treated as external (not bundled)
+- Users get Lodash automatically when they install your library
+- Your bundle stays small
 
-### Customizing Dependency Handling
+### Configuration Options
 
-Sometimes you need to override the automatic behavior:
+#### Bundle All Dependencies
 
-#### Making Additional Packages External
-
-To exclude packages that aren't in your `package.json` dependencies:
+Force all dependencies into your bundle:
 
 ::: code-group
 
 ```sh [CLI]
-# Exclude a single package
+bunup --packages bundle
+```
+
+```typescript [bunup.config.ts]
+export default defineConfig({
+  packages: 'bundle'
+});
+```
+
+:::
+
+#### Externalize All Dependencies
+
+Keep all dependencies external:
+
+::: code-group
+
+```sh [CLI]
+bunup --packages external
+```
+
+```typescript [bunup.config.ts]
+export default defineConfig({
+  packages: 'external'
+});
+```
+
+:::
+
+### Specific Package Control
+
+#### Make Packages External
+
+Exclude specific packages from your bundle:
+
+::: code-group
+
+```sh [CLI]
+# Single package
 bunup --external lodash
 
-# Exclude multiple packages
+# Multiple packages
 bunup --external lodash,react,vue
 ```
 
-```ts [bunup.config.ts]
+```typescript [bunup.config.ts]
 export default defineConfig({
-	external: ['lodash'],
+  external: ['lodash', 'react', 'vue']
 });
 ```
 
 :::
 
-#### Including Dependencies in Your Bundle
+##### Force Packages Into Bundle
 
-To force packages into your bundle (even if they're normally excluded):
+Include specific packages in your bundle:
 
 ::: code-group
 
-```sh [CLI]
-# Include a single package
+```bash [CLI]
+# Single package
 bunup --no-external lodash
 
-# Include multiple packages
+# Multiple packages
 bunup --no-external lodash,react,vue
 ```
 
-```ts [bunup.config.ts]
+```typescript [bunup.config.ts]
 export default defineConfig({
-	noExternal: ['lodash'],
+  noExternal: ['lodash', 'react', 'vue']
 });
 ```
 
 :::
 
-::: info
-Both `external` and `no-external` options support exact package names and regular expressions for flexible dependency management.
-:::
+### Advanced Usage
+
+Both `external` and `noExternal` options support:
+- Exact package names: `'lodash'`
+- Regular expressions: `'/^@my-org\//'`
+
+The `packages` option works as a default setting. You can still override individual packages using `external` or `noExternal` options.
 
 ## Target Environments
 

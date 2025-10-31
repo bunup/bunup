@@ -267,6 +267,29 @@ export interface BuildOptions {
 	noExternal?: External
 
 	/**
+	 * Controls whether to bundle or externalize all dependencies.
+	 *
+	 * This option provides a convenient way to handle all dependencies at once:
+	 * - `"bundle"`: Bundle all dependencies into the output (overrides automatic external behavior)
+	 * - `"external"`: Externalize all dependencies (treats all as external)
+	 *
+	 * This option works alongside `external` and `noExternal`:
+	 * - When set to `"bundle"`, all dependencies are bundled by default, but `external` can still mark specific packages as external
+	 * - When set to `"external"`, all dependencies are externalized by default, but `noExternal` can still bundle specific packages
+	 *
+	 * @see https://bunup.dev/docs/guide/options#managing-dependencies-in-your-bundle
+	 *
+	 * @example
+	 * // Bundle all dependencies
+	 * packages: "bundle"
+	 *
+	 * @example
+	 * // Externalize all dependencies
+	 * packages: "external"
+	 */
+	packages?: 'bundle' | 'external'
+
+	/**
 	 * The target environment for the bundle.
 	 * Can be 'browser', 'bun', 'node', etc.
 	 * Defaults to 'node' if not specified.

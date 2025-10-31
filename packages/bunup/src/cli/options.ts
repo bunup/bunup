@@ -202,6 +202,16 @@ const program = cli()
 			.optional(),
 	)
 	.option(
+		'packages',
+		z
+			.string()
+			.choices(['bundle', 'external'])
+			.describe(
+				'Bundle all dependencies or externalize all dependencies. Use "bundle" to include all deps in output, or "external" to exclude all deps',
+			)
+			.optional(),
+	)
+	.option(
 		'shims',
 		z
 			.boolean()

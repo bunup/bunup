@@ -28,8 +28,9 @@ Each package requires three properties:
 
 👉 If you omit `config`, Bunup will use **defaults**:
 
-* ESM-only build
-* One of the [default entry points](/#default-entry-points) (e.g. `src/index.ts`)
+* Build as ESM-only
+* Use [default entry points](/#default-entry-points) (e.g. `src/index.ts`)
+* Generate TypeScript declaration files (`.d.ts`) for entry points that need them
 
 ## Basic Usage
 
@@ -52,8 +53,9 @@ export default defineWorkspace([
   {
     name: "utils",
     root: "packages/utils",
-    // Uses default entry: src/index.ts
+    // Uses default entry points
     // Uses default format: esm
+    // Generates .d.ts declaration files
   },
 ]);
 ```

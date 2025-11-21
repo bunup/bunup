@@ -1,7 +1,7 @@
 {
 	"name": "bunup",
 	"description": "⚡ A blazing-fast build tool for your libraries built with Bun.",
-	"version": "0.16.3",
+	"version": "0.16.4",
 	"type": "module",
 	"files": [
 		"dist"

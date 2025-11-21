@@ -1,7 +1,7 @@
 {
 	"name": "@bunup/shared",
 	"description": "Shared utilities for use across bunup packages and official plugins.",
-	"version": "0.16.3",
+	"version": "0.16.4",
 	"type": "module",
 	"files": [
 		"dist"

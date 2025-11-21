@@ -1,0 +1,59 @@
+{
+	"name": "@bunup/plugin-react-compiler",
+	"description": "Bunup plugin for React's new compiler to automatically optimize React component libraries.",
+	"version": "0.15.14",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		},
+		"./package.json": "./package.json"
+	},
+	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bunup/bunup.git"
+	},
+	"scripts": {
+		"type-check": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@babel/core": "^7.28.5",
+		"babel-plugin-react-compiler": "^1.0.0"
+	},
+	"peerDependencies": {
+		"typescript": "latest"
+	},
+	"funding": "https://github.com/sponsors/arshad-yaseen",
+	"homepage": "https://bunup.dev",
+	"keywords": [
+		"bunup",
+		"react",
+		"compiler",
+		"react-compiler"
+	],
+	"license": "MIT",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "m@arshadyaseen.com",
+			"url": "https://arshadyaseen.com"
+		}
+	],
+	"peerDependenciesMeta": {
+		"typescript": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@types/babel__core": "^7.20.5"
+	}
+}

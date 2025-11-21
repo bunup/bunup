@@ -5,7 +5,7 @@ import type { BunPlugin } from 'bun'
 import { transform } from 'lightningcss'
 import postcss, { type Plugin } from 'postcss'
 
-type TailwindCSSOptions = {
+export interface TailwindCSSOptions {
 	/**
 	 * Whether to inject CSS styles dynamically into the document head at runtime
 	 * instead of bundling them to the build output.

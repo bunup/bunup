@@ -57,5 +57,5 @@ jobs:
       - name: Publish packages to npm
         run: |
           for dir in packages/*/; do
-            (cd "$dir" && npm publish --access public --no-git-checks)
+            (cd "$dir" && npm publish --access public)
           done

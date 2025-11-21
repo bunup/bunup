@@ -10,7 +10,7 @@
 	},
 	"scripts": {
 		"prepublishOnly": "bun run build",
-		"postinstall": "bun simple-git-hooks && cd packages/shared && bunx bunup@latest",
+		"postinstall": "bun simple-git-hooks && cd packages/shared && bunx bunup@v0.15.14",
 		"build": "bun packages/bunup/src/cli/index.ts",
 		"build:docs": "bun run --cwd docs build",
 		"dev": "bun packages/bunup/src/cli/index.ts --watch",

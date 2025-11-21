@@ -1,4 +1,4 @@
-# React Component Library
+# React
 
 Build a production-ready React component library with Bunup in minutes. Zero config. Just works.
 
@@ -250,6 +250,76 @@ function App() {
 ```
 
 Styles are automatically injected at runtime.
+
+## React Compiler
+
+Optimize your React components automatically with the React Compiler plugin. It intelligently memoizes components and hooks to minimize unnecessary re-renders without manual `useMemo`, `useCallback`, or `memo` usage. Learn more about the [React Compiler](https://react.dev/learn/react-compiler).
+
+Install the React Compiler plugin:
+
+```bash
+bun add --dev @bunup/plugin-react-compiler
+```
+
+Add it to your config:
+
+```ts [bunup.config.ts]
+import { defineConfig } from 'bunup'
+import { reactCompiler } from '@bunup/plugin-react-compiler'
+
+export default defineConfig({
+  plugins: [reactCompiler()],
+})
+```
+
+That's it! Your components are now automatically optimized during the build. Write React code naturally:
+
+```tsx [src/components/counter.tsx]
+function ExpensiveComponent({ data, onClick }) {
+  const processedData = expensiveProcessing(data);
+
+  const handleClick = (item) => {
+    onClick(item.id);
+  };
+
+  return (
+    <div>
+      {processedData.map(item => (
+        <Item key={item.id} onClick={() => handleClick(item)} />
+      ))}
+    </div>
+  );
+}
+```
+
+The React Compiler plugin automatically transforms your code to be more performant without changing its behavior.
+
+::: info Build performance
+Since the React Compiler uses Babel for transformations, builds will be slightly slower compared to Bunup's normally instant builds. The impact is small but may be more noticeable in larger applications. This trade-off is expected and worth it for the runtime performance improvements your components will gain.
+:::
+
+### Configuration Options
+
+Customize which files to process or pass options to the React Compiler:
+
+```ts [bunup.config.ts]
+import { defineConfig } from 'bunup'
+import { reactCompiler } from '@bunup/plugin-react-compiler'
+
+export default defineConfig({
+  plugins: [
+    reactCompiler({
+      // Only process .tsx files (default: /\.[jt]sx$/)
+      filter: /\.tsx$/,
+
+      // React Compiler configuration
+      reactCompilerConfig: {
+        target: '18',
+      },
+    }),
+  ],
+})
+```
 
 ## Examples
 

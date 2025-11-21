@@ -55,8 +55,8 @@ export default defineConfig({
 				text: 'Recipes',
 				items: [
 					{
-						text: 'React Component Library',
-						link: '/docs/recipes/react-component-library',
+						text: 'React',
+						link: '/docs/recipes/react',
 					},
 				],
 			},

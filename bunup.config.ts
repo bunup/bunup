@@ -16,6 +16,10 @@ export default defineWorkspace(
 			root: 'packages/plugin-tailwindcss',
 		},
 		{
+			name: '@bunup/plugin-react-compiler',
+			root: 'packages/plugin-react-compiler',
+		},
+		{
 			name: '@bunup/shared',
 			root: 'packages/shared',
 		},

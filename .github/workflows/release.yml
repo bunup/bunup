@@ -19,6 +19,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -45,11 +50,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Publish packages to npm
         run: |
           for dir in packages/*/; do
-            (cd "$dir" && bun publish --access public --no-git-checks)
+            (cd "$dir" && npm publish --access public --no-git-checks)
           done
-        env:
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true

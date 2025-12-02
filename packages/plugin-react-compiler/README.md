@@ -1,4 +1,4 @@
-# @bunup/plugin-tailwindcss
+# @bunup/plugin-react-compiler
 
 Bunup plugin for React's new compiler to automatically optimize React component libraries.
 

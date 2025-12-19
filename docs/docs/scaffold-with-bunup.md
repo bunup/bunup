@@ -39,7 +39,7 @@ NPM now requires [trusted publishing](https://docs.npmjs.com/trusted-publishers)
    - Go to your package's NPM page → Settings tab
    - Select "GitHub Actions" as your publisher
 
-   ![Trusted Publishing in Settings](/trusted-publising-1.png)
+   ![Trusted Publishing in Settings](/trusted-publishing-1.png)
 
    - Fill in the required fields:
      - **Organization or User:** Your GitHub username or organization name
@@ -47,7 +47,7 @@ NPM now requires [trusted publishing](https://docs.npmjs.com/trusted-publishers)
      - **Workflow filename:** Just the filename (e.g., `release.yml`, not the full path)
        - For scaffolded projects using Bunup, use `release.yml` (since it's located at `.github/workflows/release.yml`)
 
-   ![Trusted Publishing Fill Details](/trusted-publising-2.png)
+   ![Trusted Publishing Fill Details](/trusted-publishing-2.png)
 
    - Click "Set up connection"
 

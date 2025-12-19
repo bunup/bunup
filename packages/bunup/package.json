@@ -52,7 +52,7 @@
 	"dependencies": {
 		"@bunup/dts": "^0.14.37",
 		"@bunup/shared": "workspace:*",
-		"chokidar": "^4.0.3",
+		"chokidar": "^5.0.0",
 		"coffi": "^0.1.37",
 		"lightningcss": "^1.30.2",
 		"picocolors": "^1.1.1",

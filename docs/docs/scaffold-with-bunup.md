@@ -27,16 +27,33 @@ If you selected `minimal`, you can skip the next sections which is for those who
 
 ## Setup for Releases
 
-1. Generate an npm token:
-   - Visit [npmjs.com](https://www.npmjs.com/), sign in
-   - Go to profile → Access Tokens → Generate New Token (Classic)
-   - Name it (e.g. "Publish from CI"), select "Automation"
-   - Generate and copy token
+NPM now requires [trusted publishing](https://docs.npmjs.com/trusted-publishers) for automated CI releases, tokens are no longer supported. Your scaffolded project is pre-configured, but needs a one-time setup. After that, simply run `bun run release` for all future releases.
 
-2. Add token to GitHub:
-   - Go to repo Settings → Secrets and variables → Actions
-   - Click "New repository secret"
-   - Set name as `NPM_TOKEN` and paste token value
+### Setup Steps
+
+1. **Initial Publish:**
+   - **Monorepo:** Navigate to your first package (`cd packages/my-first-package`) and run `bun publish --access public`. Repeat for each new package.
+   - **Single Package:** Run `bun publish --access public` from the root directory.
+
+2. **Configure Trusted Publishing:**
+   - Go to your package's NPM page → Settings tab
+   - Select "GitHub Actions" as your publisher
+
+   ![Trusted Publishing in Settings](/trusted-publising-1.png)
+
+   - Fill in the required fields:
+     - **Organization or User:** Your GitHub username or organization name
+     - **Repository:** Your repository name
+     - **Workflow filename:** Just the filename (e.g., `release.yml`, not the full path)
+       - For scaffolded projects using Bunup, use `release.yml` (since it's located at `.github/workflows/release.yml`)
+
+   ![Trusted Publishing Fill Details](/trusted-publising-2.png)
+
+   - Click "Set up connection"
+
+3. **You're Done!**
+   - Ensure your repository exists on GitHub and matches the details provided
+   - Run `bun run release` to publish
 
 ## Development Workflow
 

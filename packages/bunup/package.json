@@ -50,13 +50,13 @@
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@bunup/dts": "^0.14.37",
+		"@bunup/dts": "^0.14.45",
 		"@bunup/shared": "workspace:*",
 		"chokidar": "^5.0.0",
 		"coffi": "^0.1.37",
 		"lightningcss": "^1.30.2",
 		"picocolors": "^1.1.1",
-		"tinyexec": "^1.0.1",
+		"tinyexec": "^1.0.2",
 		"tree-kill": "^1.2.2",
 		"zlye": "^0.4.4"
 	},
@@ -69,6 +69,6 @@
 		}
 	},
 	"devDependencies": {
-		"@types/bun": "^1.3.1"
+		"@types/bun": "^1.3.5"
 	}
 }

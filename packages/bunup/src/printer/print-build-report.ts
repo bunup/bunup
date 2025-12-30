@@ -115,15 +115,6 @@ export async function printBuildReport(
 			: ' '.repeat(Math.max(0, diff)) + str
 	}
 
-	console.log('')
-
-	if (options.name) {
-		console.log('')
-		console.log(`  ${pc.bgBlueBright(` ${options.name} `)}`)
-	}
-
-	console.log('')
-
 	const headers = [
 		pad('  Output', pathWidth + labelWidth + 2),
 		pad('Raw', sizeWidth, 'right'),
@@ -205,5 +196,6 @@ export async function printBuildReport(
 			),
 		)
 	}
+
 	console.log('')
 }

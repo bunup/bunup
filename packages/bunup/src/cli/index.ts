@@ -12,7 +12,6 @@ import {
 	processLoadedConfigs,
 } from '../loaders'
 import type { BuildOptions } from '../options'
-import type { BuildResult } from '../plugins/types'
 import { logger, logTime } from '../printer/logger'
 import { printBuildReport } from '../printer/print-build-report'
 import { ensureArray } from '../utils/common'
@@ -67,10 +66,8 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 
 	const startTime = performance.now()
 
-	const buildResults: BuildResult[] = []
-
 	// this is not parallel for a reason
-	// because, can cause race conditions if we are building multiple packages, for example in a workspace which packages uses each other
+	// because, can cause race conditions if we are building multiple packages, for example in bunup workspaces which packages uses each other
 	for (const { options, rootDir } of configsToProcess) {
 		const optionsArray = ensureArray(options)
 		await Promise.all(
@@ -83,17 +80,16 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 				if (userOptions.watch) {
 					await watch(userOptions, rootDir, filepath)
 				} else {
-					buildResults.push(await build(userOptions, rootDir))
+					const result = await build(userOptions, rootDir)
+					if (!cliOptions.watch && !shouldSilent) {
+						await printBuildReport(result)
+					}
 				}
 			}),
 		)
 	}
 
 	const buildTimeMs = performance.now() - startTime
-
-	if (!cliOptions.watch && !shouldSilent) {
-		await Promise.all(buildResults.map((o) => printBuildReport(o)))
-	}
 
 	if (cliOptions.watch) {
 		console.log(

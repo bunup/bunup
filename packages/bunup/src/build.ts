@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { generateDts, logIsolatedDeclarationErrors } from '@bunup/dts'
+import pc from 'picocolors'
 import { ensureMinimumBunVersion } from './ensure-bun-version'
 import {
 	BunupBuildError,
@@ -42,7 +43,7 @@ import {
 } from './utils/extension'
 import { cleanOutDir, getFilesFromGlobs, isJavascriptFile } from './utils/file'
 import { formatListWithAnd } from './utils/format'
-import { cleanPath, getShortFilePath } from './utils/path'
+import { cleanPath } from './utils/path'
 
 let ac: AbortController | null = null
 
@@ -70,14 +71,6 @@ export async function build(
 
 	const packageJson = await loadPackageJson(rootDir)
 
-	if (packageJson.data && packageJson.path) {
-		logger.info(`Using ${getShortFilePath(packageJson.path, 2)}`, {
-			muted: true,
-			identifier: options.name,
-			once: `${packageJson.path}:${options.name}`,
-		})
-	}
-
 	const packageType = packageJson.data?.type as string | undefined
 
 	const allPlugins = resolvePlugins(options, packageJson.data)
@@ -101,11 +94,21 @@ export async function build(
 		throw new BunupBuildError(formatInvalidEntryPointsError(entryArray))
 	}
 
-	logger.info(`entry: ${formatListWithAnd(entrypoints)}`, {
-		identifier: options.name,
-		once: options.name,
-		muted: true,
-	})
+	console.log('')
+
+	if (options.name) {
+		console.log(
+			`${options.name ? `  ${pc.bgBlueBright(` ${options.name} `)} ` : ''}${logger.formatMessage(
+				{
+					message: formatListWithAnd(entrypoints),
+					muted: true,
+					noIcon: true,
+				},
+			)}`,
+		)
+	}
+
+	console.log('')
 
 	const buildOutputFiles: BuildOutputFile[] = []
 

@@ -94,20 +94,6 @@ export async function build(
 		throw new BunupBuildError(formatInvalidEntryPointsError(entryArray))
 	}
 
-	console.log('')
-
-	console.log(
-		`${options.name ? `  ${pc.bgBlueBright(` ${options.name} `)} ` : '  '}${logger.formatMessage(
-			{
-				message: formatListWithAnd(entrypoints),
-				muted: true,
-				noIcon: true,
-			},
-		)}`,
-	)
-
-	console.log('')
-
 	const buildOutputFiles: BuildOutputFile[] = []
 
 	const absoluteEntrypoints = entrypoints.map((file) => `${rootDir}/${file}`)
@@ -334,6 +320,20 @@ export async function build(
 	if (options.onSuccess) {
 		await executeOnSuccess(options.onSuccess, options, ac.signal)
 	}
+
+	console.log('')
+
+	console.log(
+		`${options.name ? `  ${pc.bgBlueBright(` ${options.name} `)} ` : '  '}${logger.formatMessage(
+			{
+				message: formatListWithAnd(entrypoints),
+				muted: true,
+				noIcon: true,
+			},
+		)}`,
+	)
+
+	console.log('')
 
 	return buildResult
 }

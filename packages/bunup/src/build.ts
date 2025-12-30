@@ -96,17 +96,15 @@ export async function build(
 
 	console.log('')
 
-	if (options.name) {
-		console.log(
-			`${options.name ? `  ${pc.bgBlueBright(` ${options.name} `)} ` : ''}${logger.formatMessage(
-				{
-					message: formatListWithAnd(entrypoints),
-					muted: true,
-					noIcon: true,
-				},
-			)}`,
-		)
-	}
+	console.log(
+		`${options.name ? `  ${pc.bgBlueBright(` ${options.name} `)} ` : '  '}${logger.formatMessage(
+			{
+				message: formatListWithAnd(entrypoints),
+				muted: true,
+				noIcon: true,
+			},
+		)}`,
+	)
 
 	console.log('')
 

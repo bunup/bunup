@@ -70,23 +70,21 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 	// because, can cause race conditions if we are building multiple packages, for example in bunup workspaces which packages uses each other
 	for (const { options, rootDir } of configsToProcess) {
 		const optionsArray = ensureArray(options)
-		await Promise.all(
-			optionsArray.map(async (o) => {
-				const userOptions: Partial<BuildOptions> = {
-					...o,
-					...removeCliOnlyOptions(cliOptions),
-				}
+		for await (const o of optionsArray) {
+			const userOptions: Partial<BuildOptions> = {
+				...o,
+				...removeCliOnlyOptions(cliOptions),
+			}
 
-				if (userOptions.watch) {
-					await watch(userOptions, rootDir, filepath)
-				} else {
-					const result = await build(userOptions, rootDir)
-					if (!cliOptions.watch && !shouldSilent) {
-						await printBuildReport(result)
-					}
+			if (userOptions.watch) {
+				await watch(userOptions, rootDir, filepath)
+			} else {
+				const result = await build(userOptions, rootDir)
+				if (!cliOptions.watch && !shouldSilent) {
+					await printBuildReport(result)
 				}
-			}),
-		)
+			}
+		}
 	}
 
 	const buildTimeMs = performance.now() - startTime

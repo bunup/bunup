@@ -69,23 +69,23 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 
 	const buildResults: BuildResult[] = []
 
-	await Promise.all(
-		configsToProcess.flatMap(({ options, rootDir }) => {
-			const optionsArray = ensureArray(options)
-			return optionsArray.map(async (o) => {
-				const userOptions: Partial<BuildOptions> = {
-					...o,
-					...removeCliOnlyOptions(cliOptions),
-				}
+	// this is not parallel for a reason
+	// because, can cause race conditions if we are building multiple packages, for example in a workspace which packages uses each other
+	for (const { options, rootDir } of configsToProcess) {
+		const optionsArray = ensureArray(options)
+		for (const o of optionsArray) {
+			const userOptions: Partial<BuildOptions> = {
+				...o,
+				...removeCliOnlyOptions(cliOptions),
+			}
 
-				if (userOptions.watch) {
-					await watch(userOptions, rootDir, filepath)
-				} else {
-					buildResults.push(await build(userOptions, rootDir))
-				}
-			})
-		}),
-	)
+			if (userOptions.watch) {
+				await watch(userOptions, rootDir, filepath)
+			} else {
+				buildResults.push(await build(userOptions, rootDir))
+			}
+		}
+	}
 
 	const buildTimeMs = performance.now() - startTime
 

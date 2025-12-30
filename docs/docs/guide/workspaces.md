@@ -2,7 +2,7 @@
 
 Effortlessly manage **multiple packages in a monorepo** with Bunup’s built-in workspace support.
 
-This eliminates the need for separate build configurations and multiple commands for each package. With a single configuration file and a single command, you can build all your packages at once.
+This eliminates the need for separate config files and multiple commands for each package. With a single configuration file and a single command, you can build and watch all your packages at once with a great ui and experience.
 
 ## Creating a Workspace Configuration
 

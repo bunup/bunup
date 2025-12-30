@@ -52,7 +52,9 @@ export async function watch(
 		isRebuilding = true
 
 		try {
-			console.clear()
+			if (buildCount > 0) {
+				console.clear()
+			}
 
 			await new Promise((resolve) => setTimeout(resolve, 20))
 

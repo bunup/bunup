@@ -4,6 +4,8 @@ Effortlessly manage **multiple packages in a monorepo** with Bunup’s built-in 
 
 This eliminates the need for separate config files and multiple commands for each package. With a single configuration file and a single command, you can build and watch all your packages at once with a great ui and experience.
 
+![Bunup Workspaces](/bunup-workspaces.gif)
+
 ## Creating a Workspace Configuration
 
 Define your workspace using the `defineWorkspace` function:

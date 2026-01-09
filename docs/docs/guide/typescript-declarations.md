@@ -31,7 +31,7 @@ function fetchUser() {
 }
 ```
 
-Learn more about isolated declarations [here](https://arshadyaseen.com/writing/isolated-declarations).
+Learn more about isolated declarations [here](https://arshad.fyi/writing/isolated-declarations).
 
 For new projects, we strongly recommend isolated declarations for instant builds and rebuilds and clearer APIs. Explicitly typing your public exports is considered a best practice for library development.
 

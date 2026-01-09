@@ -17,7 +17,7 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"author": "Arshad Yaseen <m@arshadyaseen.com> (https://arshadyaseen.com)",
+	"author": "Arshad Yaseen <arshadpyaseen@gmail.com> (https://arshad.fyi)",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bunup/bunup.git"
@@ -44,8 +44,8 @@
 	"maintainers": [
 		{
 			"name": "Arshad Yaseen",
-			"email": "m@arshadyaseen.com",
-			"url": "https://arshadyaseen.com"
+			"email": "arshadpyaseen@gmail.com",
+			"url": "https://arshad.fyi"
 		}
 	],
 	"peerDependenciesMeta": {

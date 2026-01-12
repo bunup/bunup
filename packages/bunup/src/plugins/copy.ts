@@ -1,4 +1,5 @@
-import { basename, extname, join } from 'node:path'
+import fs from 'node:fs'
+import { basename, isAbsolute, join } from 'node:path'
 import type { BuildOptions } from '../options'
 import { logger } from '../printer/logger'
 import type { Arrayable } from '../types'
@@ -151,7 +152,7 @@ class CopyBuilder {
 
 						const finalDestinationPath = resolveDestinationPath(
 							destinationPath,
-							scannedPath,
+							sourcePath,
 							meta.rootDir,
 						)
 
@@ -227,7 +228,9 @@ function resolveDestinationPath(
 	scannedPath: string,
 	rootDir: string,
 ): string {
-	const fullDestinationPath = join(rootDir, destinationPath)
+	const fullDestinationPath = isAbsolute(destinationPath)
+		? destinationPath
+		: join(rootDir, destinationPath)
 	const isScannedPathDir = isDirectoryPath(scannedPath)
 	const isDestinationDir = isDirectoryPath(fullDestinationPath)
 
@@ -239,7 +242,12 @@ function resolveDestinationPath(
 }
 
 function isDirectoryPath(filePath: string): boolean {
-	return extname(filePath) === ''
+	try {
+		const stats = fs.statSync(filePath)
+		return stats.isDirectory()
+	} catch {
+		return false
+	}
 }
 
 async function copyDirectory(

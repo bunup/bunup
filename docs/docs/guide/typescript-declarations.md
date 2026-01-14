@@ -293,6 +293,32 @@ export default defineConfig({
 
 :::
 
+## Declaration Files Only
+
+If you only want to generate TypeScript declaration files without building JavaScript output, use the `dtsOnly` option:
+
+::: code-group
+
+```sh [CLI]
+bunup --dts-only
+```
+
+```ts [bunup.config.ts]
+export default defineConfig({
+  entry: "src/index.ts",
+  dtsOnly: true,
+});
+```
+
+:::
+
+This is useful when:
+- You're using a different bundler for JavaScript but want Bunup to handle TypeScript declarations
+- You need to generate type definitions separately from your build process
+- You're working on a types-only package
+
+When `dtsOnly` is enabled, Bunup skips the entire JavaScript build process and only generates `.d.ts` files.
+
 ## Disabling Declaration Generation
 
 You can completely disable automatic declaration file generation:

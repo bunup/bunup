@@ -24,7 +24,7 @@ const program = cli()
 			`${pc.blue('bunup src/index.ts')}               # Single entry file`,
 		),
 		pc.gray(
-			`${pc.blue('bunup src/**/*.ts')}                             # Glob pattern for multiple files`,
+			`${pc.blue('bunup src/**/*.ts')}                # Glob pattern for multiple files`,
 		),
 		pc.gray(`${pc.blue('bunup --watch')}                    # Watch mode`),
 		pc.gray(

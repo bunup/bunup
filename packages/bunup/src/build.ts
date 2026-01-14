@@ -35,6 +35,7 @@ import {
 	runPluginBuildStartHooks,
 } from './plugins/utils'
 import { logger } from './printer/logger'
+import { getOriginalEntrypointFromOutputPath } from './utils/bun'
 import { ensureArray } from './utils/common'
 import {
 	getDefaultDtsOutputExtention,
@@ -145,6 +146,7 @@ export async function build(
 			tsconfig: options.preferredTsconfig
 				? path.resolve(rootDir, options.preferredTsconfig)
 				: undefined,
+			metafile: true,
 		})
 
 		for (const log of result.logs) {
@@ -155,11 +157,6 @@ export async function build(
 			if (log.level === 'verbose') logger.log(log.message)
 			else if (log.level === 'info') logger.info(log.message)
 		}
-
-		// track entrypoint index to get the entrypoint of an output file
-		// this is a little hack until Bun adds an entrypoint field in output file
-		// upstream: https://github.com/oven-sh/bun/issues/15033
-		let entrypointIndex = 0
 
 		for (const file of result.outputs) {
 			// for executables, we don't need to handle the output file writing manually
@@ -218,14 +215,14 @@ export async function build(
 					kind: file.kind,
 					entrypoint:
 						file.kind === 'entry-point'
-							? cleanPath(entrypoints[entrypointIndex] ?? '')
+							? getOriginalEntrypointFromOutputPath(
+									result.metafile,
+									file.path,
+									rootDir,
+								)
 							: undefined,
 					size: file.size,
 				})
-
-				if (file.kind === 'entry-point') {
-					entrypointIndex++
-				}
 			}
 		}
 	})
@@ -285,9 +282,7 @@ export async function build(
 						dts: true,
 						format: fmt,
 						kind: file.kind,
-						entrypoint: file.entrypoint
-							? cleanPath(file.entrypoint)
-							: undefined,
+						entrypoint: file.entrypoint,
 						size: file.dts.length,
 					})
 				}
@@ -321,9 +316,9 @@ export async function build(
 		await executeOnSuccess(options.onSuccess, options, ac.signal)
 	}
 
-	console.log('')
+	logger.log('')
 
-	console.log(
+	logger.log(
 		`${options.name ? `  ${pc.bgBlueBright(` ${options.name} `)} ` : '  '}${logger.formatMessage(
 			{
 				message: formatListWithAnd(entrypoints),

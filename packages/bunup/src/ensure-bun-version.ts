@@ -1,7 +1,7 @@
 import pc from 'picocolors'
 import { BunupVersionError } from './errors'
 
-const MINIMUM_BUN_VERSION = '1.0.11'
+const MINIMUM_BUN_VERSION = '1.3.6'
 
 export function ensureBunVersion(
 	requiredVersion: string,

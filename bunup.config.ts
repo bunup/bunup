@@ -2,6 +2,11 @@ import { defineWorkspace } from './packages/bunup/src'
 
 export default defineWorkspace(
 	[
+		// build shared first, because it's used in other packages too
+		{
+			name: '@bunup/shared',
+			root: 'packages/shared',
+		},
 		{
 			name: 'bunup',
 			root: 'packages/bunup',
@@ -18,10 +23,6 @@ export default defineWorkspace(
 		{
 			name: '@bunup/plugin-react-compiler',
 			root: 'packages/plugin-react-compiler',
-		},
-		{
-			name: '@bunup/shared',
-			root: 'packages/shared',
 		},
 	],
 	{

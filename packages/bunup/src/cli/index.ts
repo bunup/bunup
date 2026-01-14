@@ -64,7 +64,7 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 
 	logger.info('Build started')
 
-	const startTime = performance.now()
+	let buildTimeMs = 0
 
 	// this is not parallel for a reason
 	// because, can cause race conditions if we are building multiple packages, for example in bunup workspaces which packages uses each other
@@ -79,15 +79,15 @@ async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
 			if (userOptions.watch) {
 				await watch(userOptions, rootDir, filepath)
 			} else {
+				const startTime = performance.now()
 				const result = await build(userOptions, rootDir)
+				buildTimeMs += performance.now() - startTime
 				if (!cliOptions.watch && !shouldSilent) {
 					await printBuildReport(result)
 				}
 			}
 		}
 	}
-
-	const buildTimeMs = performance.now() - startTime
 
 	if (cliOptions.watch) {
 		console.log(

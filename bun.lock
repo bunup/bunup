@@ -25,12 +25,12 @@
     },
     "packages/bunup": {
       "name": "bunup",
-      "version": "0.16.17",
+      "version": "0.16.19",
       "bin": {
         "bunup": "dist/cli/index.js",
       },
       "dependencies": {
-        "@bunup/dts": "^0.14.47",
+        "@bunup/dts": "^0.14.49",
         "@bunup/shared": "workspace:*",
         "chokidar": "^5.0.0",
         "coffi": "^0.1.37",
@@ -86,7 +86,7 @@
     },
     "packages/plugin-react-compiler": {
       "name": "@bunup/plugin-react-compiler",
-      "version": "0.16.17",
+      "version": "0.16.19",
       "dependencies": {
         "@babel/core": "^7.28.6",
         "babel-plugin-react-compiler": "^1.0.0",
@@ -103,7 +103,7 @@
     },
     "packages/plugin-tailwindcss": {
       "name": "@bunup/plugin-tailwindcss",
-      "version": "0.16.17",
+      "version": "0.16.19",
       "dependencies": {
         "@bunup/shared": "workspace:*",
         "@tailwindcss/postcss": "^4.1.18",
@@ -119,7 +119,7 @@
     },
     "packages/shared": {
       "name": "@bunup/shared",
-      "version": "0.16.17",
+      "version": "0.16.19",
       "peerDependencies": {
         "typescript": "latest",
       },
@@ -219,7 +219,7 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.10", "", { "os": "win32", "cpu": "x64" }, "sha512-pHEFgq7dUEsKnqG9mx9bXihxGI49X+ar+UBrEIj3Wqj3UCZp1rNgV+OoyjFgcXsjCWpuEAF4VJdkZr3TrWdCbQ=="],
 
-    "@bunup/dts": ["@bunup/dts@0.14.47", "", { "dependencies": { "@babel/parser": "^7.28.6", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.16.2", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.10.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-SUG3RKQ5TNTylkVPlnbODZhQRrb/1HcDffEC1X+0YT+PARWZSStDeguHa3cao1MZ63DY86k1Z3SdWDUTgh4ADQ=="],
+    "@bunup/dts": ["@bunup/dts@0.14.49", "", { "dependencies": { "@babel/parser": "^7.28.6", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.16.2", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.10.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-mAni3Zpf1MLxFDNCNStcxjbgNaSZpygc1qqF66WHMoUs3j+NSNKZPKwex9uLGXazJdE8g9MqQ//1QQcETdwY6Q=="],
 
     "@bunup/plugin-react-compiler": ["@bunup/plugin-react-compiler@workspace:packages/plugin-react-compiler"],
 

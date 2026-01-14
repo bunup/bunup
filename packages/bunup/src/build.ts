@@ -216,11 +216,11 @@ export async function build(
 					kind: file.kind,
 					entrypoint:
 						file.kind === 'entry-point'
-							? getOriginalEntrypointFromOutputPath(
+							? cleanPath(getOriginalEntrypointFromOutputPath(
 									result.metafile,
 									file.path,
 									rootDir,
-								)
+								))
 							: undefined,
 					size: file.size,
 				})

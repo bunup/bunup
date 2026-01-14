@@ -436,7 +436,7 @@ function createUpdatedPackageJson(
 	exports: CustomExports,
 	files: string[],
 ): Record<string, unknown> {
-	const { main, module, types, ...restPackageJson } = originalData
+	const { main: _, module: __, types: ___, ...restPackageJson } = originalData
 
 	const newPackageJson: Record<string, unknown> = {
 		...Object.fromEntries(

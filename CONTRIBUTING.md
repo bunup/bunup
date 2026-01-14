@@ -20,7 +20,7 @@ Thank you for your interest in contributing to our project! This guide will help
 
 1. Create a new branch: `git checkout -b feature/your-feature-name`
 2. Make your changes
-3. Check and fix code style and formatting issues: `bun run lint:fix`
+3. Check and fix code style and formatting issues: `bun run lint && bun run format`
 4. Run tests: `bun run test`
 5. Build the project: `bun run build`
 6. Commit your changes using the conventions below
@@ -52,10 +52,6 @@ For more comprehensive testing, you can use the test fixtures:
 4. **Check test build output**: The output of the test build can be found in `packages/bunup/test/dist/` directory
 
 The `packages/bunup/test/fixtures/` directory serves as a sandbox where you can create any file structure to test your changes. The test build will process these fixtures using your modifications to Bunup, allowing you to verify that your changes work as expected. The `packages/bunup/test/bunup.config.ts` file contains the build configuration used for this rough testing of the fixtures.
-
-### 3. Testing DTS Bundler Changes
-
-If you make changes to the DTS bundler (located in `packages/dts`), you can test them directly in the bunup test playground since the packages are linked. Any modifications to the DTS bundler will be automatically available when running test builds in the bunup package if you've started development mode with `bun run dev`. Otherwise, you'll need to run `bun run build` to make your changes available for testing.
 
 ## Commit Message Conventions
 
@@ -103,7 +99,6 @@ Here's a brief overview of the project structure:
     - `build.ts` - Core build functionality
     - `watch.ts` - Watch mode functionality
     - `plugins/` - Bundler plugins
-- `packages/dts/` - DTS bundler used by Bunup
 - `packages/plugin-*/` - Official Bunup plugins
 
 ## Pull Request Guidelines

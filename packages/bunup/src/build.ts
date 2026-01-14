@@ -330,7 +330,7 @@ export async function build(
 		)}`,
 	)
 
-	console.log('')
+	logger.log('')
 
 	return buildResult
 }

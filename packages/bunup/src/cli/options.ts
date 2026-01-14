@@ -38,6 +38,9 @@ const program = cli()
 			`${pc.blue('bunup --dts.splitting')}            # Declaration splitting`,
 		),
 		pc.gray(
+			`${pc.blue('bunup --dts-only')}                 # Only emit declaration files`,
+		),
+		pc.gray(
 			`${pc.blue('bunup --no-clean')}                 # Disable cleaning output directory before build`,
 		),
 	])
@@ -289,6 +292,15 @@ const program = cli()
 				}),
 			)
 			.default(true),
+	)
+	.option(
+		'dts-only',
+		z
+			.boolean()
+			.describe(
+				'Only emit TypeScript declaration files without building JavaScript output',
+			)
+			.optional(),
 	)
 	.option(
 		'preferred-tsconfig',

@@ -244,6 +244,14 @@ export interface BuildOptions {
 		  })
 
 	/**
+	 * When enabled, only emit TypeScript declaration files (.d.ts) without building JavaScript output.
+	 * This is useful when you only need to generate type definitions.
+	 *
+	 * @default false
+	 */
+	dtsOnly?: boolean
+
+	/**
 	 * Path to a custom tsconfig.json file used for path resolution during
 	 * both bundling and TypeScript declaration generation.
 	 *

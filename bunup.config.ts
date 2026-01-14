@@ -31,5 +31,6 @@ export default defineWorkspace(
 		},
 		exports: true,
 		unused: true,
+		// dtsOnly: true,
 	},
 )

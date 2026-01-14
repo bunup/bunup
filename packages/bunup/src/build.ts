@@ -97,15 +97,16 @@ export async function build(
 
 	const buildOutputFiles: BuildOutputFile[] = []
 
-	const absoluteEntrypoints = entrypoints.map((file) => `${rootDir}/${file}`)
-	const resolvedDefine = getResolvedDefine(options.define, options.env)
-	const resolvedMinify = getResolvedMinify(options)
-	const resolvedTarget = getResolvedTarget(options.target)
-	const resolvedSourcemap = getResolvedSourcemap(options.sourcemap)
-	const resolvedEnv = getResolvedEnv(options.env)
-	const chunkNaming = getDefaultChunkNaming(options.name)
+	if (!options.dtsOnly) {
+		const absoluteEntrypoints = entrypoints.map((file) => `${rootDir}/${file}`)
+		const resolvedDefine = getResolvedDefine(options.define, options.env)
+		const resolvedMinify = getResolvedMinify(options)
+		const resolvedTarget = getResolvedTarget(options.target)
+		const resolvedSourcemap = getResolvedSourcemap(options.sourcemap)
+		const resolvedEnv = getResolvedEnv(options.env)
+		const chunkNaming = getDefaultChunkNaming(options.name)
 
-	const buildPromises = ensureArray(options.format).map(async (fmt) => {
+		const buildPromises = ensureArray(options.format).map(async (fmt) => {
 		const result = await Bun.build({
 			entrypoints: absoluteEntrypoints,
 			format: fmt,
@@ -227,10 +228,11 @@ export async function build(
 		}
 	})
 
-	await Promise.all(buildPromises)
+		await Promise.all(buildPromises)
+	}
 
 	if (
-		options.dts &&
+		(options.dts || options.dtsOnly) &&
 		// no need to generate dts when compile is provided
 		!options.compile
 	) {

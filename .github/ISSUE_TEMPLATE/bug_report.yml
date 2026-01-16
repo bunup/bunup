@@ -97,11 +97,8 @@ body:
       label: Environment
       description: Please provide your environment details
       placeholder: |
-        - OS: [e.g., macOS 14.0, Windows 11, Ubuntu 22.04]
-        - Node version: [e.g., 20.10.0]
-        - Package manager: [e.g., npm 10.2.3, yarn 4.0.2, pnpm 8.14.0]
-        - TypeScript version (if applicable): [e.g., 5.3.3]
-        - Browser (if applicable): [e.g., Chrome 120, Safari 17]
+        - OS: [e.g., macOS, Windows, Ubuntu]
+        - Bun version: [e.g., 0.16.17]
     validations:
       required: false
 

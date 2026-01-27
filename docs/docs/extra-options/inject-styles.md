@@ -21,10 +21,10 @@ dist/
 Users must import both:
 
 ```javascript
-import 'my-library/dist/index.css';
-import { Button } from 'my-library';
+import "my-library/dist/index.css";
+import { Button } from "my-library";
 
-<Button />
+<Button />;
 ```
 
 ### With inject styles
@@ -39,9 +39,9 @@ dist/
 Users only import JavaScript, CSS is automatically included:
 
 ```javascript
-import { Button } from 'my-library';
+import { Button } from "my-library";
 
-<Button />
+<Button />;
 ```
 
 ## Usage
@@ -55,12 +55,12 @@ bunup --css.inject
 ```
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
-  css: {
-    inject: true,
-  },
+	css: {
+		inject: true,
+	},
 });
 ```
 
@@ -85,14 +85,14 @@ bunup --css.inject.minify=false
 ```
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
-  css: {
-    inject: {
-      minify: false,
-    },
-  },
+	css: {
+		inject: {
+			minify: false,
+		},
+	},
 });
 ```
 
@@ -107,21 +107,21 @@ By default, bunup uses its own `injectStyle` function that creates a `<style>` t
 The `inject` function receives the processed CSS string (already JSON stringified) and the original file path, and should return JavaScript code that will inject the styles when executed.
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
-  css: {
-    inject: {
-      inject: (css, filePath) => {
-        return `
+	css: {
+		inject: {
+			inject: (css, filePath) => {
+				return `
           const style = document.createElement('style');
           style.setAttribute('data-source', '${filePath}');
           style.textContent = ${css};
           document.head.appendChild(style);
         `;
-      }
-    },
-  },
+			},
+		},
+	},
 });
 ```
 

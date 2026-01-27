@@ -1,22 +1,17 @@
-import type { BuildOptions } from './options'
+import type { BuildOptions } from "./options";
 
-export type MaybePromise<T> = Promise<T> | T
+export type MaybePromise<T> = Promise<T> | T;
 
-export type WithOptional<T, K extends keyof T> = Omit<T, K> &
-	Partial<Pick<T, K>>
+export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export type WithRequired<T, K extends keyof T> = Omit<T, K> &
-	Required<Pick<T, K>>
+export type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
-export type Arrayable<T> = T | T[]
+export type Arrayable<T> = T | T[];
 
-export type DefineConfigItem = WithOptional<
-	BuildOptions,
-	'outDir' | 'format' | 'entry'
->
+export type DefineConfigItem = WithOptional<BuildOptions, "outDir" | "format" | "entry">;
 
 export type DefineWorkspaceItem = {
-	name: string
-	root: string
-	config?: DefineConfigItem | WithRequired<DefineConfigItem, 'name'>[]
-}
+	name: string;
+	root: string;
+	config?: DefineConfigItem | WithRequired<DefineConfigItem, "name">[];
+};

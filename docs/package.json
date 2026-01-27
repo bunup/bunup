@@ -1,15 +1,15 @@
 {
 	"name": "docs",
-	"devDependencies": {
-		"micromark-util-decode-string": "^2.0.1",
-		"vitepress": "^1.6.4",
-		"vitepress-plugin-group-icons": "^1.6.5",
-		"vitepress-plugin-llms": "^1.10.0"
-	},
 	"private": true,
 	"scripts": {
 		"dev": "vitepress dev",
 		"build": "vitepress build",
 		"preview": "vitepress preview"
+	},
+	"devDependencies": {
+		"micromark-util-decode-string": "^2.0.1",
+		"vitepress": "^1.6.4",
+		"vitepress-plugin-group-icons": "^1.6.5",
+		"vitepress-plugin-llms": "^1.10.0"
 	}
 }

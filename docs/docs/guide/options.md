@@ -18,7 +18,7 @@ bunup src/index.ts
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-      entry: 'src/index.ts',
+	entry: "src/index.ts",
 });
 ```
 
@@ -44,7 +44,7 @@ bunup -e src/index.ts -e src/cli.ts
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-      entry: ['src/index.ts', 'src/cli.ts'],
+	entry: ["src/index.ts", "src/cli.ts"],
 });
 ```
 
@@ -64,17 +64,14 @@ bunup 'src/**/*.ts' '!src/**/*.test.ts'
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-      entry: [
-            'src/**/*.ts',
-            '!src/**/*.test.ts',
-            '!src/internal/**/*.ts'
-      ],
+	entry: ["src/**/*.ts", "!src/**/*.test.ts", "!src/internal/**/*.ts"],
 });
 ```
 
 :::
 
 Glob pattern features:
+
 - Use patterns like `**/*.ts` to match files recursively
 - Prefix patterns with `!` to exclude files that match the pattern
 - Patterns are resolved relative to the project root
@@ -93,7 +90,7 @@ bunup -o build
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-    outDir: 'build',
+	outDir: "build",
 });
 ```
 
@@ -128,7 +125,7 @@ bunup -f esm,cjs,iife
 ```ts [bunup.config.ts]
 export default defineConfig({
 	// Single format
-	format: 'esm',
+	format: "esm",
 
 	// Or multiple formats
 	// format: ['esm', 'cjs', 'iife'],
@@ -165,11 +162,11 @@ Bunup automatically determines which packages to include in your bundle based on
 
 Bunup examines your `package.json` and follows these rules:
 
-| Dependency Type | Default Behavior | Result |
-|-----------------|------------------|---------|
-| `dependencies` | Excluded from bundle | Installed when users install your library |
-| `peerDependencies` | Excluded from bundle | Users must install these separately |
-| `devDependencies` | Included only if imported | Bundled when your code uses them |
+| Dependency Type    | Default Behavior          | Result                                    |
+| ------------------ | ------------------------- | ----------------------------------------- |
+| `dependencies`     | Excluded from bundle      | Installed when users install your library |
+| `peerDependencies` | Excluded from bundle      | Users must install these separately       |
+| `devDependencies`  | Included only if imported | Bundled when your code uses them          |
 
 This keeps your library lightweight and prevents version conflicts.
 
@@ -179,14 +176,15 @@ Building a utility library with Lodash:
 
 ```json
 {
-  "name": "my-utility-lib",
-  "dependencies": {
-    "lodash": "^4.17.21"
-  }
+	"name": "my-utility-lib",
+	"dependencies": {
+		"lodash": "^4.17.21"
+	}
 }
 ```
 
 **Result:**
+
 - Lodash is treated as external (not bundled)
 - Users get Lodash automatically when they install your library
 - Your bundle stays small
@@ -205,7 +203,7 @@ bunup --packages bundle
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  packages: 'bundle'
+	packages: "bundle",
 });
 ```
 
@@ -223,7 +221,7 @@ bunup --packages external
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  packages: 'external'
+	packages: "external",
 });
 ```
 
@@ -247,7 +245,7 @@ bunup --external lodash,react,vue
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  external: ['lodash', 'react', 'vue']
+	external: ["lodash", "react", "vue"],
 });
 ```
 
@@ -269,7 +267,7 @@ bunup --no-external lodash,react,vue
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  noExternal: ['lodash', 'react', 'vue']
+	noExternal: ["lodash", "react", "vue"],
 });
 ```
 
@@ -278,6 +276,7 @@ export default defineConfig({
 ### Advanced Usage
 
 Both `external` and `noExternal` options support:
+
 - Exact package names: `'lodash'`
 - Regular expressions: `'/^@my-org\//'`
 
@@ -297,7 +296,7 @@ bunup -t browser
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-    target: 'browser',
+	target: "browser",
 });
 ```
 
@@ -329,7 +328,7 @@ bunup --minify
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-    minify: true,
+	minify: true,
 });
 ```
 
@@ -380,9 +379,9 @@ bunup --sourcemap
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-    sourcemap: 'linked'
-    // Can also use boolean
-    // sourcemap: true // equivalent to 'inline'
+	sourcemap: "linked",
+	// Can also use boolean
+	// sourcemap: true // equivalent to 'inline'
 });
 ```
 
@@ -403,6 +402,7 @@ For detailed explanations of these values, see the [Bun documentation on source 
 Bunup provides flexible options for handling environment variables in your bundled code:
 
 ::: code-group
+
 ```sh [CLI]
 # Inline all environment variables available at build time
 FOO=bar API_KEY=secret bunup --env inline
@@ -420,7 +420,7 @@ bunup --env.NODE_ENV="production" --env.API_URL="https://api.example.com"
 ```ts [bunup.config.ts]
 export default defineConfig({
 	// Inline all available environment variables at build time
-	env: 'inline',
+	env: "inline",
 
 	// Or disable inlining entirely (keep process.env.FOO in the output)
 	// env: "disable",
@@ -436,6 +436,7 @@ export default defineConfig({
 	// },
 });
 ```
+
 :::
 
 ### How it Works
@@ -477,10 +478,10 @@ bunup --jsx.development
 ```ts [bunup.config.ts]
 export default defineConfig({
 	jsx: {
-		runtime: 'automatic', // or 'classic'
-		importSource: 'preact',
-		factory: 'h',
-		fragment: 'Fragment',
+		runtime: "automatic", // or 'classic'
+		importSource: "preact",
+		factory: "h",
+		fragment: "Fragment",
 		sideEffects: false,
 		development: false,
 	},
@@ -529,7 +530,7 @@ bunup --no-splitting
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-	format: 'esm',
+	format: "esm",
 	// Enable for all formats
 	splitting: true,
 
@@ -552,8 +553,8 @@ bunup --preferred-tsconfig ./tsconfig.build.json
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-  entry: "src/index.ts",
-  preferredTsconfig: "./tsconfig.build.json",
+	entry: "src/index.ts",
+	preferredTsconfig: "./tsconfig.build.json",
 });
 ```
 
@@ -574,7 +575,7 @@ Execute custom JavaScript code after a successful build:
 ```typescript
 export default defineConfig({
 	onSuccess: (options) => {
-		console.log('Build completed!');
+		console.log("Build completed!");
 
 		const server = startDevServer();
 
@@ -596,7 +597,7 @@ bunup --on-success "bun run ./scripts/server.ts"
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-	onSuccess: 'bun run ./scripts/server.ts',
+	onSuccess: "bun run ./scripts/server.ts",
 });
 ```
 
@@ -609,18 +610,19 @@ For more control over command execution:
 ```typescript
 export default defineConfig({
 	onSuccess: {
-		cmd: 'bun run ./scripts/server.ts',
+		cmd: "bun run ./scripts/server.ts",
 		options: {
-			cwd: './app',
-			env: { ...process.env, FOO: 'bar' },
+			cwd: "./app",
+			env: { ...process.env, FOO: "bar" },
 			timeout: 30000, // 30 seconds
-			killSignal: 'SIGKILL',
+			killSignal: "SIGKILL",
 		},
 	},
 });
 ```
 
 Available command options:
+
 - **cwd**: Working directory for the command
 - **env**: Environment variables (defaults to `process.env`)
 - **timeout**: Maximum execution time in milliseconds
@@ -646,7 +648,7 @@ bunup --no-clean
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-    clean: false,
+	clean: false,
 });
 ```
 
@@ -666,7 +668,7 @@ bunup --define.PACKAGE_VERSION='"1.0.0"' --define.DEBUG='false'
 export default defineConfig({
 	define: {
 		PACKAGE_VERSION: '"1.0.0"',
-		DEBUG: 'false',
+		DEBUG: "false",
 	},
 });
 ```
@@ -692,10 +694,10 @@ bunup --banner 'use client' --footer '// built with love in SF'
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-      // Add text to the beginning of bundle files
-      banner: '"use client";',
-      // Add text to the end of bundle files
-      footer: '// built with love in SF',
+	// Add text to the beginning of bundle files
+	banner: '"use client";',
+	// Add text to the end of bundle files
+	footer: "// built with love in SF",
 });
 ```
 
@@ -723,7 +725,7 @@ bunup --drop console,debugger
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-	drop: ['console', 'debugger', 'anyIdentifier.or.propertyAccess'],
+	drop: ["console", "debugger", "anyIdentifier.or.propertyAccess"],
 });
 ```
 
@@ -749,7 +751,7 @@ bunup --conditions development,node
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-	conditions: ['development', 'node'],
+	conditions: ["development", "node"],
 });
 ```
 
@@ -826,8 +828,8 @@ bunup --no-report.gzip
 ```typescript [bunup.config.ts]
 export default defineConfig({
 	report: {
-		gzip: true,        // Enable gzip size calculation (default: true)
-		brotli: false,     // Enable brotli size calculation (default: false)
+		gzip: true, // Enable gzip size calculation (default: true)
+		brotli: false, // Enable brotli size calculation (default: false)
 		maxBundleSize: 1024 * 1024, // Warn if bundle exceeds 1MB
 	},
 });
@@ -858,8 +860,8 @@ bunup --loader.'.css'=text --loader.'.txt'=file
 ```typescript [bunup.config.ts]
 export default defineConfig({
 	loader: {
-		'.css': 'text',
-		'.txt': 'file',
+		".css": "text",
+		".txt": "file",
 	},
 });
 ```
@@ -882,7 +884,7 @@ bunup --public-path https://cdn.example.com/
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-      publicPath: 'https://cdn.example.com/',
+	publicPath: "https://cdn.example.com/",
 });
 ```
 
@@ -899,17 +901,17 @@ By default, these imports are relative. Setting `publicPath` will prefix these s
 For example:
 
 ```js [Input]
-import logo from './logo.svg';
+import logo from "./logo.svg";
 console.log(logo);
 ```
 
 ```js [Output without publicPath]
-var logo = './logo-a7305bdef.svg';
+var logo = "./logo-a7305bdef.svg";
 console.log(logo);
 ```
 
 ```js [Output with publicPath]
-var logo = 'https://cdn.example.com/logo-a7305bdef.svg';
+var logo = "https://cdn.example.com/logo-a7305bdef.svg";
 console.log(logo);
 ```
 
@@ -927,7 +929,7 @@ bunup --source-base ./src
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-	sourceBase: './src',
+	sourceBase: "./src",
 });
 ```
 
@@ -954,12 +956,13 @@ my-project/
 
 ```ts
 export default defineConfig({
-  entry: 'src/components/Button/index.ts',
-  outDir: 'dist',
+	entry: "src/components/Button/index.ts",
+	outDir: "dist",
 });
 ```
 
 Output structure:
+
 ```
 my-project/
 └── dist/
@@ -970,13 +973,14 @@ my-project/
 
 ```ts
 export default defineConfig({
-  entry: 'src/components/Button/index.ts',
-  sourceBase: './src',
-  outDir: 'dist',
+	entry: "src/components/Button/index.ts",
+	sourceBase: "./src",
+	outDir: "dist",
 });
 ```
 
 Output structure:
+
 ```
 my-project/
 └── dist/
@@ -1004,8 +1008,8 @@ my-project/
 
 ```ts
 export default defineConfig({
-  entry: ['src/components/**/*.ts', 'src/utils/**/*.ts'],
-  outDir: 'dist',
+	entry: ["src/components/**/*.ts", "src/utils/**/*.ts"],
+	outDir: "dist",
 });
 ```
 
@@ -1025,9 +1029,9 @@ my-project/
 
 ```ts
 export default defineConfig({
-  entry: ['src/components/**/*.ts', 'src/utils/**/*.ts'],
-  sourceBase: '.',
-  outDir: 'dist',
+	entry: ["src/components/**/*.ts", "src/utils/**/*.ts"],
+	sourceBase: ".",
+	outDir: "dist",
 });
 ```
 

@@ -11,7 +11,7 @@ bunup --unused
 ```
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
 	unused: true,
@@ -36,12 +36,12 @@ bunup --unused.level=error --unused.ignore=pkg1,pkg2
 ```
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
 	unused: {
-		level: 'error', // Fail the build on unused dependencies, defaults to 'warn'
-		ignore: ['intentionally-unused-pkg'], // Dependencies to ignore when checking for unused dependencies
+		level: "error", // Fail the build on unused dependencies, defaults to 'warn'
+		ignore: ["intentionally-unused-pkg"], // Dependencies to ignore when checking for unused dependencies
 	},
 });
 ```

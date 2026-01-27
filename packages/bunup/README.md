@@ -5,15 +5,17 @@
 <div align="center">
 
   <!-- markdownlint-disable-next-line no-alt-text -->
-  ![Logo](/docs/public/logo.svg)
 
-  ![Bunup](/assets/bunup-title.svg)
+![Logo](/docs/public/logo.svg)
 
-  [![NPM Version](https://img.shields.io/npm/v/bunup?logo=npm&logoColor=212121&label=version&labelColor=ffc44e&color=212121)](https://npmjs.com/package/bunup)
-  [![Built with Bun](https://img.shields.io/badge/Built_with-Bun-fbf0df?logo=bun&labelColor=212121)](https://bun.com)
-  [![sponsor](https://img.shields.io/badge/sponsor-EA4AAA?logo=githubsponsors&labelColor=FAFAFA)](https://github.com/sponsors/arshad-yaseen)
+![Bunup](/assets/bunup-title.svg)
 
-  Bunup helps you ship TypeScript/React libraries faster with great DX — built on [Bun](https://bun.com)'s native bundler.
+[![NPM Version](https://img.shields.io/npm/v/bunup?logo=npm&logoColor=212121&label=version&labelColor=ffc44e&color=212121)](https://npmjs.com/package/bunup)
+[![Built with Bun](https://img.shields.io/badge/Built_with-Bun-fbf0df?logo=bun&labelColor=212121)](https://bun.com)
+[![sponsor](https://img.shields.io/badge/sponsor-EA4AAA?logo=githubsponsors&labelColor=FAFAFA)](https://github.com/sponsors/arshad-yaseen)
+
+Bunup helps you ship TypeScript/React libraries faster with great DX — built on [Bun](https://bun.com)'s native bundler.
+
 </div>
 <!-- markdownlint-restore -->
 
@@ -28,7 +30,7 @@ Create a TypeScript file:
 ```ts
 // src/index.ts
 export function greet(name: string): string {
-  return `Hello, ${name}!`;
+	return `Hello, ${name}!`;
 }
 ```
 
@@ -93,7 +95,7 @@ We welcome contributions! Please read the [contributing guide](CONTRIBUTING.md).
 
   <img src="https://cdn.jsdelivr.net/gh/arshad-yaseen/static/sponsors.svg" alt="Sponsors" />
 
-  <br /><br />
+<br /><br />
 
   <img src="assets/cat-footer.svg" alt="______ 🐈‍⬛ _____________" />
 

@@ -1,11 +1,11 @@
 {
 	"name": "basic",
-	"description": "A typescript library",
 	"version": "0.1.0",
-	"type": "module",
+	"description": "A typescript library",
 	"files": [
 		"dist"
 	],
+	"type": "module",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {

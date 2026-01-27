@@ -9,14 +9,14 @@ The build function must be run in the Bun runtime.
 ## Basic Usage
 
 ```typescript
-import { build } from 'bunup';
+import { build } from "bunup";
 
 const result = await build({
-  entry: 'src/index.ts',
+	entry: "src/index.ts",
 });
 
-console.log('Built files:', result.files);
-console.log('Build context:', result.build);
+console.log("Built files:", result.files);
+console.log("Build context:", result.build);
 ```
 
 ## Build Result
@@ -25,35 +25,35 @@ The `build` function returns a `BuildResult` object containing information about
 
 ```typescript
 type BuildResult = {
-  /** Array of generated files with their paths and metadata */
-  files: BuildOutputFile[]
-  /** Build configuration and metadata that were used */
-  build: {
-    /** Build configuration options that were used */
-    options: BuildOptions
-    /** Build execution metadata */
-    meta: BuildMeta
-  }
-}
+	/** Array of generated files with their paths and metadata */
+	files: BuildOutputFile[];
+	/** Build configuration and metadata that were used */
+	build: {
+		/** Build configuration options that were used */
+		options: BuildOptions;
+		/** Build execution metadata */
+		meta: BuildMeta;
+	};
+};
 
 type BuildOutputFile = {
-  /** The entry point for which this file was generated (undefined for chunks/assets) */
-  entrypoint: string | undefined
-  /** The kind of the file */
-  kind: 'entry-point' | 'chunk' | 'asset' | 'sourcemap' | 'bytecode'
-  /** Absolute path to the generated file */
-  fullPath: string
-  /** Path relative to the root directory */
-  pathRelativeToRootDir: string
-  /** Path relative to the output directory */
-  pathRelativeToOutdir: string
-  /** Whether the file is a TypeScript declaration file */
-  dts: boolean
-  /** The format of the output file */
-  format: Format
-  /** The size of the file in bytes */
-  size: number
-}
+	/** The entry point for which this file was generated (undefined for chunks/assets) */
+	entrypoint: string | undefined;
+	/** The kind of the file */
+	kind: "entry-point" | "chunk" | "asset" | "sourcemap" | "bytecode";
+	/** Absolute path to the generated file */
+	fullPath: string;
+	/** Path relative to the root directory */
+	pathRelativeToRootDir: string;
+	/** Path relative to the output directory */
+	pathRelativeToOutdir: string;
+	/** Whether the file is a TypeScript declaration file */
+	dts: boolean;
+	/** The format of the output file */
+	format: Format;
+	/** The size of the file in bytes */
+	size: number;
+};
 ```
 
 ## Options
@@ -63,11 +63,11 @@ The build function accepts the same options as `defineConfig`. See the [Options 
 For TypeScript users, the `BuildOptions` type is available:
 
 ```typescript
-import { build, type BuildOptions } from 'bunup';
+import { build, type BuildOptions } from "bunup";
 
 const options: BuildOptions = {
-  entry: 'src/index.ts',
-  format: ['esm', 'cjs'],
+	entry: "src/index.ts",
+	format: ["esm", "cjs"],
 };
 
 await build(options);
@@ -80,15 +80,21 @@ The full type definition can be found in the [bunup source code](https://github.
 The build function accepts an optional second parameter to specify a custom root directory. By default, it uses `process.cwd()`.
 
 ```typescript
-import { build } from 'bunup';
+import { build } from "bunup";
 
-await build({
-  entry: 'src/index.ts',
-}, '/path/to/your/project');
+await build(
+	{
+		entry: "src/index.ts",
+	},
+	"/path/to/your/project",
+);
 
-await build({
-  entry: 'src/index.ts',
-}, './my-project');
+await build(
+	{
+		entry: "src/index.ts",
+	},
+	"./my-project",
+);
 ```
 
 ## Using Plugins
@@ -96,17 +102,17 @@ await build({
 Plugins can be used programmatically the same way they are used in the configuration file:
 
 ```typescript
-import { build } from 'bunup';
-import { copy } from 'bunup/plugins';
-import { tailwindcss } from '@bunup/plugin-tailwindcss';
+import { build } from "bunup";
+import { copy } from "bunup/plugins";
+import { tailwindcss } from "@bunup/plugin-tailwindcss";
 
 await build({
-  entry: 'src/index.ts',
-  plugins: [
-    tailwindcss({
-      minify: true,
-    }),
-    copy(['README.md', 'assets/**/*']),
-  ]
+	entry: "src/index.ts",
+	plugins: [
+		tailwindcss({
+			minify: true,
+		}),
+		copy(["README.md", "assets/**/*"]),
+	],
 });
 ```

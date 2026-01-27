@@ -1,18 +1,13 @@
-import type {
-	DefineConfigItem,
-	DefineWorkspaceItem,
-	WithOptional,
-	WithRequired,
-} from './types'
+import type { DefineConfigItem, DefineWorkspaceItem, WithOptional, WithRequired } from "./types";
 
 export function defineConfig(
-	options: DefineConfigItem | WithRequired<DefineConfigItem, 'name'>[],
-): DefineConfigItem | WithRequired<DefineConfigItem, 'name'>[] {
-	return options
+	options: DefineConfigItem | WithRequired<DefineConfigItem, "name">[],
+): DefineConfigItem | WithRequired<DefineConfigItem, "name">[] {
+	return options;
 }
 
 export function defineWorkspace(
-	options: WithOptional<DefineWorkspaceItem, 'config'>[],
+	options: WithOptional<DefineWorkspaceItem, "config">[],
 	sharedOptions?: Partial<DefineConfigItem>,
 ): DefineWorkspaceItem[] {
 	return options.map((item) => {
@@ -24,7 +19,7 @@ export function defineWorkspace(
 					}))
 				: item.config
 					? { ...sharedOptions, ...item.config }
-					: sharedOptions
-		return { ...item, config }
-	}) as DefineWorkspaceItem[]
+					: sharedOptions;
+		return { ...item, config };
+	}) as DefineWorkspaceItem[];
 }

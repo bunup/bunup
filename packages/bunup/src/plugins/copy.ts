@@ -1,47 +1,42 @@
-import fs from 'node:fs'
-import { basename, isAbsolute, join } from 'node:path'
-import type { BuildOptions } from '../options'
-import { logger } from '../printer/logger'
-import type { Arrayable } from '../types'
-import { ensureArray } from '../utils/common'
-import { isGlobPattern } from '../utils/file'
-import type { BunupPlugin, BunupPluginHooks } from './types'
+import fs from "node:fs";
+import { basename, isAbsolute, join } from "node:path";
+import type { BuildOptions } from "../options";
+import { logger } from "../printer/logger";
+import type { Arrayable } from "../types";
+import { ensureArray } from "../utils/common";
+import { isGlobPattern } from "../utils/file";
+import type { BunupPlugin, BunupPluginHooks } from "./types";
 
 type CopyOptions = {
 	/** Whether to follow symbolic links when copying files. */
-	followSymlinks?: boolean
+	followSymlinks?: boolean;
 	/** Whether to exclude dotfiles (files starting with a dot) from being copied. */
-	excludeDotfiles?: boolean
+	excludeDotfiles?: boolean;
 	/** Whether to override existing files. Default: true */
-	override?: boolean
+	override?: boolean;
 	/**
 	 * Behavior in watch mode:
 	 * - 'changed': Only copy files that have changed (default)
 	 * - 'always': Always copy all files on each build
 	 * - 'skip': Skip copying in watch mode
 	 */
-	watchMode?: 'changed' | 'always' | 'skip'
-}
+	watchMode?: "changed" | "always" | "skip";
+};
 
 type TransformContext = {
 	/** The file content */
-	content: string | ArrayBuffer
+	content: string | ArrayBuffer;
 	/** The source file path */
-	path: string
+	path: string;
 	/** The destination file path */
-	destination: string
+	destination: string;
 	/** Build options */
-	options: BuildOptions
-}
+	options: BuildOptions;
+};
 
-type TransformResult =
-	| string
-	| ArrayBuffer
-	| { content: string | ArrayBuffer; filename: string }
+type TransformResult = string | ArrayBuffer | { content: string | ArrayBuffer; filename: string };
 
-type TransformFunction = (
-	context: TransformContext,
-) => TransformResult | Promise<TransformResult>
+type TransformFunction = (context: TransformContext) => TransformResult | Promise<TransformResult>;
 
 /**
  * A plugin that copies files and directories to the output directory.
@@ -52,18 +47,18 @@ type TransformFunction = (
  * @see https://bunup.dev/docs/builtin-plugins/copy
  */
 export function copy(pattern: Arrayable<string>): BunupPlugin & CopyBuilder {
-	return new CopyBuilder(pattern)
+	return new CopyBuilder(pattern);
 }
 
 class CopyBuilder {
-	private _patterns: string[]
-	private _destination?: string
-	private _options?: CopyOptions
-	private _transform?: TransformFunction
-	private _fileCache = new Map<string, number>()
+	private _patterns: string[];
+	private _destination?: string;
+	private _options?: CopyOptions;
+	private _transform?: TransformFunction;
+	private _fileCache = new Map<string, number>();
 
 	constructor(pattern: Arrayable<string>) {
-		this._patterns = ensureArray(pattern)
+		this._patterns = ensureArray(pattern);
 	}
 
 	/**
@@ -71,16 +66,16 @@ class CopyBuilder {
 	 * Relative to the output directory.
 	 */
 	to(destination: string): this {
-		this._destination = destination
-		return this
+		this._destination = destination;
+		return this;
 	}
 
 	/**
 	 * Sets additional options for the copy operation.
 	 */
 	with(options: CopyOptions): this {
-		this._options = options
-		return this
+		this._options = options;
+		return this;
 	}
 
 	/**
@@ -88,25 +83,25 @@ class CopyBuilder {
 	 * Useful for modifying files on the fly (e.g., replacing tokens, minifying, etc.)
 	 */
 	transform(fn: TransformFunction): this {
-		this._transform = fn
-		return this
+		this._transform = fn;
+		return this;
 	}
 
 	get name() {
-		return 'copy'
+		return "copy";
 	}
 
 	get hooks(): BunupPluginHooks {
 		return {
 			onBuildDone: async ({ options: buildOptions, meta }) => {
-				const isWatchMode = buildOptions.watch
-				const watchBehavior = this._options?.watchMode ?? 'changed'
+				const isWatchMode = buildOptions.watch;
+				const watchBehavior = this._options?.watchMode ?? "changed";
 
-				if (isWatchMode && watchBehavior === 'skip') {
-					return
+				if (isWatchMode && watchBehavior === "skip") {
+					return;
 				}
 
-				let destinationPath = ''
+				let destinationPath = "";
 
 				if (this._destination) {
 					if (this._destination.startsWith(buildOptions.outDir)) {
@@ -115,19 +110,19 @@ class CopyBuilder {
 							{
 								verticalSpace: true,
 							},
-						)
-						destinationPath = this._destination
+						);
+						destinationPath = this._destination;
 					} else {
-						destinationPath = join(buildOptions.outDir, this._destination)
+						destinationPath = join(buildOptions.outDir, this._destination);
 					}
 				} else {
-					destinationPath = buildOptions.outDir
+					destinationPath = buildOptions.outDir;
 				}
 
-				const activeFiles = new Set<string>()
+				const activeFiles = new Set<string>();
 
 				for (const pattern of this._patterns) {
-					const glob = new Bun.Glob(pattern)
+					const glob = new Bun.Glob(pattern);
 
 					for await (const scannedPath of glob.scan({
 						cwd: meta.rootDir,
@@ -135,57 +130,52 @@ class CopyBuilder {
 						onlyFiles: isGlobPattern(pattern),
 						followSymlinks: this._options?.followSymlinks,
 					})) {
-						const sourcePath = join(meta.rootDir, scannedPath)
-						activeFiles.add(sourcePath)
+						const sourcePath = join(meta.rootDir, scannedPath);
+						activeFiles.add(sourcePath);
 
-						if (isWatchMode && watchBehavior === 'changed') {
-							const stat = await Bun.file(sourcePath).stat()
-							const lastModified = stat?.mtime?.getTime() ?? 0
-							const cachedTime = this._fileCache.get(sourcePath)
+						if (isWatchMode && watchBehavior === "changed") {
+							const stat = await Bun.file(sourcePath).stat();
+							const lastModified = stat?.mtime?.getTime() ?? 0;
+							const cachedTime = this._fileCache.get(sourcePath);
 
 							if (cachedTime === lastModified) {
-								continue
+								continue;
 							}
 
-							this._fileCache.set(sourcePath, lastModified)
+							this._fileCache.set(sourcePath, lastModified);
 						}
 
 						const finalDestinationPath = resolveDestinationPath(
 							destinationPath,
 							sourcePath,
 							meta.rootDir,
-						)
+						);
 
-						const shouldOverride = this._options?.override ?? true
+						const shouldOverride = this._options?.override ?? true;
 						if (!shouldOverride) {
-							const destinationExists =
-								await Bun.file(finalDestinationPath).exists()
+							const destinationExists = await Bun.file(finalDestinationPath).exists();
 							if (destinationExists) {
-								continue
+								continue;
 							}
 						}
 
 						if (isDirectoryPath(sourcePath)) {
-							await copyDirectory(sourcePath, finalDestinationPath)
+							await copyDirectory(sourcePath, finalDestinationPath);
 						} else {
-							await this.copyFileWithTransform(
-								sourcePath,
-								finalDestinationPath,
-								buildOptions,
-							)
+							await this.copyFileWithTransform(sourcePath, finalDestinationPath, buildOptions);
 						}
 					}
 				}
 
-				if (isWatchMode && watchBehavior === 'changed') {
+				if (isWatchMode && watchBehavior === "changed") {
 					for (const cachedPath of this._fileCache.keys()) {
 						if (!activeFiles.has(cachedPath)) {
-							this._fileCache.delete(cachedPath)
+							this._fileCache.delete(cachedPath);
 						}
 					}
 				}
 			},
-		}
+		};
 	}
 
 	private async copyFileWithTransform(
@@ -193,32 +183,28 @@ class CopyBuilder {
 		destinationPath: string,
 		buildOptions: BuildOptions,
 	): Promise<void> {
-		const sourceFile = Bun.file(sourcePath)
+		const sourceFile = Bun.file(sourcePath);
 
 		if (this._transform) {
-			const content = await sourceFile.arrayBuffer()
+			const content = await sourceFile.arrayBuffer();
 			const result = await this._transform({
 				content,
 				path: sourcePath,
 				destination: destinationPath,
 				options: buildOptions,
-			})
+			});
 
-			if (
-				typeof result === 'object' &&
-				'content' in result &&
-				'filename' in result
-			) {
+			if (typeof result === "object" && "content" in result && "filename" in result) {
 				const newDestination = join(
-					destinationPath.substring(0, destinationPath.lastIndexOf('/')),
+					destinationPath.substring(0, destinationPath.lastIndexOf("/")),
 					result.filename,
-				)
-				await Bun.write(newDestination, result.content)
+				);
+				await Bun.write(newDestination, result.content);
 			} else {
-				await Bun.write(destinationPath, result)
+				await Bun.write(destinationPath, result);
 			}
 		} else {
-			await Bun.write(destinationPath, sourceFile)
+			await Bun.write(destinationPath, sourceFile);
 		}
 	}
 }
@@ -230,29 +216,26 @@ function resolveDestinationPath(
 ): string {
 	const fullDestinationPath = isAbsolute(destinationPath)
 		? destinationPath
-		: join(rootDir, destinationPath)
-	const isScannedPathDir = isDirectoryPath(scannedPath)
-	const isDestinationDir = isDirectoryPath(fullDestinationPath)
+		: join(rootDir, destinationPath);
+	const isScannedPathDir = isDirectoryPath(scannedPath);
+	const isDestinationDir = isDirectoryPath(fullDestinationPath);
 
 	if (isDestinationDir && !isScannedPathDir) {
-		return join(fullDestinationPath, basename(scannedPath))
+		return join(fullDestinationPath, basename(scannedPath));
 	}
 
-	return fullDestinationPath
+	return fullDestinationPath;
 }
 
 function isDirectoryPath(filePath: string): boolean {
 	try {
-		const stats = fs.statSync(filePath)
-		return stats.isDirectory()
+		const stats = fs.statSync(filePath);
+		return stats.isDirectory();
 	} catch {
-		return false
+		return false;
 	}
 }
 
-async function copyDirectory(
-	sourcePath: string,
-	finalDestinationPath: string,
-): Promise<void> {
-	await Bun.$`cp -r ${sourcePath} ${finalDestinationPath}`
+async function copyDirectory(sourcePath: string, finalDestinationPath: string): Promise<void> {
+	await Bun.$`cp -r ${sourcePath} ${finalDestinationPath}`;
 }

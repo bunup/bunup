@@ -1,30 +1,19 @@
-import path from 'node:path'
-import pc from 'picocolors'
-import { CSS_RE, JS_DTS_RE } from '../constants/re'
-import { logger } from '../printer/logger'
-import { detectFileFormatting } from '../utils/file'
-import { cleanPath, getShortFilePath } from '../utils/path'
-import type {
-	BuildContext,
-	BuildOutputFile,
-	BunupPlugin,
-	OnBuildDoneCtx,
-} from './types'
+import path from "node:path";
+import pc from "picocolors";
+import { CSS_RE, JS_DTS_RE } from "../constants/re";
+import { logger } from "../printer/logger";
+import { detectFileFormatting } from "../utils/file";
+import { cleanPath, getShortFilePath } from "../utils/path";
+import type { BuildContext, BuildOutputFile, BunupPlugin, OnBuildDoneCtx } from "./types";
 
-type ExportField = 'require' | 'import' | 'types'
-type EntryPoint = 'main' | 'module' | 'types'
-type ExportValue = string | { types: string; default: string }
-type ExportsField = Record<
-	string,
-	string | Partial<Record<ExportField, ExportValue>>
->
+type ExportField = "require" | "import" | "types";
+type EntryPoint = "main" | "module" | "types";
+type ExportValue = string | { types: string; default: string };
+type ExportsField = Record<string, string | Partial<Record<ExportField, ExportValue>>>;
 
-type CustomExports = Record<
-	string,
-	string | Record<string, string | Record<string, string>>
->
+type CustomExports = Record<string, string | Record<string, string | Record<string, string>>>;
 
-type Exclude = ((ctx: BuildContext) => string[] | undefined) | string[]
+type Exclude = ((ctx: BuildContext) => string[] | undefined) | string[];
 
 export interface ExportsOptions {
 	/**
@@ -32,7 +21,7 @@ export interface ExportsOptions {
 	 *
 	 * @see https://bunup.dev/docs/extra-options/exports#customexports
 	 */
-	customExports?: (ctx: BuildContext) => CustomExports | undefined
+	customExports?: (ctx: BuildContext) => CustomExports | undefined;
 	/**
 	 * Export keys to exclude from the generated exports field in package.json
 	 *
@@ -57,7 +46,7 @@ export interface ExportsOptions {
 	 *
 	 * @see https://bunup.dev/docs/extra-options/exports#exclude
 	 */
-	exclude?: Exclude
+	exclude?: Exclude;
 	/**
 	 * Whether to automatically exclude CLI entry points from the exports field
 	 *
@@ -76,20 +65,20 @@ export interface ExportsOptions {
 	 * @default true
 	 * @see https://bunup.dev/docs/extra-options/exports#excludecli
 	 */
-	excludeCli?: boolean
+	excludeCli?: boolean;
 	/**
 	 * Whether to exclude CSS files from being added to the exports field
 	 *
 	 * @default false
 	 */
-	excludeCss?: boolean
+	excludeCss?: boolean;
 	/**
 	 * Whether to include "./package.json": "./package.json" in the exports field
 	 *
 	 * @default true
 	 * @see https://bunup.dev/docs/extra-options/exports#includepackagejson
 	 */
-	includePackageJson?: boolean
+	includePackageJson?: boolean;
 	/**
 	 * Whether to add a wildcard export that allows deep imports
 	 *
@@ -99,12 +88,12 @@ export interface ExportsOptions {
 	 * @default false
 	 * @see https://bunup.dev/docs/extra-options/exports#all
 	 */
-	all?: boolean
+	all?: boolean;
 }
 
 interface FileEntry {
-	dts: BuildOutputFile | undefined
-	source: BuildOutputFile | undefined
+	dts: BuildOutputFile | undefined;
+	source: BuildOutputFile | undefined;
 }
 
 /**
@@ -114,23 +103,23 @@ interface FileEntry {
  */
 export function exports(options: ExportsOptions = {}): BunupPlugin {
 	return {
-		name: 'exports',
+		name: "exports",
 		hooks: {
 			onBuildDone: async (ctx) => {
-				await processPackageJsonExports(ctx, options)
+				await processPackageJsonExports(ctx, options);
 			},
 		},
-	}
+	};
 }
 
 async function processPackageJsonExports(
 	ctx: OnBuildDoneCtx,
 	options: ExportsOptions,
 ): Promise<void> {
-	const { files, options: buildOptions, meta } = ctx
+	const { files, options: buildOptions, meta } = ctx;
 
 	if (!meta.packageJson.path || !meta.packageJson.data) {
-		return
+		return;
 	}
 
 	try {
@@ -140,58 +129,47 @@ async function processPackageJsonExports(
 			options.excludeCli,
 			options.excludeCss,
 			ctx,
-		)
+		);
 
-		const updatedFiles = createUpdatedFilesArray(
-			meta.packageJson.data,
-			buildOptions.outDir,
-		)
+		const updatedFiles = createUpdatedFilesArray(meta.packageJson.data, buildOptions.outDir);
 
-		const mergedExports = mergeCustomExportsWithGenerated(
-			exportsField,
-			options.customExports,
-			ctx,
-		)
+		const mergedExports = mergeCustomExportsWithGenerated(exportsField, options.customExports, ctx);
 
 		const finalExports = addPackageJsonOrWildcardExport(
 			mergedExports,
 			options.includePackageJson,
 			options.all,
-		)
+		);
 
 		const newPackageJson = createUpdatedPackageJson(
 			meta.packageJson.data,
 			entryPoints,
 			finalExports,
 			updatedFiles,
-		)
+		);
 
 		await validateBinFields(
 			meta.packageJson.data,
 			buildOptions.name,
 			meta.packageJson.path,
 			meta.rootDir,
-		)
+		);
 
 		if (Bun.deepEquals(newPackageJson, meta.packageJson.data)) {
-			return
+			return;
 		}
 
-		const formatting = await detectFileFormatting(meta.packageJson.path)
+		const formatting = await detectFileFormatting(meta.packageJson.path);
 
-		let jsonContent = JSON.stringify(
-			newPackageJson,
-			null,
-			formatting.indentation,
-		)
+		let jsonContent = JSON.stringify(newPackageJson, null, formatting.indentation);
 
 		if (formatting.hasTrailingNewline) {
-			jsonContent += '\n'
+			jsonContent += "\n";
 		}
 
-		await Bun.write(meta.packageJson.path, jsonContent)
+		await Bun.write(meta.packageJson.path, jsonContent);
 	} catch {
-		logger.error('Failed to update package.json')
+		logger.error("Failed to update package.json");
 	}
 }
 
@@ -202,232 +180,217 @@ function generateExportsFields(
 	excludeCss: boolean | undefined,
 	ctx: OnBuildDoneCtx,
 ): {
-	exportsField: ExportsField
-	entryPoints: Partial<Record<EntryPoint, string>>
+	exportsField: ExportsField;
+	entryPoints: Partial<Record<EntryPoint, string>>;
 } {
-	const filteredFiles = filterFiles(files, excludeCli)
-	const { filesByExportKey, allDtsFiles, cssFiles } =
-		groupFilesByExportKey(filteredFiles)
-	const exportsField = createExportEntries(filesByExportKey)
+	const filteredFiles = filterFiles(files, excludeCli);
+	const { filesByExportKey, allDtsFiles, cssFiles } = groupFilesByExportKey(filteredFiles);
+	const exportsField = createExportEntries(filesByExportKey);
 
 	if (!excludeCss) {
-		addCssToExports(exportsField, cssFiles)
+		addCssToExports(exportsField, cssFiles);
 	}
 
-	const filteredExportsField = filterExportKeys(exportsField, exclude, ctx)
-	const filteredAllDtsFiles = filterDtsFiles(allDtsFiles, exclude, ctx)
+	const filteredExportsField = filterExportKeys(exportsField, exclude, ctx);
+	const filteredAllDtsFiles = filterDtsFiles(allDtsFiles, exclude, ctx);
 
-	const entryPoints = extractEntryPoints(
-		filteredExportsField,
-		filteredAllDtsFiles,
-	)
+	const entryPoints = extractEntryPoints(filteredExportsField, filteredAllDtsFiles);
 
-	return { exportsField: filteredExportsField, entryPoints }
+	return { exportsField: filteredExportsField, entryPoints };
 }
 
 function groupFilesByExportKey(files: BuildOutputFile[]) {
-	const filesByExportKey = new Map<string, Map<string, FileEntry>>()
-	const allDtsFiles = new Map<string, BuildOutputFile[]>()
-	const cssFiles: BuildOutputFile[] = []
+	const filesByExportKey = new Map<string, Map<string, FileEntry>>();
+	const allDtsFiles = new Map<string, BuildOutputFile[]>();
+	const cssFiles: BuildOutputFile[] = [];
 
 	for (const file of files) {
-		const exportKey = getExportKey(cleanPath(file.pathRelativeToOutdir))
+		const exportKey = getExportKey(cleanPath(file.pathRelativeToOutdir));
 
 		if (CSS_RE.test(file.fullPath)) {
-			cssFiles.push(file)
-			continue
+			cssFiles.push(file);
+			continue;
 		}
 
-		const format = file.format === 'esm' ? 'import' : 'require'
+		const format = file.format === "esm" ? "import" : "require";
 
 		if (!filesByExportKey.has(exportKey)) {
-			filesByExportKey.set(exportKey, new Map())
-			allDtsFiles.set(exportKey, [])
+			filesByExportKey.set(exportKey, new Map());
+			allDtsFiles.set(exportKey, []);
 		}
 
-		const formatMap = filesByExportKey.get(exportKey)
-		const dtsFiles = allDtsFiles.get(exportKey)
+		const formatMap = filesByExportKey.get(exportKey);
+		const dtsFiles = allDtsFiles.get(exportKey);
 
 		if (formatMap && dtsFiles) {
 			if (!formatMap.has(format)) {
-				formatMap.set(format, { dts: undefined, source: undefined })
+				formatMap.set(format, { dts: undefined, source: undefined });
 			}
 
-			const fileEntry = formatMap.get(format)
+			const fileEntry = formatMap.get(format);
 			if (fileEntry) {
 				if (file.dts) {
-					fileEntry.dts = file
-					dtsFiles.push(file)
+					fileEntry.dts = file;
+					dtsFiles.push(file);
 				} else {
-					fileEntry.source = file
+					fileEntry.source = file;
 				}
 			}
 		}
 	}
 
-	return { filesByExportKey, allDtsFiles, cssFiles }
+	return { filesByExportKey, allDtsFiles, cssFiles };
 }
 
-function createExportEntries(
-	filesByExportKey: Map<string, Map<string, FileEntry>>,
-): ExportsField {
-	const exportsField: ExportsField = {}
+function createExportEntries(filesByExportKey: Map<string, Map<string, FileEntry>>): ExportsField {
+	const exportsField: ExportsField = {};
 
 	for (const [exportKey, formatMap] of filesByExportKey.entries()) {
-		exportsField[exportKey] = {}
+		exportsField[exportKey] = {};
 
-		let hasFormatSpecificTypes = false
-		let primaryTypesPath: string | undefined
+		let hasFormatSpecificTypes = false;
+		let primaryTypesPath: string | undefined;
 
 		for (const [format, files] of formatMap.entries()) {
-			const formatKey = format as ExportField
+			const formatKey = format as ExportField;
 
 			if (files.dts && files.source) {
 				exportsField[exportKey][formatKey] = {
 					types: `./${cleanPath(files.dts.pathRelativeToRootDir)}`,
 					default: `./${cleanPath(files.source.pathRelativeToRootDir)}`,
-				}
-				hasFormatSpecificTypes = true
+				};
+				hasFormatSpecificTypes = true;
 
 				if (!primaryTypesPath) {
-					primaryTypesPath = `./${cleanPath(files.dts.pathRelativeToRootDir)}`
+					primaryTypesPath = `./${cleanPath(files.dts.pathRelativeToRootDir)}`;
 				}
 			} else if (files.source) {
-				exportsField[exportKey][formatKey] =
-					`./${cleanPath(files.source.pathRelativeToRootDir)}`
+				exportsField[exportKey][formatKey] = `./${cleanPath(files.source.pathRelativeToRootDir)}`;
 
 				if (files.dts) {
-					primaryTypesPath = `./${cleanPath(files.dts.pathRelativeToRootDir)}`
+					primaryTypesPath = `./${cleanPath(files.dts.pathRelativeToRootDir)}`;
 				}
 			} else if (files.dts) {
-				primaryTypesPath = `./${cleanPath(files.dts.pathRelativeToRootDir)}`
+				primaryTypesPath = `./${cleanPath(files.dts.pathRelativeToRootDir)}`;
 			}
 		}
 
 		if (!hasFormatSpecificTypes && primaryTypesPath) {
-			exportsField[exportKey].types = primaryTypesPath
+			exportsField[exportKey].types = primaryTypesPath;
 		}
 	}
 
-	return exportsField
+	return exportsField;
 }
 
 function extractEntryPoints(
 	exportsField: ExportsField,
 	allDtsFiles: Map<string, BuildOutputFile[]>,
 ): Partial<Record<EntryPoint, string>> {
-	const entryPoints: Partial<Record<EntryPoint, string>> = {}
-	const dotExport = exportsField['.']
+	const entryPoints: Partial<Record<EntryPoint, string>> = {};
+	const dotExport = exportsField["."];
 
-	if (!dotExport || typeof dotExport === 'string') {
-		return entryPoints
+	if (!dotExport || typeof dotExport === "string") {
+		return entryPoints;
 	}
 
 	for (const [field, value] of Object.entries(dotExport)) {
-		if (field === 'types') continue
+		if (field === "types") continue;
 
-		const entryPoint = exportFieldToEntryPoint(field as ExportField)
+		const entryPoint = exportFieldToEntryPoint(field as ExportField);
 
-		if (typeof value === 'string') {
-			entryPoints[entryPoint] = value
-		} else if (value && typeof value === 'object' && 'default' in value) {
-			entryPoints[entryPoint] = value.default
+		if (typeof value === "string") {
+			entryPoints[entryPoint] = value;
+		} else if (value && typeof value === "object" && "default" in value) {
+			entryPoints[entryPoint] = value.default;
 		}
 	}
 
-	const dotEntryDtsFiles = allDtsFiles.get('.')
+	const dotEntryDtsFiles = allDtsFiles.get(".");
 	if (dotEntryDtsFiles?.length) {
-		const standardDts = findStandardDtsFile(dotEntryDtsFiles)
+		const standardDts = findStandardDtsFile(dotEntryDtsFiles);
 
 		if (standardDts) {
-			entryPoints.types = `./${cleanPath(standardDts.pathRelativeToRootDir)}`
+			entryPoints.types = `./${cleanPath(standardDts.pathRelativeToRootDir)}`;
 		} else {
-			entryPoints.types = extractTypesFromExport(dotExport)
+			entryPoints.types = extractTypesFromExport(dotExport);
 		}
 	}
 
-	return entryPoints
+	return entryPoints;
 }
 
-function findStandardDtsFile(
-	dtsFiles: BuildOutputFile[],
-): BuildOutputFile | undefined {
+function findStandardDtsFile(dtsFiles: BuildOutputFile[]): BuildOutputFile | undefined {
 	return dtsFiles.find(
 		(file) =>
-			file.pathRelativeToRootDir.endsWith('.d.ts') &&
-			!file.pathRelativeToRootDir.endsWith('.d.mts') &&
-			!file.pathRelativeToRootDir.endsWith('.d.cts'),
-	)
+			file.pathRelativeToRootDir.endsWith(".d.ts") &&
+			!file.pathRelativeToRootDir.endsWith(".d.mts") &&
+			!file.pathRelativeToRootDir.endsWith(".d.cts"),
+	);
 }
 
 function extractTypesFromExport(
 	dotExport: Partial<Record<ExportField, ExportValue>>,
 ): string | undefined {
-	const typesValue = dotExport.types
-	if (typeof typesValue === 'string') {
-		return typesValue
+	const typesValue = dotExport.types;
+	if (typeof typesValue === "string") {
+		return typesValue;
 	}
 
-	if (typesValue && typeof typesValue === 'object' && 'types' in typesValue) {
-		return typesValue.types
+	if (typesValue && typeof typesValue === "object" && "types" in typesValue) {
+		return typesValue.types;
 	}
 
-	const importValue = dotExport.import
-	if (
-		importValue &&
-		typeof importValue === 'object' &&
-		'types' in importValue
-	) {
-		return (importValue as Record<string, unknown>).types as string
+	const importValue = dotExport.import;
+	if (importValue && typeof importValue === "object" && "types" in importValue) {
+		return (importValue as Record<string, unknown>).types as string;
 	}
 
-	return undefined
+	return undefined;
 }
 
 function createUpdatedFilesArray(
 	packageJsonData: Record<string, unknown>,
 	outDir: string,
 ): string[] {
-	const existingFiles = Array.isArray(packageJsonData.files)
-		? packageJsonData.files
-		: []
+	const existingFiles = Array.isArray(packageJsonData.files) ? packageJsonData.files : [];
 
-	return [...new Set([...existingFiles, outDir])]
+	return [...new Set([...existingFiles, outDir])];
 }
 
 function mergeCustomExportsWithGenerated(
 	baseExports: ExportsField,
-	customExportsProvider: ExportsOptions['customExports'],
+	customExportsProvider: ExportsOptions["customExports"],
 	ctx: OnBuildDoneCtx,
 ): CustomExports {
-	const mergedExports: CustomExports = { ...baseExports }
+	const mergedExports: CustomExports = { ...baseExports };
 
 	if (!customExportsProvider) {
-		return mergedExports
+		return mergedExports;
 	}
 
 	const customExports = customExportsProvider({
 		options: ctx.options,
 		meta: ctx.meta,
-	})
+	});
 	if (!customExports) {
-		return mergedExports
+		return mergedExports;
 	}
 
 	for (const [key, value] of Object.entries(customExports)) {
-		if (typeof value === 'string') {
-			mergedExports[key] = value
+		if (typeof value === "string") {
+			mergedExports[key] = value;
 		} else {
-			const existingExport = mergedExports[key]
-			if (typeof existingExport === 'object' && existingExport !== null) {
-				mergedExports[key] = { ...existingExport, ...value }
+			const existingExport = mergedExports[key];
+			if (typeof existingExport === "object" && existingExport !== null) {
+				mergedExports[key] = { ...existingExport, ...value };
 			} else {
-				mergedExports[key] = value
+				mergedExports[key] = value;
 			}
 		}
 	}
 
-	return mergedExports
+	return mergedExports;
 }
 
 function createUpdatedPackageJson(
@@ -436,7 +399,7 @@ function createUpdatedPackageJson(
 	exports: CustomExports,
 	files: string[],
 ): Record<string, unknown> {
-	const { main: _, module: __, types: ___, ...restPackageJson } = originalData
+	const { main: _, module: __, types: ___, ...restPackageJson } = originalData;
 
 	const newPackageJson: Record<string, unknown> = {
 		...Object.fromEntries(
@@ -451,33 +414,25 @@ function createUpdatedPackageJson(
 		files,
 		...entryPoints,
 		exports,
-	}
+	};
 
 	for (const key in restPackageJson) {
-		if (
-			Object.hasOwn(restPackageJson, key) &&
-			!Object.hasOwn(newPackageJson, key)
-		) {
-			newPackageJson[key] = restPackageJson[key]
+		if (Object.hasOwn(restPackageJson, key) && !Object.hasOwn(newPackageJson, key)) {
+			newPackageJson[key] = restPackageJson[key];
 		}
 	}
 
-	return newPackageJson
+	return newPackageJson;
 }
 
-function filterFiles(
-	files: BuildOutputFile[],
-	excludeCli: boolean | undefined,
-): BuildOutputFile[] {
+function filterFiles(files: BuildOutputFile[], excludeCli: boolean | undefined): BuildOutputFile[] {
 	return files.filter(
 		(file) =>
 			(JS_DTS_RE.test(file.fullPath) || CSS_RE.test(file.fullPath)) &&
-			(file.kind === 'entry-point' || file.kind === 'asset') &&
-			(file.format === 'esm' ||
-				file.format === 'cjs' ||
-				CSS_RE.test(file.fullPath)) &&
+			(file.kind === "entry-point" || file.kind === "asset") &&
+			(file.format === "esm" || file.format === "cjs" || CSS_RE.test(file.fullPath)) &&
 			(!file.entrypoint || !isCliEntrypoint(file.entrypoint, excludeCli)),
-	)
+	);
 }
 
 /**
@@ -485,18 +440,15 @@ function filterFiles(
  * These patterns match files and directories commonly used for CLI/binary entry points
  */
 const CLI_EXCLUSION_PATTERNS = [
-	'**/cli.{ts,tsx,js,jsx,mjs,cjs}',
-	'**/cli/index.{ts,tsx,js,jsx,mjs,cjs}',
-	'**/bin.{ts,tsx,js,jsx,mjs,cjs}',
-	'**/bin/index.{ts,tsx,js,jsx,mjs,cjs}',
-]
+	"**/cli.{ts,tsx,js,jsx,mjs,cjs}",
+	"**/cli/index.{ts,tsx,js,jsx,mjs,cjs}",
+	"**/bin.{ts,tsx,js,jsx,mjs,cjs}",
+	"**/bin/index.{ts,tsx,js,jsx,mjs,cjs}",
+];
 
-function isCliEntrypoint(
-	entrypoint: string,
-	excludeCli: boolean | undefined,
-): boolean {
-	const cliPatterns = excludeCli !== false ? CLI_EXCLUSION_PATTERNS : []
-	return cliPatterns.some((pattern) => new Bun.Glob(pattern).match(entrypoint))
+function isCliEntrypoint(entrypoint: string, excludeCli: boolean | undefined): boolean {
+	const cliPatterns = excludeCli !== false ? CLI_EXCLUSION_PATTERNS : [];
+	return cliPatterns.some((pattern) => new Bun.Glob(pattern).match(entrypoint));
 }
 
 function filterExportKeys(
@@ -505,31 +457,27 @@ function filterExportKeys(
 	ctx: OnBuildDoneCtx,
 ): ExportsField {
 	if (!exclude) {
-		return exportsField
+		return exportsField;
 	}
 
 	const userPatterns =
-		typeof exclude === 'function'
-			? exclude({ options: ctx.options, meta: ctx.meta })
-			: exclude
+		typeof exclude === "function" ? exclude({ options: ctx.options, meta: ctx.meta }) : exclude;
 
 	if (!userPatterns || userPatterns.length === 0) {
-		return exportsField
+		return exportsField;
 	}
 
-	const filteredExports: ExportsField = {}
+	const filteredExports: ExportsField = {};
 
 	for (const [exportKey, value] of Object.entries(exportsField)) {
-		const shouldExclude = userPatterns.some((pattern) =>
-			new Bun.Glob(pattern).match(exportKey),
-		)
+		const shouldExclude = userPatterns.some((pattern) => new Bun.Glob(pattern).match(exportKey));
 
 		if (!shouldExclude) {
-			filteredExports[exportKey] = value
+			filteredExports[exportKey] = value;
 		}
 	}
 
-	return filteredExports
+	return filteredExports;
 }
 
 function filterDtsFiles(
@@ -538,97 +486,83 @@ function filterDtsFiles(
 	ctx: OnBuildDoneCtx,
 ): Map<string, BuildOutputFile[]> {
 	if (!exclude) {
-		return allDtsFiles
+		return allDtsFiles;
 	}
 
 	const userPatterns =
-		typeof exclude === 'function'
-			? exclude({ options: ctx.options, meta: ctx.meta })
-			: exclude
+		typeof exclude === "function" ? exclude({ options: ctx.options, meta: ctx.meta }) : exclude;
 
 	if (!userPatterns || userPatterns.length === 0) {
-		return allDtsFiles
+		return allDtsFiles;
 	}
 
-	const filteredDtsFiles = new Map<string, BuildOutputFile[]>()
+	const filteredDtsFiles = new Map<string, BuildOutputFile[]>();
 
 	for (const [exportKey, files] of allDtsFiles.entries()) {
-		const shouldExclude = userPatterns.some((pattern) =>
-			new Bun.Glob(pattern).match(exportKey),
-		)
+		const shouldExclude = userPatterns.some((pattern) => new Bun.Glob(pattern).match(exportKey));
 
 		if (!shouldExclude) {
-			filteredDtsFiles.set(exportKey, files)
+			filteredDtsFiles.set(exportKey, files);
 		}
 	}
 
-	return filteredDtsFiles
+	return filteredDtsFiles;
 }
 
 function getExportKey(pathRelativeToOutdir: string): string {
-	const pathSegments = cleanPath(removeExtension(pathRelativeToOutdir)).split(
-		'/',
-	)
+	const pathSegments = cleanPath(removeExtension(pathRelativeToOutdir)).split("/");
 
 	if (
 		pathSegments.length === 1 &&
-		(pathSegments[0]?.startsWith('index') ||
-			pathSegments[0]?.startsWith('main'))
+		(pathSegments[0]?.startsWith("index") || pathSegments[0]?.startsWith("main"))
 	) {
-		return '.'
+		return ".";
 	}
 
-	return `./${pathSegments.filter((segment) => !segment.startsWith('index') && !segment.startsWith('main')).join('/')}`
+	return `./${pathSegments.filter((segment) => !segment.startsWith("index") && !segment.startsWith("main")).join("/")}`;
 }
 
 function removeExtension(filePath: string): string {
-	const basename = path.basename(filePath)
-	const firstDotIndex = basename.indexOf('.')
+	const basename = path.basename(filePath);
+	const firstDotIndex = basename.indexOf(".");
 
 	if (firstDotIndex === -1) {
-		return filePath
+		return filePath;
 	}
 
-	const nameWithoutExtensions = basename.slice(0, firstDotIndex)
-	const directory = path.dirname(filePath)
+	const nameWithoutExtensions = basename.slice(0, firstDotIndex);
+	const directory = path.dirname(filePath);
 
-	return directory === '.'
-		? nameWithoutExtensions
-		: path.join(directory, nameWithoutExtensions)
+	return directory === "." ? nameWithoutExtensions : path.join(directory, nameWithoutExtensions);
 }
 
-function addCssToExports(
-	exportsField: ExportsField,
-	cssFiles: BuildOutputFile[],
-): void {
-	if (cssFiles.length === 0) return
+function addCssToExports(exportsField: ExportsField, cssFiles: BuildOutputFile[]): void {
+	if (cssFiles.length === 0) return;
 
 	for (const cssFile of cssFiles) {
-		const exportKey = getCssExportKey(cleanPath(cssFile.pathRelativeToOutdir))
-		exportsField[exportKey] = `./${cleanPath(cssFile.pathRelativeToRootDir)}`
+		const exportKey = getCssExportKey(cleanPath(cssFile.pathRelativeToOutdir));
+		exportsField[exportKey] = `./${cleanPath(cssFile.pathRelativeToRootDir)}`;
 	}
 }
 
 function getCssExportKey(pathRelativeToOutdir: string): string {
-	const pathSegments = cleanPath(removeExtension(pathRelativeToOutdir)).split(
-		'/',
-	)
-	const fileName = pathSegments[pathSegments.length - 1]
+	const pathSegments = cleanPath(removeExtension(pathRelativeToOutdir)).split("/");
+	const fileName = pathSegments[pathSegments.length - 1];
 
-	if (fileName === 'index') {
+	if (fileName === "index") {
 		// index.css files
 		if (pathSegments.length === 1) {
 			// root level index.css -> ./styles.css
-			return './styles.css'
+			return "./styles.css";
 		} else {
 			// nested index.css -> use parent directory path with .css suffix to avoid conflicts
 			// e.g., button/index.css -> ./button.css
-			return `./${pathSegments.slice(0, -1).join('/')}.css`
+			return `./${pathSegments.slice(0, -1).join("/")}.css`;
 		}
 	} else {
 		// non-index CSS files -> use full path with .css extension
 		// e.g., button.css -> ./button.css, components/button.css -> ./components/button.css
-		return `./${pathSegments.join('/')}.css`
+		return `./${pathSegments.join("/")}.css`;
 	}
 }
 
@@ -637,27 +571,27 @@ function addPackageJsonOrWildcardExport(
 	includePackageJson?: boolean,
 	all?: boolean,
 ): CustomExports {
-	const finalExports = { ...exports }
+	const finalExports = { ...exports };
 
 	if (all) {
-		finalExports['./*'] = './*'
+		finalExports["./*"] = "./*";
 	} else if (includePackageJson !== false) {
-		if (!finalExports['./package.json']) {
-			finalExports['./package.json'] = './package.json'
+		if (!finalExports["./package.json"]) {
+			finalExports["./package.json"] = "./package.json";
 		}
 	}
 
-	return finalExports
+	return finalExports;
 }
 
 function exportFieldToEntryPoint(exportField: ExportField): EntryPoint {
 	switch (exportField) {
-		case 'types':
-			return 'types'
-		case 'require':
-			return 'main'
+		case "types":
+			return "types";
+		case "require":
+			return "main";
 		default:
-			return 'module'
+			return "module";
 	}
 }
 
@@ -667,44 +601,40 @@ async function validateBinFields(
 	packageJsonPath: string | undefined,
 	rootDir: string | undefined,
 ): Promise<void> {
-	if (!packageJsonData?.bin || !rootDir) return
+	if (!packageJsonData?.bin || !rootDir) return;
 
-	const bin = packageJsonData.bin
-	const invalidBins: string[] = []
+	const bin = packageJsonData.bin;
+	const invalidBins: string[] = [];
 
-	if (typeof bin === 'string') {
-		const fullPath = path.resolve(rootDir, bin)
-		const exists = await Bun.file(fullPath).exists()
+	if (typeof bin === "string") {
+		const fullPath = path.resolve(rootDir, bin);
+		const exists = await Bun.file(fullPath).exists();
 		if (!exists) {
-			invalidBins.push(`bin field points to ${pc.yellow(bin)}`)
+			invalidBins.push(`bin field points to ${pc.yellow(bin)}`);
 		}
-	} else if (typeof bin === 'object' && bin !== null) {
+	} else if (typeof bin === "object" && bin !== null) {
 		for (const [name, binPath] of Object.entries(bin)) {
-			if (typeof binPath === 'string') {
-				const fullPath = path.resolve(rootDir, binPath)
-				const exists = await Bun.file(fullPath).exists()
+			if (typeof binPath === "string") {
+				const fullPath = path.resolve(rootDir, binPath);
+				const exists = await Bun.file(fullPath).exists();
 				if (!exists) {
-					invalidBins.push(
-						`${pc.yellow(pc.bold(name))} points to ${pc.red(binPath)}`,
-					)
+					invalidBins.push(`${pc.yellow(pc.bold(name))} points to ${pc.red(binPath)}`);
 				}
 			}
 		}
 	}
 
-	if (invalidBins.length === 0) return
+	if (invalidBins.length === 0) return;
 
-	const project = projectName ? ` ${projectName}` : ''
-	const count = invalidBins.length
-	const depText = count === 1 ? 'binary' : 'binaries'
-	const verb = count === 1 ? 'points' : 'point'
-	const fileText = count === 1 ? 'file' : 'files'
+	const project = projectName ? ` ${projectName}` : "";
+	const count = invalidBins.length;
+	const depText = count === 1 ? "binary" : "binaries";
+	const verb = count === 1 ? "points" : "point";
+	const fileText = count === 1 ? "file" : "files";
 
-	const pathPrefix = packageJsonPath
-		? pc.cyan(getShortFilePath(packageJsonPath))
-		: ''
+	const pathPrefix = packageJsonPath ? pc.cyan(getShortFilePath(packageJsonPath)) : "";
 
-	const message = `\nYour project${project} has ${count} ${depText} in the bin field that ${verb} to invalid ${fileText}:\n\n  ${pathPrefix}:\n    ${invalidBins.join('\n    ')}`
+	const message = `\nYour project${project} has ${count} ${depText} in the bin field that ${verb} to invalid ${fileText}:\n\n  ${pathPrefix}:\n    ${invalidBins.join("\n    ")}`;
 
-	logger.log(message, { leftPadding: true })
+	logger.log(message, { leftPadding: true });
 }

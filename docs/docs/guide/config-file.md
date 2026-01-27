@@ -7,10 +7,10 @@ Centralize your build settings with a configuration file when CLI options aren't
 Create a `bunup.config.ts` file in your project root:
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
-  // ...your configuration options go here
+	// ...your configuration options go here
 });
 ```
 
@@ -26,19 +26,19 @@ When using an array of configurations, the `name` property is **required** for e
 
 ```ts [bunup.config.ts]
 export default defineConfig([
-  {
-    entry: "src/index.ts",
-    name: 'node',
-    format: 'esm',
-    target: 'node',
-  },
-  {
-    entry: "src/browser.ts",
-    name: 'browser',
-    format: ['esm', 'iife'],
-    target: 'browser',
-    outDir: 'dist/browser',
-  },
+	{
+		entry: "src/index.ts",
+		name: "node",
+		format: "esm",
+		target: "node",
+	},
+	{
+		entry: "src/browser.ts",
+		name: "browser",
+		format: ["esm", "iife"],
+		target: "browser",
+		outDir: "dist/browser",
+	},
 ]);
 ```
 
@@ -48,22 +48,22 @@ With this setup, Bunup will build both Node.js and browser bundles.
 
 ```ts [bunup.config.ts]
 export default defineConfig([
-  {
-    entry: "src/index.ts",
-    name: 'main',
-    format: ['esm', 'cjs'],
-  },
-  {
-    entry: "src/cli.ts",
-    name: 'cli',
-    format: ['esm'],
-  },
-  {
-    entry: "src/browser.ts",
-    name: 'browser',
-    format: ['esm', 'iife'],
-    outDir: 'dist/browser'
-  },
+	{
+		entry: "src/index.ts",
+		name: "main",
+		format: ["esm", "cjs"],
+	},
+	{
+		entry: "src/cli.ts",
+		name: "cli",
+		format: ["esm"],
+	},
+	{
+		entry: "src/browser.ts",
+		name: "browser",
+		format: ["esm", "iife"],
+		outDir: "dist/browser",
+	},
 ]);
 ```
 

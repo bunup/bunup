@@ -1,11 +1,31 @@
 {
 	"name": "@bunup/plugin-tailwindcss",
-	"description": "A plugin for Bunup that provides seamless integration with Tailwind CSS.",
 	"version": "0.16.20",
-	"type": "module",
+	"description": "A plugin for Bunup that provides seamless integration with Tailwind CSS.",
+	"keywords": [
+		"bunup",
+		"bunup-tailwindcss",
+		"tailwindcss"
+	],
+	"homepage": "https://bunup.dev",
+	"license": "MIT",
+	"author": "Arshad Yaseen <arshadpyaseen@gmail.com> (https://arshad.fyi)",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "arshadpyaseen@gmail.com",
+			"url": "https://arshad.fyi"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bunup/bunup.git"
+	},
+	"funding": "https://github.com/sponsors/arshad-yaseen",
 	"files": [
 		"dist"
 	],
+	"type": "module",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -17,38 +37,18 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"author": "Arshad Yaseen <arshadpyaseen@gmail.com> (https://arshad.fyi)",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bunup/bunup.git"
-	},
 	"scripts": {
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@bunup/shared": "workspace:*",
 		"@tailwindcss/postcss": "^4.1.18",
 		"lightningcss": "^1.30.2",
-		"postcss": "^8.5.6",
-		"@bunup/shared": "workspace:*"
+		"postcss": "^8.5.6"
 	},
 	"peerDependencies": {
 		"typescript": "latest"
 	},
-	"funding": "https://github.com/sponsors/arshad-yaseen",
-	"homepage": "https://bunup.dev",
-	"keywords": [
-		"bunup",
-		"tailwindcss",
-		"bunup-tailwindcss"
-	],
-	"license": "MIT",
-	"maintainers": [
-		{
-			"name": "Arshad Yaseen",
-			"email": "arshadpyaseen@gmail.com",
-			"url": "https://arshad.fyi"
-		}
-	],
 	"peerDependenciesMeta": {
 		"typescript": {
 			"optional": true

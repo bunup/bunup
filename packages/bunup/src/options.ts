@@ -1,44 +1,44 @@
-import path from 'node:path'
-import type { GenerateDtsOptions } from '@bunup/dts'
-import type { BuildConfig, BunPlugin, CompileBuildOptions } from 'bun'
-import { ensureBunVersion } from './ensure-bun-version'
-import { BunupBuildError } from './errors'
-import { cssTypedModulesPlugin } from './plugins/css-typed-modules'
-import { type ExportsOptions, exports } from './plugins/exports'
-import { type InjectStylesOptions, injectStyles } from './plugins/inject-styles'
-import { externalOptionPlugin } from './plugins/internal/external-option'
-import { useClient } from './plugins/internal/use-client'
-import { shims } from './plugins/shims'
-import type { BunupPlugin } from './plugins/types'
-import { type UnusedOptions, unused } from './plugins/unused'
-import type { Arrayable, MaybePromise, WithRequired } from './types'
-import { ensureObject } from './utils/common'
+import path from "node:path";
+import type { GenerateDtsOptions } from "@bunup/dts";
+import type { BuildConfig, BunPlugin, CompileBuildOptions } from "bun";
+import { ensureBunVersion } from "./ensure-bun-version";
+import { BunupBuildError } from "./errors";
+import { cssTypedModulesPlugin } from "./plugins/css-typed-modules";
+import { type ExportsOptions, exports } from "./plugins/exports";
+import { type InjectStylesOptions, injectStyles } from "./plugins/inject-styles";
+import { externalOptionPlugin } from "./plugins/internal/external-option";
+import { useClient } from "./plugins/internal/use-client";
+import { shims } from "./plugins/shims";
+import type { BunupPlugin } from "./plugins/types";
+import { type UnusedOptions, unused } from "./plugins/unused";
+import type { Arrayable, MaybePromise, WithRequired } from "./types";
+import { ensureObject } from "./utils/common";
 
 export type Loader =
-	| 'js'
-	| 'jsx'
-	| 'ts'
-	| 'tsx'
-	| 'json'
-	| 'toml'
-	| 'file'
-	| 'napi'
-	| 'wasm'
-	| 'text'
-	| 'css'
-	| 'html'
+	| "js"
+	| "jsx"
+	| "ts"
+	| "tsx"
+	| "json"
+	| "toml"
+	| "file"
+	| "napi"
+	| "wasm"
+	| "text"
+	| "css"
+	| "html";
 
-type Define = Record<string, string>
+type Define = Record<string, string>;
 
-type Sourcemap = 'none' | 'linked' | 'inline' | 'external' | 'linked' | boolean
+type Sourcemap = "none" | "linked" | "inline" | "external" | "linked" | boolean;
 
-export type Format = 'esm' | 'cjs' | 'iife'
+export type Format = "esm" | "cjs" | "iife";
 
-type Target = 'bun' | 'node' | 'browser'
+type Target = "bun" | "node" | "browser";
 
-export type External = (string | RegExp)[]
+export type External = (string | RegExp)[];
 
-type Env = 'inline' | 'disable' | `${string}*` | Record<string, string>
+type Env = "inline" | "disable" | `${string}*` | Record<string, string>;
 
 type CSSOptions = {
 	/**
@@ -46,7 +46,7 @@ type CSSOptions = {
 	 *
 	 * @see https://bunup.dev/docs/guide/css#css-modules-and-typescript
 	 */
-	typedModules?: boolean
+	typedModules?: boolean;
 	/**
 	 * Inject CSS styles into the document head at runtime instead of bundling them to the build output.
 	 *
@@ -55,10 +55,10 @@ type CSSOptions = {
 	 *
 	 * @see https://bunup.dev/docs/extra-options/inject-styles
 	 */
-	inject?: boolean | InjectStylesOptions
-}
+	inject?: boolean | InjectStylesOptions;
+};
 
-export type Compile = boolean | Bun.Build.Target | CompileBuildOptions
+export type Compile = boolean | Bun.Build.Target | CompileBuildOptions;
 
 export type OnSuccess =
 	| ((options: Partial<BuildOptions>) => MaybePromise<void> | (() => void))
@@ -67,7 +67,7 @@ export type OnSuccess =
 			/**
 			 * The shell command to execute after a successful build
 			 */
-			cmd: string
+			cmd: string;
 			/**
 			 * Additional options for the command execution
 			 */
@@ -75,23 +75,23 @@ export type OnSuccess =
 				/**
 				 * Working directory for the command
 				 */
-				cwd?: string
+				cwd?: string;
 				/**
 				 * Environment variables to pass to the command
 				 * @default process.env
 				 */
-				env?: Record<string, string | undefined>
+				env?: Record<string, string | undefined>;
 				/**
 				 * Maximum time in milliseconds the command is allowed to run
 				 */
-				timeout?: number
+				timeout?: number;
 				/**
 				 * Signal to use when killing the process
 				 * @default 'SIGTERM'
 				 */
-				killSignal?: NodeJS.Signals | number
-			}
-	  }
+				killSignal?: NodeJS.Signals | number;
+			};
+	  };
 
 type ReportOptions = {
 	/**
@@ -101,7 +101,7 @@ type ReportOptions = {
 	 *
 	 * @default true
 	 */
-	gzip?: boolean
+	gzip?: boolean;
 	/**
 	 * Enable brotli compression size calculation.
 	 *
@@ -109,57 +109,57 @@ type ReportOptions = {
 	 *
 	 * @default false
 	 */
-	brotli?: boolean
+	brotli?: boolean;
 	/**
 	 * Maximum bundle size in bytes. Will warn if exceeded.
 	 *
 	 * @default undefined
 	 */
-	maxBundleSize?: number
-}
+	maxBundleSize?: number;
+};
 
 type JSXOptions = {
 	/**
 	 * JSX runtime mode
 	 * @default "automatic"
 	 */
-	runtime?: 'automatic' | 'classic'
+	runtime?: "automatic" | "classic";
 	/**
 	 * Import source for JSX functions
 	 * @default "react"
 	 * @example "preact"
 	 */
-	importSource?: string
+	importSource?: string;
 	/**
 	 * JSX factory function name
 	 * @default "React.createElement"
 	 * @example "h"
 	 */
-	factory?: string
+	factory?: string;
 	/**
 	 * JSX fragment function name
 	 * @default "React.Fragment"
 	 * @example "Fragment"
 	 */
-	fragment?: string
+	fragment?: string;
 	/**
 	 * Whether JSX functions have side effects
 	 * @default false
 	 */
-	sideEffects?: boolean
+	sideEffects?: boolean;
 	/**
 	 * Use jsx-dev runtime for development
 	 * @default false
 	 */
-	development?: boolean
-}
+	development?: boolean;
+};
 
 export interface BuildOptions {
 	/**
 	 * Name of the build configuration
 	 * Used for logging and identification purposes
 	 */
-	name?: string
+	name?: string;
 
 	/**
 	 * Entry point files for the build
@@ -170,55 +170,55 @@ export interface BuildOptions {
 	 *
 	 * @see https://bunup.dev/docs/guide/options#entry-points
 	 */
-	entry: Arrayable<string>
+	entry: Arrayable<string>;
 
 	/**
 	 * Output directory for the bundled files
 	 * Defaults to 'dist' if not specified
 	 */
-	outDir: string
+	outDir: string;
 
 	/**
 	 * Output formats for the bundle
 	 * Can include 'esm', 'cjs', and/or 'iife'
 	 * Defaults to 'esm' if not specified
 	 */
-	format: Format | Format[]
+	format: Format | Format[];
 
 	/**
 	 * Whether to enable all minification options
 	 * When true, enables minifyWhitespace, minifyIdentifiers, and minifySyntax
 	 */
-	minify?: boolean
+	minify?: boolean;
 
 	/**
 	 * Whether to enable code splitting
 	 * Defaults to true for ESM format, false for CJS format
 	 */
-	splitting?: boolean
+	splitting?: boolean;
 
 	/**
 	 * Whether to minify whitespace in the output
 	 * Removes unnecessary whitespace to reduce file size
 	 */
-	minifyWhitespace?: boolean
+	minifyWhitespace?: boolean;
 
 	/**
 	 * Whether to minify identifiers in the output
 	 * Renames variables and functions to shorter names
 	 */
-	minifyIdentifiers?: boolean
+	minifyIdentifiers?: boolean;
 
 	/**
 	 * Whether to minify syntax in the output
 	 * Optimizes code structure for smaller file size
 	 */
-	minifySyntax?: boolean
+	minifySyntax?: boolean;
 
 	/**
 	 * Whether to watch for file changes and rebuild automatically
 	 */
-	watch?: boolean
+	watch?: boolean;
 
 	/**
 	 * package.json `exports` conditions used when resolving imports
@@ -227,7 +227,7 @@ export interface BuildOptions {
 	 *
 	 * https://nodejs.org/api/packages.html#exports
 	 */
-	conditions?: Arrayable<string>
+	conditions?: Arrayable<string>;
 
 	/**
 	 * Whether to generate TypeScript declaration files (.d.ts)
@@ -236,12 +236,9 @@ export interface BuildOptions {
 	 */
 	dts?:
 		| boolean
-		| (Pick<
-				GenerateDtsOptions,
-				'resolve' | 'splitting' | 'minify' | 'inferTypes' | 'tsgo'
-		  > & {
-				entry?: Arrayable<string>
-		  })
+		| (Pick<GenerateDtsOptions, "resolve" | "splitting" | "minify" | "inferTypes" | "tsgo"> & {
+				entry?: Arrayable<string>;
+		  });
 
 	/**
 	 * When enabled, only emit TypeScript declaration files (.d.ts) without building JavaScript output.
@@ -249,7 +246,7 @@ export interface BuildOptions {
 	 *
 	 * @default false
 	 */
-	dtsOnly?: boolean
+	dtsOnly?: boolean;
 
 	/**
 	 * Path to a custom tsconfig.json file used for path resolution during
@@ -260,19 +257,19 @@ export interface BuildOptions {
 	 * @example
 	 * preferredTsconfig: './tsconfig.build.json'
 	 */
-	preferredTsconfig?: string
+	preferredTsconfig?: string;
 
 	/**
 	 * External packages that should not be bundled
 	 * Useful for dependencies that should be kept as external imports
 	 */
-	external?: External
+	external?: External;
 
 	/**
 	 * Packages that should be bundled even if they are in external
 	 * Useful for dependencies that should be included in the bundle
 	 */
-	noExternal?: External
+	noExternal?: External;
 
 	/**
 	 * Controls whether to bundle or externalize all dependencies.
@@ -295,7 +292,7 @@ export interface BuildOptions {
 	 * // Externalize all dependencies
 	 * packages: "external"
 	 */
-	packages?: 'bundle' | 'external'
+	packages?: "bundle" | "external";
 
 	/**
 	 * The target environment for the bundle.
@@ -310,14 +307,14 @@ export interface BuildOptions {
 	 * All bundles generated with `target: "bun"` are marked with a special `// @bun` pragma, which
 	 * indicates to the Bun runtime that there's no need to re-transpile the file before execution.
 	 */
-	target?: Target
+	target?: Target;
 
 	/**
 	 * Whether to clean the output directory before building
 	 * When true, removes all files in the outDir before starting a new build
 	 * Defaults to true if not specified
 	 */
-	clean?: boolean
+	clean?: boolean;
 	/**
 	 * Specifies the type of sourcemap to generate
 	 * Can be 'none', 'linked', 'external', or 'inline'
@@ -332,7 +329,7 @@ export interface BuildOptions {
 	 * // or
 	 * sourcemap: true // equivalent to 'inline'
 	 */
-	sourcemap?: Sourcemap
+	sourcemap?: Sourcemap;
 	/**
 	 * Define global constants for the build
 	 * These values will be replaced at build time
@@ -345,7 +342,7 @@ export interface BuildOptions {
 	 *   'PACKAGE_VERSION': '"1.0.0"'
 	 * }
 	 */
-	define?: Define
+	define?: Define;
 	/**
 	 * A callback or command to run after a successful build.
 	 *
@@ -367,7 +364,7 @@ export interface BuildOptions {
 	 *   options: { env: { ...process.env, FOO: "bar" } }
 	 * }
 	 */
-	onSuccess?: OnSuccess
+	onSuccess?: OnSuccess;
 	/**
 	 * A banner to be added to the final bundle, this can be a directive like "use client" for react or a comment block such as a license for the code.
 	 *
@@ -376,7 +373,7 @@ export interface BuildOptions {
 	 * @example
 	 * banner: '"use client";'
 	 */
-	banner?: string
+	banner?: string;
 	/**
 	 * A footer to be added to the final bundle, this can be something like a comment block for a license or just a fun easter egg.
 	 *
@@ -385,7 +382,7 @@ export interface BuildOptions {
 	 * @example
 	 * footer: '// built with love in SF'
 	 */
-	footer?: string
+	footer?: string;
 	/**
 	 * Remove function calls from a bundle. For example, `drop: ["console"]` will remove all calls to `console.log`. Arguments to calls will also be removed, regardless of if those arguments may have side effects. Dropping `debugger` will remove all `debugger` statements.
 	 *
@@ -394,7 +391,7 @@ export interface BuildOptions {
 	 * @example
 	 * drop: ["console", "debugger", "anyIdentifier.or.propertyAccess"]
 	 */
-	drop?: string[]
+	drop?: string[];
 	/**
 	 * A map of file extensions to [built-in loader names](https://bun.com/docs/bundler/loaders#built-in-loaders). This can be used to quickly customize how certain files are loaded.
 	 *
@@ -406,13 +403,13 @@ export interface BuildOptions {
 	 *   ".txt": "file",
 	 * }
 	 */
-	loader?: { [k in string]: Loader }
+	loader?: { [k in string]: Loader };
 	/**
 	 * Disable logging during the build process. When set to true, no logs will be printed to the console.
 	 *
 	 * @default false
 	 */
-	silent?: boolean
+	silent?: boolean;
 	/**
 	 * You can specify a prefix to be added to specific import paths in your bundled code
 	 *
@@ -423,7 +420,7 @@ export interface BuildOptions {
 	 * @example
 	 * publicPath: 'https://cdn.example.com/'
 	 */
-	publicPath?: string
+	publicPath?: string;
 	/**
 	 * The base directory for your entry points to control the output file structure.
 	 *
@@ -436,7 +433,7 @@ export interface BuildOptions {
 	 * @example
 	 * sourceBase: './src'
 	 */
-	sourceBase?: string
+	sourceBase?: string;
 
 	/**
 	 * Controls how environment variables are handled during bundling.
@@ -468,17 +465,17 @@ export interface BuildOptions {
 	 * // Provide specific environment variables manually
 	 * env: { API_URL: "https://api.example.com", DEBUG: "false" }
 	 */
-	env?: Env
+	env?: Env;
 	/**
 	 * Ignore dead code elimination/tree-shaking annotations such as @__PURE__ and package.json
 	 * "sideEffects" fields. This should only be used as a temporary workaround for incorrect
 	 * annotations in libraries.
 	 */
-	ignoreDCEAnnotations?: boolean
+	ignoreDCEAnnotations?: boolean;
 	/**
 	 * Force emitting @__PURE__ annotations even if minify.whitespace is true.
 	 */
-	emitDCEAnnotations?: boolean
+	emitDCEAnnotations?: boolean;
 	/**
 	 * Plugins to extend the build process functionality
 	 *
@@ -509,26 +506,26 @@ export interface BuildOptions {
 	 *   }
 	 * ]
 	 */
-	plugins?: (BunupPlugin | BunPlugin)[]
+	plugins?: (BunupPlugin | BunPlugin)[];
 	/**
 	 * Configure JSX transform behavior. Allows fine-grained control over how JSX is compiled.
 	 */
-	jsx?: JSXOptions
+	jsx?: JSXOptions;
 	/**
 	 * Options for CSS handling in the build process.
 	 */
-	css?: CSSOptions
+	css?: CSSOptions;
 
 	/**
 	 * Whether to enable shims for Node.js globals and ESM/CJS interoperability.
 	 *
 	 * @default false
 	 */
-	shims?: boolean
+	shims?: boolean;
 	/**
 	 * Configuration for the build report that shows file sizes and compression stats.
 	 */
-	report?: ReportOptions
+	report?: ReportOptions;
 	/**
 	 * Automatically generate the exports field in package.json based on build outputs.
 	 *
@@ -538,7 +535,7 @@ export interface BuildOptions {
 	 *
 	 * @see https://bunup.dev/docs/extra-options/exports
 	 */
-	exports?: boolean | ExportsOptions
+	exports?: boolean | ExportsOptions;
 	/**
 	 * Detect and report dependencies that are unused or incorrectly categorized.
 	 * This includes dependencies not used in your build output, as well as dependencies
@@ -546,7 +543,7 @@ export interface BuildOptions {
 	 *
 	 * @see https://bunup.dev/docs/extra-options/unused
 	 */
-	unused?: boolean | UnusedOptions
+	unused?: boolean | UnusedOptions;
 
 	/**
 	 * Create a standalone executable from your code.
@@ -576,121 +573,115 @@ export interface BuildOptions {
 	 *   }
 	 * }
 	 */
-	compile?: Compile
+	compile?: Compile;
 }
 
 // It's safe to provide multiple entry points as default since we use Bun.glob, so it only returns the available files. No errors will be thrown if the entries are not found or can't be resolved. For these entries, users don't need to provide the entry.
 export const DEFAULT_ENTYPOINTS: string[] = [
-	'index.ts',
-	'index.tsx',
-	'src/index.ts',
-	'src/index.tsx',
-	'cli.ts',
-	'src/cli.ts',
-	'src/cli/index.ts',
-]
+	"index.ts",
+	"index.tsx",
+	"src/index.ts",
+	"src/index.tsx",
+	"cli.ts",
+	"src/cli.ts",
+	"src/cli/index.ts",
+];
 
-const DEFAULT_OUT_DIR = 'dist'
-export const DEFAULT_EXECUTABLE_OUT_DIR = 'bin'
+const DEFAULT_OUT_DIR = "dist";
+export const DEFAULT_EXECUTABLE_OUT_DIR = "bin";
 
-const DEFAULT_OPTIONS: Omit<WithRequired<BuildOptions, 'clean'>, 'outDir'> = {
+const DEFAULT_OPTIONS: Omit<WithRequired<BuildOptions, "clean">, "outDir"> = {
 	entry: DEFAULT_ENTYPOINTS,
-	format: 'esm',
-	target: 'node',
+	format: "esm",
+	target: "node",
 	dts: true,
 	clean: true,
-}
+};
 
-export function resolveBuildOptions(
-	userOptions: Partial<BuildOptions>,
-): BuildOptions {
+export function resolveBuildOptions(userOptions: Partial<BuildOptions>): BuildOptions {
 	const options: BuildOptions = {
 		...DEFAULT_OPTIONS,
 		outDir: userOptions.compile ? DEFAULT_EXECUTABLE_OUT_DIR : DEFAULT_OUT_DIR,
 		...userOptions,
-	}
+	};
 
 	if (options.jsx) {
-		ensureBunVersion('1.2.23', 'jsx option')
+		ensureBunVersion("1.2.23", "jsx option");
 	}
 
 	if (options.compile) {
-		ensureBunVersion('1.3.0', 'compile option')
+		ensureBunVersion("1.3.0", "compile option");
 	}
 
-	return options
+	return options;
 }
 
 export function resolvePlugins(
 	options: BuildOptions,
 	packageJsonData: Record<string, unknown> | null,
 ): (BunPlugin | BunupPlugin)[] {
-	const plugins: (BunPlugin | BunupPlugin)[] = []
+	const plugins: (BunPlugin | BunupPlugin)[] = [];
 	// user provided plugins
 	if (options.plugins) {
-		plugins.push(...options.plugins)
+		plugins.push(...options.plugins);
 	}
 
 	// plugins based on user provided options
 	if (options.css?.typedModules !== false) {
-		plugins.push(cssTypedModulesPlugin())
+		plugins.push(cssTypedModulesPlugin());
 	}
 
 	if (options.css?.inject) {
-		plugins.push(injectStyles(ensureObject(options.css.inject)))
+		plugins.push(injectStyles(ensureObject(options.css.inject)));
 	}
 
 	if (options.shims) {
-		plugins.push(shims())
+		plugins.push(shims());
 	}
 
 	if (options.exports) {
-		plugins.push(exports(ensureObject(options.exports)))
+		plugins.push(exports(ensureObject(options.exports)));
 	}
 
 	if (options.unused) {
-		plugins.push(unused(ensureObject(options.unused)))
+		plugins.push(unused(ensureObject(options.unused)));
 	}
 
 	// always enabled plugins
-	plugins.push(useClient())
-	plugins.push(externalOptionPlugin(options, packageJsonData))
+	plugins.push(useClient());
+	plugins.push(externalOptionPlugin(options, packageJsonData));
 
-	return plugins
+	return plugins;
 }
 
 export function getResolvedMinify(options: BuildOptions): {
-	whitespace: boolean
-	identifiers: boolean
-	syntax: boolean
+	whitespace: boolean;
+	identifiers: boolean;
+	syntax: boolean;
 } {
-	const { minify, minifyWhitespace, minifyIdentifiers, minifySyntax } = options
-	const defaultValue = minify === true
+	const { minify, minifyWhitespace, minifyIdentifiers, minifySyntax } = options;
+	const defaultValue = minify === true;
 
 	return {
 		whitespace: minifyWhitespace ?? defaultValue,
 		identifiers: minifyIdentifiers ?? defaultValue,
 		syntax: minifySyntax ?? defaultValue,
-	}
+	};
 }
 
 // Bun defaults target to browser; default to node if not specified, as node is standard for library builds.
-export function getResolvedTarget(
-	target: Target | undefined,
-): BuildConfig['target'] {
-	return target ?? 'node'
+export function getResolvedTarget(target: Target | undefined): BuildConfig["target"] {
+	return target ?? "node";
 }
 
 export function getResolvedSourcemap(
 	sourcemap: boolean | string | undefined,
-): BuildConfig['sourcemap'] {
+): BuildConfig["sourcemap"] {
 	if (sourcemap === true) {
-		return 'inline'
+		return "inline";
 	}
 
-	return typeof sourcemap === 'string'
-		? (sourcemap as BuildConfig['sourcemap'])
-		: undefined
+	return typeof sourcemap === "string" ? (sourcemap as BuildConfig["sourcemap"]) : undefined;
 }
 
 export function getResolvedDefine(
@@ -698,19 +689,19 @@ export function getResolvedDefine(
 	env: Env | undefined,
 ): Record<string, string> | undefined {
 	return {
-		...(typeof env === 'object' &&
+		...(typeof env === "object" &&
 			Object.keys(env).reduce<Record<string, string>>((acc, key) => {
-				const value = JSON.stringify(env[key])
-				acc[`process.env.${key}`] = value
-				acc[`import.meta.env.${key}`] = value
-				return acc
+				const value = JSON.stringify(env[key]);
+				acc[`process.env.${key}`] = value;
+				acc[`import.meta.env.${key}`] = value;
+				return acc;
 			}, {})),
 		...define,
-	}
+	};
 }
 
 export function getDefaultChunkNaming(name: string | undefined) {
-	return `shared/${name ?? 'chunk'}-[hash].[ext]`
+	return `shared/${name ?? "chunk"}-[hash].[ext]`;
 }
 
 export function getCompileNaming(
@@ -718,49 +709,44 @@ export function getCompileNaming(
 	compile: Compile | undefined,
 	format: Format,
 ): string {
-	let resolvedEntry: string
+	let resolvedEntry: string;
 
-	const compileObj = typeof compile === 'object' ? compile : {}
+	const compileObj = typeof compile === "object" ? compile : {};
 
-	const target = typeof compile === 'string' ? compile : compileObj.target
+	const target = typeof compile === "string" ? compile : compileObj.target;
 
 	if (entry.length > 1) {
 		throw new BunupBuildError(
-			'Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entrypoints for more information.',
-		)
+			"Can only compile one entrypoint at a time. If you want to compile multiple entries, use build config array. Check https://bunup.dev/docs/advanced/compile#multiple-entrypoints for more information.",
+		);
 	} else {
-		resolvedEntry = entry[0] as string
+		resolvedEntry = entry[0] as string;
 	}
 
-	const { name: entryName } = path.parse(resolvedEntry)
+	const { name: entryName } = path.parse(resolvedEntry);
 
-	const parentDirName = path.basename(path.dirname(resolvedEntry))
+	const parentDirName = path.basename(path.dirname(resolvedEntry));
 
 	const execName =
 		compileObj.outfile ??
-		(entryName === 'index' && parentDirName !== 'src'
-			? parentDirName
-			: entryName)
+		(entryName === "index" && parentDirName !== "src" ? parentDirName : entryName);
 
-	const name = [execName]
+	const name = [execName];
 
-	if (format !== 'esm') {
-		name.push(`-${format}`)
+	if (format !== "esm") {
+		name.push(`-${format}`);
 	}
 
 	if (target) {
-		name.push(`-${target.replace('bun-', '')}`)
+		name.push(`-${target.replace("bun-", "")}`);
 	}
 
-	return `[dir]/${name.join('')}-[hash].[ext]`
+	return `[dir]/${name.join("")}-[hash].[ext]`;
 }
 
 // If splitting is undefined, it will be true if the format is esm
-export function getResolvedSplitting(
-	splitting: boolean | undefined,
-	format: Format,
-): boolean {
-	return splitting === undefined ? format === 'esm' : splitting
+export function getResolvedSplitting(splitting: boolean | undefined, format: Format): boolean {
+	return splitting === undefined ? format === "esm" : splitting;
 }
 
 export function getResolvedDtsSplitting(
@@ -769,11 +755,11 @@ export function getResolvedDtsSplitting(
 ): boolean {
 	// TODO: Enable splitting by default when build splitting is enabled once Bun fixes the issue with splitting
 	// Track upstream issue: https://github.com/oven-sh/bun/issues/5344
-	return !!dtsSplitting
+	return !!dtsSplitting;
 }
 
 export function getResolvedEnv(
 	env: Env | undefined,
 ): Exclude<Env, Record<string, string>> | undefined {
-	return typeof env === 'string' ? env : undefined
+	return typeof env === "string" ? env : undefined;
 }

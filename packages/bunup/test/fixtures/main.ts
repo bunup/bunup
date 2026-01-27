@@ -1,3 +1,3 @@
-import { fetch } from 'undici'
+import { fetch } from "undici";
 
-fetch('')
+fetch("");

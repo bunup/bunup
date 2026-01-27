@@ -61,7 +61,7 @@ Create a TypeScript file:
 
 ```ts [src/index.ts]
 export function greet(name: string): string {
-  return `Hello, ${name}!`;
+	return `Hello, ${name}!`;
 }
 ```
 
@@ -97,10 +97,10 @@ Add a build script to your `package.json`:
 
 ```json [package.json]
 {
-  "name": "my-package",
-  "scripts": {
-    "build": "bunup"
-  }
+	"name": "my-package",
+	"scripts": {
+		"build": "bunup"
+	}
 }
 ```
 
@@ -140,11 +140,11 @@ Or configure it in `package.json`:
 
 ```json [package.json] {5}
 {
-  "name": "my-package",
-  "scripts": {
-    "build": "bunup",
-    "dev": "bunup --watch"
-  }
+	"name": "my-package",
+	"scripts": {
+		"build": "bunup",
+		"dev": "bunup --watch"
+	}
 }
 ```
 

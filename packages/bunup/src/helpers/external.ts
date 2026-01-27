@@ -1,16 +1,12 @@
-import type { BuildOptions } from '../options'
-import { getPackageDeps } from '../utils/package'
+import type { BuildOptions } from "../options";
+import { getPackageDeps } from "../utils/package";
 
-function getPackageDepsPatterns(
-	packageJson: Record<string, unknown> | null,
-): RegExp[] {
-	return getPackageDeps(packageJson).map(
-		(dep) => new RegExp(`^${dep}($|\\/|\\\\)`),
-	)
+function getPackageDepsPatterns(packageJson: Record<string, unknown> | null): RegExp[] {
+	return getPackageDeps(packageJson).map((dep) => new RegExp(`^${dep}($|\\/|\\\\)`));
 }
 
 function matchesPattern(path: string, pattern: string | RegExp): boolean {
-	return typeof pattern === 'string' ? pattern === path : pattern.test(path)
+	return typeof pattern === "string" ? pattern === path : pattern.test(path);
 }
 
 export function isExternalFromPackageJson(
@@ -18,34 +14,30 @@ export function isExternalFromPackageJson(
 	options: BuildOptions,
 	packageJson: Record<string, unknown> | null,
 ): boolean | undefined {
-	const packageDepsPatterns = getPackageDepsPatterns(packageJson)
+	const packageDepsPatterns = getPackageDepsPatterns(packageJson);
 
-	if (options.packages === 'bundle') {
-		const explicitlyExternal = options.external?.some((pattern) =>
-			matchesPattern(path, pattern),
-		)
-		return explicitlyExternal
+	if (options.packages === "bundle") {
+		const explicitlyExternal = options.external?.some((pattern) => matchesPattern(path, pattern));
+		return explicitlyExternal;
 	}
 
-	if (options.packages === 'external') {
-		const explicitlyBundled = options.noExternal?.some((pattern) =>
-			matchesPattern(path, pattern),
-		)
+	if (options.packages === "external") {
+		const explicitlyBundled = options.noExternal?.some((pattern) => matchesPattern(path, pattern));
 
 		if (explicitlyBundled) {
-			return false
+			return false;
 		}
 
-		return packageDepsPatterns.some((pattern) => pattern.test(path))
+		return packageDepsPatterns.some((pattern) => pattern.test(path));
 	}
 
 	const matchesExternalPattern =
 		packageDepsPatterns.some((pattern) => pattern.test(path)) ||
-		options.external?.some((pattern) => matchesPattern(path, pattern))
+		options.external?.some((pattern) => matchesPattern(path, pattern));
 
 	const isExcludedFromExternal = options.noExternal?.some((pattern) =>
 		matchesPattern(path, pattern),
-	)
+	);
 
-	return matchesExternalPattern && !isExcludedFromExternal
+	return matchesExternalPattern && !isExcludedFromExternal;
 }

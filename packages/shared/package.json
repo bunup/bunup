@@ -1,11 +1,30 @@
 {
 	"name": "@bunup/shared",
-	"description": "Shared utilities for use across bunup packages and official plugins.",
 	"version": "0.16.20",
-	"type": "module",
+	"description": "Shared utilities for use across bunup packages and official plugins.",
+	"keywords": [
+		"bunup",
+		"shared"
+	],
+	"homepage": "https://bunup.dev",
+	"license": "MIT",
+	"author": "Arshad Yaseen <arshadpyaseen@gmail.com> (https://arshad.fyi)",
+	"maintainers": [
+		{
+			"name": "Arshad Yaseen",
+			"email": "arshadpyaseen@gmail.com",
+			"url": "https://arshad.fyi"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bunup/bunup.git"
+	},
+	"funding": "https://github.com/sponsors/arshad-yaseen",
 	"files": [
 		"dist"
 	],
+	"type": "module",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -20,25 +39,6 @@
 	"scripts": {
 		"type-check": "tsc --noEmit"
 	},
-	"license": "MIT",
-	"author": "Arshad Yaseen <arshadpyaseen@gmail.com> (https://arshad.fyi)",
-	"maintainers": [
-		{
-			"name": "Arshad Yaseen",
-			"email": "arshadpyaseen@gmail.com",
-			"url": "https://arshad.fyi"
-		}
-	],
-	"keywords": [
-		"bunup",
-		"shared"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bunup/bunup.git"
-	},
-	"funding": "https://github.com/sponsors/arshad-yaseen",
-	"homepage": "https://bunup.dev",
 	"peerDependencies": {
 		"typescript": "latest"
 	},

@@ -1,5 +1,5 @@
-import { isJavascriptFile } from '../../utils/file'
-import type { BunupPlugin } from '../types'
+import { isJavascriptFile } from "../../utils/file";
+import type { BunupPlugin } from "../types";
 
 /**
  * Ensures the `"use client"` directive appears at the very top of output files.
@@ -14,27 +14,25 @@ import type { BunupPlugin } from '../types'
  */
 export function useClient(): BunupPlugin {
 	return {
-		name: 'use-client',
+		name: "use-client",
 		hooks: {
 			onBuildDone: async ({ files }) => {
-				const filteredFiles = files.filter((file) =>
-					isJavascriptFile(file.fullPath),
-				)
+				const filteredFiles = files.filter((file) => isJavascriptFile(file.fullPath));
 
 				for (const file of filteredFiles) {
-					let text = await Bun.file(file.fullPath).text()
+					let text = await Bun.file(file.fullPath).text();
 
 					const hasUseClient = text
-						.split('\n')
-						.some((line) => line.trim().startsWith(`"use client";`))
+						.split("\n")
+						.some((line) => line.trim().startsWith(`"use client";`));
 					if (hasUseClient) {
-						text = text.replaceAll(`"use client";`, '')
-						text = `"use client";\n${text}`
+						text = text.replaceAll(`"use client";`, "");
+						text = `"use client";\n${text}`;
 					}
 
-					await Bun.write(file.fullPath, text)
+					await Bun.write(file.fullPath, text);
 				}
 			},
 		},
-	}
+	};
 }

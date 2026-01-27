@@ -14,7 +14,7 @@ Define your workspace using the `defineWorkspace` function:
 import { defineWorkspace } from "bunup";
 
 export default defineWorkspace([
-  // Package configurations go here
+	// Package configurations go here
 ]);
 ```
 
@@ -30,9 +30,9 @@ Each package requires three properties:
 
 👉 If you omit `config`, Bunup will use **defaults**:
 
-* Build as ESM-only
-* Use [default entry points](/#default-entry-points) (e.g. `src/index.ts`)
-* Generate TypeScript declaration files (`.d.ts`) for entry points that need them
+- Build as ESM-only
+- Use [default entry points](/#default-entry-points) (e.g. `src/index.ts`)
+- Generate TypeScript declaration files (`.d.ts`) for entry points that need them
 
 ## Basic Usage
 
@@ -42,23 +42,23 @@ A minimal workspace with two packages:
 import { defineWorkspace } from "bunup";
 
 export default defineWorkspace([
-  {
-    name: "core",
-    root: "packages/core",
-    config: {
-      // Bunup finds 'src/index.ts' by default
-      // Or specify exactly which files to build
-      // entry: ["src/index.ts", "src/plugins.ts"],
-      format: ["esm", "cjs"],
-    },
-  },
-  {
-    name: "utils",
-    root: "packages/utils",
-    // Uses default entry points
-    // Uses default format: esm
-    // Generates .d.ts declaration files
-  },
+	{
+		name: "core",
+		root: "packages/core",
+		config: {
+			// Bunup finds 'src/index.ts' by default
+			// Or specify exactly which files to build
+			// entry: ["src/index.ts", "src/plugins.ts"],
+			format: ["esm", "cjs"],
+		},
+	},
+	{
+		name: "utils",
+		root: "packages/utils",
+		// Uses default entry points
+		// Uses default format: esm
+		// Generates .d.ts declaration files
+	},
 ]);
 ```
 
@@ -70,25 +70,25 @@ You can define **shared options** for all packages, reducing repetition:
 
 ```ts [bunup.config.ts]
 export default defineWorkspace(
-  [
-    {
-      name: "core",
-      root: "packages/core",
-      config: {
-        format: ["esm"], // overrides shared format
-      },
-    },
-    {
-      name: "utils",
-      root: "packages/utils",
-      // config is optional, shared options apply
-    },
-  ],
-  {
-    // Shared options
-    format: ["esm", "cjs"],
-    exports: true,
-  }
+	[
+		{
+			name: "core",
+			root: "packages/core",
+			config: {
+				format: ["esm"], // overrides shared format
+			},
+		},
+		{
+			name: "utils",
+			root: "packages/utils",
+			// config is optional, shared options apply
+		},
+	],
+	{
+		// Shared options
+		format: ["esm", "cjs"],
+		exports: true,
+	},
 );
 ```
 
@@ -102,25 +102,25 @@ When using an array of build configurations, the `name` property is **required**
 
 ```ts [bunup.config.ts]
 export default defineWorkspace([
-  {
-    name: "web",
-    root: "packages/web",
-    config: [
-      {
-        entry: "src/index.ts",
-        name: "node",
-        format: "esm",
-        target: "node",
-      },
-      {
-        entry: "src/browser.ts",
-        name: "browser",
-        format: ["esm", "iife"],
-        target: "browser",
-        outDir: "dist/browser",
-      },
-    ],
-  },
+	{
+		name: "web",
+		root: "packages/web",
+		config: [
+			{
+				entry: "src/index.ts",
+				name: "node",
+				format: "esm",
+				target: "node",
+			},
+			{
+				entry: "src/browser.ts",
+				name: "browser",
+				format: ["esm", "iife"],
+				target: "browser",
+				outDir: "dist/browser",
+			},
+		],
+	},
 ]);
 ```
 
@@ -128,22 +128,22 @@ export default defineWorkspace([
 
 ```ts [bunup.config.ts]
 export default defineWorkspace([
-  {
-    name: "main",
-    root: "packages/main",
-    config: [
-      {
-        entry: "src/index.ts",
-        name: "main",
-        format: ["esm", "cjs"],
-      },
-      {
-        entry: "src/cli.ts",
-        name: "cli",
-        format: ["esm"],
-      },
-    ],
-  },
+	{
+		name: "main",
+		root: "packages/main",
+		config: [
+			{
+				entry: "src/index.ts",
+				name: "main",
+				format: ["esm", "cjs"],
+			},
+			{
+				entry: "src/cli.ts",
+				name: "cli",
+				format: ["esm"],
+			},
+		],
+	},
 ]);
 ```
 

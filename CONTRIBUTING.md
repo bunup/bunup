@@ -32,19 +32,24 @@ Thank you for your interest in contributing to our project! This guide will help
 There are two main ways to test your changes:
 
 ### 1. Unit Tests
+
 Add tests in `packages/bunup/test/specs/` and run:
+
 ```bash
 bun run test
 ```
 
 ### 2. Manual Testing with Test Build
+
 For more comprehensive testing, you can use the test fixtures:
 
 1. **Basic testing**: Modify, add, or remove files in `packages/bunup/test/fixtures/` - the entrypoint is `tests/fixtures/index.ts`
 2. **Run test build**:
+
    ```bash
    bun run test:build
    ```
+
    This runs a test build using your changes on the fixtures
 
 3. **Configure test build**: Check `packages/bunup/test/bunup.config.ts` to see or modify the build configuration used for test builds

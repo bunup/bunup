@@ -1,10 +1,10 @@
-import path from 'node:path'
-import { getDefaultCssBrowserTargets } from '@bunup/shared'
-import type { BunPlugin } from 'bun'
-import { transform } from 'lightningcss'
-import { CSS_RE } from '../constants/re'
-import { logger } from '../printer/logger'
-import type { MaybePromise } from '../types'
+import path from "node:path";
+import { getDefaultCssBrowserTargets } from "@bunup/shared";
+import type { BunPlugin } from "bun";
+import { transform } from "lightningcss";
+import { CSS_RE } from "../constants/re";
+import { logger } from "../printer/logger";
+import type { MaybePromise } from "../types";
 
 export type InjectStylesOptions = {
 	/**
@@ -34,14 +34,14 @@ export type InjectStylesOptions = {
 	 *
 	 * The default injection handles cases like when `document` is undefined (e.g., server-side rendering) and compatibility with older browsers. Consider these when implementing custom injection logic.
 	 */
-	inject?: (css: string, filePath: string) => MaybePromise<string>
+	inject?: (css: string, filePath: string) => MaybePromise<string>;
 	/**
 	 * Whether to minify the styles being injected.
 	 *
 	 * @default true
 	 */
-	minify?: boolean
-}
+	minify?: boolean;
+};
 
 /**
  * A plugin that injects styles into the document head at runtime instead of bundling them to the build output.
@@ -49,23 +49,21 @@ export type InjectStylesOptions = {
  * @see https://bunup.dev/docs/extra-options/inject-styles
  */
 export function injectStyles(options?: InjectStylesOptions): BunPlugin {
-	const { inject, minify = true } = options ?? {}
+	const { inject, minify = true } = options ?? {};
 
 	return {
-		name: 'bunup:inject-styles',
+		name: "bunup:inject-styles",
 		async setup(build) {
 			build.onResolve({ filter: /^__inject-style$/ }, () => {
 				return {
-					path: '__inject-style',
-					namespace: '__inject-style',
-				}
-			})
+					path: "__inject-style",
+					namespace: "__inject-style",
+				};
+			});
 
-			build.onLoad(
-				{ filter: /^__inject-style$/, namespace: '__inject-style' },
-				() => {
-					return {
-						contents: `
+			build.onLoad({ filter: /^__inject-style$/, namespace: "__inject-style" }, () => {
+				return {
+					contents: `
                       export default function injectStyle(css) {
                         if (!css || typeof document === 'undefined') return
 
@@ -80,36 +78,35 @@ export function injectStyles(options?: InjectStylesOptions): BunPlugin {
                         }
                       }
                       `,
-						loader: 'js',
-					}
-				},
-			)
+					loader: "js",
+				};
+			});
 
 			build.onLoad({ filter: CSS_RE }, async (args) => {
-				const source = await Bun.file(args.path).text()
+				const source = await Bun.file(args.path).text();
 
 				const { code, warnings } = transform({
 					filename: path.basename(args.path),
 					code: Buffer.from(source),
 					minify,
 					targets: getDefaultCssBrowserTargets(),
-				})
+				});
 
 				for (const warning of warnings) {
-					logger.warn(warning.message)
+					logger.warn(warning.message);
 				}
 
-				const stringifiedCode = JSON.stringify(code.toString())
+				const stringifiedCode = JSON.stringify(code.toString());
 
 				const js = inject
 					? await inject(stringifiedCode, args.path)
-					: `import injectStyle from '__inject-style';injectStyle(${stringifiedCode})`
+					: `import injectStyle from '__inject-style';injectStyle(${stringifiedCode})`;
 
 				return {
 					contents: js,
-					loader: 'js',
-				}
-			})
+					loader: "js",
+				};
+			});
 		},
-	}
+	};
 }

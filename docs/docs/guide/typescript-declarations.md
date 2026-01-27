@@ -8,10 +8,10 @@ Enable `isolatedDeclarations` in your tsconfig:
 
 ```json [tsconfig.json] {3-4}
 {
-  "compilerOptions": {
-    "declaration": true,
-    "isolatedDeclarations": true
-  }
+	"compilerOptions": {
+		"declaration": true,
+		"isolatedDeclarations": true
+	}
 }
 ```
 
@@ -22,12 +22,12 @@ This transforms builds from seconds/minutes to milliseconds (**50-100x faster**)
 ```ts
 // Required: Explicit return type on public exports
 export function getData(): Promise<User> {
-  return fetchUser();
+	return fetchUser();
 }
 
 // Internal functions don't need explicit types
 function fetchUser() {
-  return api.get('/user');
+	return api.get("/user");
 }
 ```
 
@@ -107,7 +107,7 @@ Minification keeps your public API names unchanged but shortens internal type na
 **Original:**
 
 ```ts
-type DeepPartial<T> = { [P in keyof T]? : DeepPartial<T[P]> };
+type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };
 interface Response<T> {
 	data: T;
 	error?: string;
@@ -120,7 +120,14 @@ export { fetchData, Response, DeepPartial };
 **Minified:**
 
 ```ts
-type e<T>={[P in keyof T]?:e<T[P]>};interface t<T>{data:T;error?:string;meta?:Record<string,unknown>;}declare function n<T>(url:string,options?:RequestInit): Promise<t<T>>;export{n as fetchData,t as Response,e as DeepPartial};
+type e<T> = { [P in keyof T]?: e<T[P]> };
+interface t<T> {
+	data: T;
+	error?: string;
+	meta?: Record<string, unknown>;
+}
+declare function n<T>(url: string, options?: RequestInit): Promise<t<T>>;
+export { n as fetchData, t as Response, e as DeepPartial };
 ```
 
 ## Infer Types
@@ -198,10 +205,10 @@ bunup src/index.ts src/utils.ts src/types.ts --dts.entry src/index.ts,src/types.
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-	entry: ['src/index.ts', 'src/utils.ts'],
+	entry: ["src/index.ts", "src/utils.ts"],
 	dts: {
 		// Only generate declarations for index.ts
-		entry: ['src/index.ts'],
+		entry: ["src/index.ts"],
 	},
 });
 ```
@@ -225,17 +232,15 @@ bunup --dts.entry "src/public/**/*.ts,!src/public/dev/**/*"
 ```typescript [bunup.config.ts]
 export default defineConfig({
 	dts: {
-		entry: [
-			'src/public/**/*.ts',
-			'!src/public/dev/**/*'
-		]
-	}
+		entry: ["src/public/**/*.ts", "!src/public/dev/**/*"],
+	},
 });
 ```
 
 :::
 
 You can use:
+
 - Simple patterns like `src/**/*.ts` to include files
 - Exclude patterns starting with `!` to filter out specific files
 - Both for main entries and declaration entries
@@ -261,10 +266,10 @@ bunup --dts.resolve
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-      dts: {
-            // Enable resolving all external types
-            resolve: true,
-      },
+	dts: {
+		// Enable resolving all external types
+		resolve: true,
+	},
 });
 ```
 
@@ -286,7 +291,7 @@ bunup --dts.resolve react,lodash,@types/node
 export default defineConfig({
 	dts: {
 		// Only resolve types from these specific packages
-		resolve: ['react', 'lodash', /^@types\//],
+		resolve: ["react", "lodash", /^@types\//],
 	},
 });
 ```
@@ -305,14 +310,15 @@ bunup --dts-only
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-  entry: "src/index.ts",
-  dtsOnly: true,
+	entry: "src/index.ts",
+	dtsOnly: true,
 });
 ```
 
 :::
 
 This is useful when:
+
 - You're using a different bundler for JavaScript but want Bunup to handle TypeScript declarations
 - You need to generate type definitions separately from your build process
 - You're working on a types-only package
@@ -331,8 +337,8 @@ bunup --no-dts
 
 ```ts [bunup.config.ts]
 export default defineConfig({
-  entry: "src/index.ts",
-  dts: false,
+	entry: "src/index.ts",
+	dts: false,
 });
 ```
 

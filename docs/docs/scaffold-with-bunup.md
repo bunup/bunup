@@ -20,6 +20,7 @@ bunx @bunup/cli@latest create
 You will be greeted with a few simple questions and that's it! You can now start coding.
 
 You'll choose between two variants:
+
 - **Minimal**: Minimal setup, perfect for building your own setup
 - **Full**: Complete modern library setup, just focus on code and publish
 
@@ -40,7 +41,6 @@ NPM now requires [trusted publishing](https://docs.npmjs.com/trusted-publishers)
    - Select "GitHub Actions" as your publisher
 
    ![Trusted Publishing in Settings](/trusted-publishing-1.png)
-
    - Fill in the required fields:
      - **Organization or User:** Your GitHub username or organization name
      - **Repository:** Your repository name
@@ -48,7 +48,6 @@ NPM now requires [trusted publishing](https://docs.npmjs.com/trusted-publishers)
        - For scaffolded projects using Bunup, use `release.yml` (since it's located at `.github/workflows/release.yml`)
 
    ![Trusted Publishing Fill Details](/trusted-publishing-2.png)
-
    - Click "Set up connection"
 
 3. **You're Done!**

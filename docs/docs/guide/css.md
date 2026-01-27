@@ -7,19 +7,19 @@ Bunup handles CSS automatically. Just import it and it works.
 Import CSS in your TypeScript files:
 
 ```typescript [src/index.ts]
-import './styles.css';
-import { Button } from './components/button';
+import "./styles.css";
+import { Button } from "./components/button";
 
 export { Button };
 ```
 
 ```css [src/styles.css]
 .button {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+	background-color: #007bff;
+	color: white;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
 }
 ```
 
@@ -61,11 +61,11 @@ New to CSS modules? Check out [this guide](https://css-tricks.com/css-modules-pa
 
 ```css [src/components/button.module.css]
 .primary {
-  background-color: #007bff;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+	background-color: #007bff;
+	color: white;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
 }
 ```
 
@@ -73,11 +73,7 @@ New to CSS modules? Check out [this guide](https://css-tricks.com/css-modules-pa
 import styles from "./button.module.css";
 
 export function Button({ children }) {
-  return (
-    <button className={styles.primary}>
-      {children}
-    </button>
-  );
+	return <button className={styles.primary}>{children}</button>;
 }
 ```
 
@@ -89,27 +85,28 @@ Reuse styles with the `composes` property:
 
 ```css [src/components/button.module.css] {9,15}
 .base {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 .primary {
-  composes: base;
-  background-color: #007bff;
-  color: white;
+	composes: base;
+	background-color: #007bff;
+	color: white;
 }
 
 .secondary {
-  composes: base;
-  background-color: transparent;
-  color: #007bff;
-  border: 1px solid #007bff;
+	composes: base;
+	background-color: transparent;
+	color: #007bff;
+	border: 1px solid #007bff;
 }
 ```
 
 **Rules:**
+
 - `composes` must come first in the class
 - Works only with single class selectors (not `#id` or `.class1, .class2`)
 
@@ -117,9 +114,9 @@ Reuse styles with the `composes` property:
 
 ```css [src/components/button.module.css] {2}
 .primary {
-  composes: base from "../shared.module.css";
-  background-color: #007bff;
-  color: white;
+	composes: base from "../shared.module.css";
+	background-color: #007bff;
+	color: white;
 }
 ```
 
@@ -133,23 +130,23 @@ Export CSS files for package consumers:
 
 ```json [package.json]
 {
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./styles.css": "./dist/index.css" // [!code ++]
-  }
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		},
+		"./styles.css": "./dist/index.css" // [!code ++]
+	}
 }
 ```
 
 Users can then import your styles:
 
 ```javascript
-import 'your-package/styles.css';
-import { Button } from 'your-package';
+import "your-package/styles.css";
+import { Button } from "your-package";
 
-<Button />
+<Button />;
 ```
 
 ::: tip
@@ -170,13 +167,13 @@ Bunup automatically creates TypeScript definitions for CSS modules. Get autocomp
 
 ```css [src/components/button.module.css]
 .primary {
-  background-color: #007bff;
-  color: white;
+	background-color: #007bff;
+	color: white;
 }
 
 .secondary {
-  background-color: transparent;
-  color: #007bff;
+	background-color: transparent;
+	color: #007bff;
 }
 ```
 
@@ -184,14 +181,15 @@ Bunup generates this TypeScript file:
 
 ```ts [src/components/button.module.css.d.ts]
 declare const classes: {
-  readonly primary: string;
-  readonly secondary: string;
+	readonly primary: string;
+	readonly secondary: string;
 };
 
 export default classes;
 ```
 
 **You get:**
+
 - Autocomplete when typing `styles.`
 - Errors for typos like `styles.primry`
 - Safe refactoring when renaming CSS classes
@@ -227,12 +225,13 @@ bunup --no-css.typed-modules
 ```
 
 ```ts [bunup.config.ts]
-import { defineConfig } from 'bunup';
+import { defineConfig } from "bunup";
 
 export default defineConfig({
-  css: {
-    typedModules: false
-  }
+	css: {
+		typedModules: false,
+	},
 });
 ```
+
 :::

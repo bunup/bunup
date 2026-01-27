@@ -1,3 +1,3 @@
-import './styles.css'
+import "./styles.css";
 
-export { Button } from '@/components/button'
+export { Button } from "@/components/button";

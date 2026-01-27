@@ -18,8 +18,8 @@ Compiled executables output to `bin/` by default, unlike normal builds which out
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  entry: 'src/cli.ts',
-  compile: true, // Create executable for current platform
+	entry: "src/cli.ts",
+	compile: true, // Create executable for current platform
 });
 ```
 
@@ -31,9 +31,9 @@ You can change the output directory using the `outDir` option:
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  entry: 'src/cli.ts',
-  compile: true,
-  outDir: 'dist', // Output to dist/ instead of bin/
+	entry: "src/cli.ts",
+	compile: true,
+	outDir: "dist", // Output to dist/ instead of bin/
 });
 ```
 
@@ -43,8 +43,8 @@ Target specific platforms:
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  entry: 'src/cli.ts',
-  compile: 'bun-linux-x64', // Cross-compile for Linux
+	entry: "src/cli.ts",
+	compile: "bun-linux-x64", // Cross-compile for Linux
 });
 ```
 
@@ -52,15 +52,15 @@ export default defineConfig({
 
 ```typescript [bunup.config.ts]
 export default defineConfig({
-  entry: 'src/cli.ts',
-  compile: {
-    target: 'bun-linux-x64',
-    outfile: './bin/my-app',
-    windows: {
-      hideConsole: true,
-      icon: './icon.ico',
-    },
-  },
+	entry: "src/cli.ts",
+	compile: {
+		target: "bun-linux-x64",
+		outfile: "./bin/my-app",
+		windows: {
+			hideConsole: true,
+			icon: "./icon.ico",
+		},
+	},
 });
 ```
 
@@ -70,18 +70,18 @@ Only one entrypoint can be compiled at a time. If you want to compile multiple e
 
 ```typescript [bunup.config.ts]
 export default defineConfig([
-  {
-    name: 'main',
-    entry: 'src/main.ts',
-    compile: true,
-  },
-  {
-    name: 'cli',
-    entry: 'src/cli.ts',
-    compile: {
-      outfile: 'my-cli',
-    },
-  },
+	{
+		name: "main",
+		entry: "src/main.ts",
+		compile: true,
+	},
+	{
+		name: "cli",
+		entry: "src/cli.ts",
+		compile: {
+			outfile: "my-cli",
+		},
+	},
 ]);
 ```
 
@@ -93,35 +93,36 @@ If you want to cross-compile the same entrypoint for multiple targets, or use di
 
 ```typescript [bunup.config.ts]
 export default defineConfig([
-  {
-    name: 'cli-linux',
-    entry: 'src/cli.ts',
-    compile: 'bun-linux-x64',
-  },
-  {
-    name: 'cli-windows',
-    entry: 'src/cli.ts',
-    compile: {
-      target: 'bun-windows-x64',
-      outfile: './bin/my-app-windows.exe',
-      windows: {
-        hideConsole: true,
-        icon: './icon.ico',
-      },
-    },
-  },
-  {
-    name: 'cli-macos',
-    entry: 'src/cli.ts',
-    compile: {
-      target: 'bun-darwin-arm64',
-      outfile: './bin/my-app-macos',
-    },
-  },
+	{
+		name: "cli-linux",
+		entry: "src/cli.ts",
+		compile: "bun-linux-x64",
+	},
+	{
+		name: "cli-windows",
+		entry: "src/cli.ts",
+		compile: {
+			target: "bun-windows-x64",
+			outfile: "./bin/my-app-windows.exe",
+			windows: {
+				hideConsole: true,
+				icon: "./icon.ico",
+			},
+		},
+	},
+	{
+		name: "cli-macos",
+		entry: "src/cli.ts",
+		compile: {
+			target: "bun-darwin-arm64",
+			outfile: "./bin/my-app-macos",
+		},
+	},
 ]);
 ```
 
 This approach allows you to:
+
 - Build executables for multiple platforms in a single build command
 - Apply platform-specific configurations (like Windows console hiding or custom icons)
 - Customize the output filename for each target platform
@@ -132,19 +133,19 @@ You can also mix executable compilation with normal library builds in the same c
 
 ```typescript [bunup.config.ts]
 export default defineConfig([
-  {
-    name: 'library',
-    entry: 'src/index.ts',
-    format: ['esm', 'cjs'],
-    dts: true,
-    // Normal library build
-  },
-  {
-    name: 'cli',
-    entry: 'src/cli.ts',
-    compile: true,
-    // Compile to executable
-  },
+	{
+		name: "library",
+		entry: "src/index.ts",
+		format: ["esm", "cjs"],
+		dts: true,
+		// Normal library build
+	},
+	{
+		name: "cli",
+		entry: "src/cli.ts",
+		compile: true,
+		// Compile to executable
+	},
 ]);
 ```
 

@@ -1,16 +1,16 @@
-import type { PackageJson } from '../loaders'
-import type { BuildOptions, Format } from '../options'
-import type { MaybePromise } from '../types'
+import type { PackageJson } from "../loaders";
+import type { BuildOptions, Format } from "../options";
+import type { MaybePromise } from "../types";
 
 /**
  * Represents the meta data of the build
  */
 export type BuildMeta = {
 	/** The package.json file */
-	packageJson: PackageJson
+	packageJson: PackageJson;
 	/** The root directory of the build */
-	rootDir: string
-}
+	rootDir: string;
+};
 
 export type BuildOutputFile = {
 	/**
@@ -18,56 +18,50 @@ export type BuildOutputFile = {
 	 *
 	 * Undefined for non-entry point files (e.g., assets, sourcemaps, chunks)
 	 */
-	entrypoint: string | undefined
+	entrypoint: string | undefined;
 	/** The kind of the file */
-	kind:
-		| 'entry-point'
-		| 'chunk'
-		| 'asset'
-		| 'sourcemap'
-		| 'bytecode'
-		| 'executable'
+	kind: "entry-point" | "chunk" | "asset" | "sourcemap" | "bytecode" | "executable";
 	/** Absolute path to the generated file */
-	fullPath: string
+	fullPath: string;
 	/** Path to the generated file relative to the root directory */
-	pathRelativeToRootDir: string
+	pathRelativeToRootDir: string;
 	/** Path to the generated file relative to the output directory */
-	pathRelativeToOutdir: string
+	pathRelativeToOutdir: string;
 	/** Whether the file is a dts file */
-	dts: boolean
+	dts: boolean;
 	/** The format of the output file */
-	format: Format
+	format: Format;
 	/** The size of the file in bytes */
-	size: number
-}
+	size: number;
+};
 
 /**
  * Build configuration and metadata used during build execution.
  */
 export type BuildContext = {
 	/** Build configuration options that were used */
-	options: BuildOptions
+	options: BuildOptions;
 	/** Build execution metadata */
-	meta: BuildMeta
-}
+	meta: BuildMeta;
+};
 
 /**
  * Build output containing generated files and build context.
  */
 export type BuildResult = {
 	/** Generated output files */
-	files: BuildOutputFile[]
+	files: BuildOutputFile[];
 	/** Build configuration and metadata that were used */
-	build: BuildContext
-}
+	build: BuildContext;
+};
 
 /**
  * Context provided when build starts.
  */
 export type OnBuildStartCtx = {
 	/** Build configuration options that will be used */
-	options: BuildOptions
-}
+	options: BuildOptions;
+};
 
 /**
  * Context provided when build completes.
@@ -75,12 +69,12 @@ export type OnBuildStartCtx = {
  */
 export type OnBuildDoneCtx = {
 	/** Generated output files */
-	files: BuildOutputFile[]
+	files: BuildOutputFile[];
 	/** Build configuration options that were used */
-	options: BuildOptions
+	options: BuildOptions;
 	/** Build execution metadata */
-	meta: BuildMeta
-}
+	meta: BuildMeta;
+};
 
 /**
  * Hooks that can be implemented by Bunup plugins.
@@ -89,20 +83,20 @@ export type BunupPluginHooks = {
 	/**
 	 * Called when a build is successfully completed.
 	 */
-	onBuildDone?: (ctx: OnBuildDoneCtx) => MaybePromise<void>
+	onBuildDone?: (ctx: OnBuildDoneCtx) => MaybePromise<void>;
 
 	/**
 	 * Called before a build starts.
 	 */
-	onBuildStart?: (ctx: OnBuildStartCtx) => MaybePromise<void>
-}
+	onBuildStart?: (ctx: OnBuildStartCtx) => MaybePromise<void>;
+};
 
 /**
  * Represents a Bunup-specific plugin
  */
 export type BunupPlugin = {
 	/** Optional name for the plugin */
-	name?: string
+	name?: string;
 	/** The hooks implemented by this plugin */
-	hooks: BunupPluginHooks
-}
+	hooks: BunupPluginHooks;
+};

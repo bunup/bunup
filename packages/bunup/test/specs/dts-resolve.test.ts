@@ -1,59 +1,59 @@
-import { describe, expect, it } from 'bun:test'
-import { createProject, findFile, runDtsBuild } from '../utils'
+import { describe, expect, it } from "bun:test";
+import { createProject, findFile, runDtsBuild } from "../utils";
 
-describe('dts-resolve', () => {
-	it('should respect custom dts.resolve configuration', async () => {
+describe("dts-resolve", () => {
+	it("should respect custom dts.resolve configuration", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test-package',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
 				devDependencies: {
-					'external-lib': '^1.0.0',
+					"external-lib": "^1.0.0",
 				},
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                         import { SomeType } from 'external-lib';
 
                         export function process(data: SomeType): SomeType {
                             return data;
                         }
                     `,
-			'node_modules/external-lib/index.d.ts': `
+			"node_modules/external-lib/index.d.ts": `
                         export interface SomeType {
                             id: number;
                             value: string;
                         }
                     `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			dts: {
 				resolve: true,
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function process')
-		expect(dtsFile?.content).toContain('interface SomeType')
-		expect(dtsFile?.content).toContain('value')
-	})
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
+		expect(dtsFile?.content).toContain("declare function process");
+		expect(dtsFile?.content).toContain("interface SomeType");
+		expect(dtsFile?.content).toContain("value");
+	});
 
-	it('should only resolve specified external packages in dts files', async () => {
+	it("should only resolve specified external packages in dts files", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test",
+				version: "1.0.0",
 				devDependencies: {
-					'date-fns': '^2.0.0',
-					chalk: '^4.0.0',
-					uuid: '^8.0.0',
+					"date-fns": "^2.0.0",
+					chalk: "^4.0.0",
+					uuid: "^8.0.0",
 				},
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                     import { format, type DateFormat } from 'date-fns';
                     import chalk, { type ChalkColor } from 'chalk';
                     import { v4, type UUID } from 'uuid';
@@ -66,53 +66,53 @@ describe('dts-resolve', () => {
 
                     export declare function generateId(): string;
                 `,
-			'node_modules/date-fns/index.d.ts': `
+			"node_modules/date-fns/index.d.ts": `
                     export type DateFormat = string;
                     export declare function format(date: Date, formatStr: string): string;
                 `,
-			'node_modules/chalk/index.d.ts': `
+			"node_modules/chalk/index.d.ts": `
                     export type ChalkColor = string;
                     export declare function blue(text: string): string;
                 `,
-			'node_modules/uuid/index.d.mts': `
+			"node_modules/uuid/index.d.mts": `
                     export type UUID = string;
                     export declare function v4(): UUID;
                 `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			dts: {
-				resolve: ['date-fns', 'uuid'],
+				resolve: ["date-fns", "uuid"],
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
+		expect(result.success).toBe(true);
 
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
 
-		expect(dtsFile?.content).not.toContain(`from "date-fns"`)
+		expect(dtsFile?.content).not.toContain(`from "date-fns"`);
 
-		expect(dtsFile?.content).not.toContain(`from "uuid"`)
+		expect(dtsFile?.content).not.toContain(`from "uuid"`);
 
-		expect(dtsFile?.content).toContain(`from "chalk"`)
+		expect(dtsFile?.content).toContain(`from "chalk"`);
 
-		expect(dtsFile?.content).toContain('type UUID')
-		expect(dtsFile?.content).toContain('type DateFormat')
-	})
+		expect(dtsFile?.content).toContain("type UUID");
+		expect(dtsFile?.content).toContain("type DateFormat");
+	});
 
-	it('should prefer declaration files over source code files', async () => {
+	it("should prefer declaration files over source code files", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test-package',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
 				devDependencies: {
-					'source-lib': '^1.0.0',
+					"source-lib": "^1.0.0",
 				},
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                 import { Component } from 'source-lib';
 
                 export function createComponent(): Component {
@@ -121,7 +121,7 @@ describe('dts-resolve', () => {
 
                 export type { Component };
             `,
-			'node_modules/source-lib/index.ts': `
+			"node_modules/source-lib/index.ts": `
                 // This is source code that should not be used
                 export interface Component {
                     id: number;
@@ -129,47 +129,47 @@ describe('dts-resolve', () => {
                     unusedSourceProp: boolean; // This property should not appear in the output
                 }
             `,
-			'node_modules/source-lib/index.d.ts': `
+			"node_modules/source-lib/index.d.ts": `
                 // This is declaration file that should be preferred
                 export interface Component {
                     id: number;
                     name: string;
                 }
             `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			dts: {
-				resolve: ['source-lib'],
+				resolve: ["source-lib"],
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
-		expect(dtsFile?.content).toContain('declare function createComponent')
-		expect(dtsFile?.content).toContain('interface Component')
-		expect(dtsFile?.content).toContain('id: number')
-		expect(dtsFile?.content).toContain('name: string')
-		expect(dtsFile?.content).not.toContain('unusedSourceProp')
-		expect(dtsFile?.content).not.toContain(`from "source-lib"`)
-	})
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
+		expect(dtsFile?.content).toContain("declare function createComponent");
+		expect(dtsFile?.content).toContain("interface Component");
+		expect(dtsFile?.content).toContain("id: number");
+		expect(dtsFile?.content).toContain("name: string");
+		expect(dtsFile?.content).not.toContain("unusedSourceProp");
+		expect(dtsFile?.content).not.toContain(`from "source-lib"`);
+	});
 
-	it('should resolve types from dependencies listed in package.json when specified in dts.resolve', async () => {
+	it("should resolve types from dependencies listed in package.json when specified in dts.resolve", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test-package',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
 				dependencies: {
-					'dep-lib': '^1.0.0',
+					"dep-lib": "^1.0.0",
 				},
 				peerDependencies: {
-					'peer-lib': '^2.0.0',
+					"peer-lib": "^2.0.0",
 				},
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                 import { DepType } from 'dep-lib';
                 import { PeerType } from 'peer-lib';
 
@@ -182,46 +182,46 @@ describe('dts-resolve', () => {
 
                 export type { DepType, PeerType };
             `,
-			'node_modules/dep-lib/index.d.ts': `
+			"node_modules/dep-lib/index.d.ts": `
                 export interface DepType {
                     id: number;
                     name: string;
                 }
             `,
-			'node_modules/peer-lib/index.d.ts': `
+			"node_modules/peer-lib/index.d.ts": `
                 export interface PeerType {
                     key: string;
                     value: boolean;
                 }
             `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			dts: {
-				resolve: ['dep-lib'],
+				resolve: ["dep-lib"],
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
 
-		expect(dtsFile?.content).toContain('interface DepType')
-		expect(dtsFile?.content).not.toContain(`from "dep-lib"`)
+		expect(dtsFile?.content).toContain("interface DepType");
+		expect(dtsFile?.content).not.toContain(`from "dep-lib"`);
 
-		expect(dtsFile?.content).not.toContain('interface PeerType')
-		expect(dtsFile?.content).toContain(`from "peer-lib"`)
-	})
+		expect(dtsFile?.content).not.toContain("interface PeerType");
+		expect(dtsFile?.content).toContain(`from "peer-lib"`);
+	});
 
-	it('should resolve types from packages specified in both external and dts.resolve', async () => {
+	it("should resolve types from packages specified in both external and dts.resolve", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test-package',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                 import { ExternalType } from 'external-pkg';
                 import { InternalType } from 'internal-pkg';
 
@@ -234,53 +234,53 @@ describe('dts-resolve', () => {
 
                 export type { ExternalType, InternalType };
             `,
-			'node_modules/external-pkg/index.d.ts': `
+			"node_modules/external-pkg/index.d.ts": `
                 export interface ExternalType {
                     id: string;
                     timestamp: number;
                 }
             `,
-			'node_modules/internal-pkg/index.d.ts': `
+			"node_modules/internal-pkg/index.d.ts": `
                 export interface InternalType {
                     name: string;
                     active: boolean;
                 }
             `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
-			external: ['external-pkg', 'internal-pkg'],
+			entry: "src/index.ts",
+			format: "esm",
+			external: ["external-pkg", "internal-pkg"],
 			dts: {
-				resolve: ['external-pkg'],
+				resolve: ["external-pkg"],
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
 
-		expect(dtsFile?.content).toContain('interface ExternalType')
-		expect(dtsFile?.content).not.toContain(`from "external-pkg"`)
+		expect(dtsFile?.content).toContain("interface ExternalType");
+		expect(dtsFile?.content).not.toContain(`from "external-pkg"`);
 
-		expect(dtsFile?.content).not.toContain('interface InternalType')
-		expect(dtsFile?.content).toContain(`from "internal-pkg"`)
-	})
+		expect(dtsFile?.content).not.toContain("interface InternalType");
+		expect(dtsFile?.content).toContain(`from "internal-pkg"`);
+	});
 
-	it('should resolve all external types when dts.resolve is true', async () => {
+	it("should resolve all external types when dts.resolve is true", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test-package',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
 				dependencies: {
-					'lib-a': '^1.0.0',
+					"lib-a": "^1.0.0",
 				},
 				peerDependencies: {
-					'lib-b': '^2.0.0',
+					"lib-b": "^2.0.0",
 				},
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                 import { TypeA } from 'lib-a';
                 import { TypeB } from 'lib-b';
                 import { TypeC } from 'lib-c';
@@ -295,56 +295,56 @@ describe('dts-resolve', () => {
 
                 export type { TypeA, TypeB, TypeC };
             `,
-			'node_modules/lib-a/index.d.ts': `
+			"node_modules/lib-a/index.d.ts": `
                 export interface TypeA {
                     propA: string;
                 }
             `,
-			'node_modules/lib-b/index.d.ts': `
+			"node_modules/lib-b/index.d.ts": `
                 export interface TypeB {
                     propB: number;
                 }
             `,
-			'node_modules/lib-c/index.d.ts': `
+			"node_modules/lib-c/index.d.ts": `
                 export interface TypeC {
                     propC: boolean;
                 }
             `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
-			external: ['lib-c'],
+			entry: "src/index.ts",
+			format: "esm",
+			external: ["lib-c"],
 			dts: {
 				resolve: true,
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
 
-		expect(dtsFile?.content).toContain('interface TypeA')
-		expect(dtsFile?.content).toContain('interface TypeB')
-		expect(dtsFile?.content).toContain('interface TypeC')
+		expect(dtsFile?.content).toContain("interface TypeA");
+		expect(dtsFile?.content).toContain("interface TypeB");
+		expect(dtsFile?.content).toContain("interface TypeC");
 
-		expect(dtsFile?.content).not.toContain(`from "lib-a"`)
-		expect(dtsFile?.content).not.toContain(`from "lib-b"`)
-		expect(dtsFile?.content).not.toContain(`from "lib-c"`)
-	})
+		expect(dtsFile?.content).not.toContain(`from "lib-a"`);
+		expect(dtsFile?.content).not.toContain(`from "lib-b"`);
+		expect(dtsFile?.content).not.toContain(`from "lib-c"`);
+	});
 
-	it('should respect noExternal when resolving types', async () => {
+	it("should respect noExternal when resolving types", async () => {
 		createProject({
-			'package.json': JSON.stringify({
-				name: 'test-package',
-				version: '1.0.0',
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
 				dependencies: {
-					'external-lib': '^1.0.0',
-					'included-lib': '^1.0.0',
+					"external-lib": "^1.0.0",
+					"included-lib": "^1.0.0",
 				},
 			}),
-			'src/index.ts': `
+			"src/index.ts": `
                 import { ExternalType } from 'external-lib';
                 import { IncludedType } from 'included-lib';
 
@@ -357,35 +357,35 @@ describe('dts-resolve', () => {
 
                 export type { ExternalType, IncludedType };
             `,
-			'node_modules/external-lib/index.d.ts': `
+			"node_modules/external-lib/index.d.ts": `
                 export interface ExternalType {
                     id: number;
                 }
             `,
-			'node_modules/included-lib/index.d.ts': `
+			"node_modules/included-lib/index.d.ts": `
                 export interface IncludedType {
                     name: string;
                 }
             `,
-		})
+		});
 
 		const result = await runDtsBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
-			noExternal: ['included-lib'],
+			entry: "src/index.ts",
+			format: "esm",
+			noExternal: ["included-lib"],
 			dts: {
-				resolve: ['included-lib'],
+				resolve: ["included-lib"],
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const dtsFile = findFile(result, 'index', '.d.mts')
-		expect(dtsFile).toBeDefined()
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
 
-		expect(dtsFile?.content).toContain('interface IncludedType')
-		expect(dtsFile?.content).not.toContain(`from "included-lib"`)
+		expect(dtsFile?.content).toContain("interface IncludedType");
+		expect(dtsFile?.content).not.toContain(`from "included-lib"`);
 
-		expect(dtsFile?.content).not.toContain('interface ExternalType')
-		expect(dtsFile?.content).toContain(`from "external-lib"`)
-	})
-})
+		expect(dtsFile?.content).not.toContain("interface ExternalType");
+		expect(dtsFile?.content).toContain(`from "external-lib"`);
+	});
+});

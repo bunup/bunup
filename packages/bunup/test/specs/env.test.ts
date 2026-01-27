@@ -1,158 +1,156 @@
-import { beforeEach, describe, expect, it } from 'bun:test'
-import { cleanProjectDir, createProject, runBuild } from '../utils'
+import { beforeEach, describe, expect, it } from "bun:test";
+import { cleanProjectDir, createProject, runBuild } from "../utils";
 
-describe('Environment Variables', () => {
+describe("Environment Variables", () => {
 	beforeEach(() => {
-		cleanProjectDir()
-	})
+		cleanProjectDir();
+	});
 
-	it('inlines specific environment variables from object', async () => {
+	it("inlines specific environment variables from object", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export const testVar: string = process.env.TEST_VAR;
                 export const anotherVar: string = process.env.ANOTHER_VAR;
                 export const undefinedVar: string = process.env.UNDEFINED_VAR;
             `,
-		})
+		});
 
 		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			env: {
-				TEST_VAR: 'overridden-value',
-				UNDEFINED_VAR: 'defined-in-config',
+				TEST_VAR: "overridden-value",
+				UNDEFINED_VAR: "defined-in-config",
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const file = result.files[0]
-		expect(file.content).toContain('"overridden-value"')
-		expect(file.content).toContain('"defined-in-config"')
-		expect(file.content).toContain('process.env.ANOTHER_VAR')
-		expect(file.content).not.toContain('"another-original"')
-	})
+		expect(result.success).toBe(true);
+		const file = result.files[0];
+		expect(file.content).toContain('"overridden-value"');
+		expect(file.content).toContain('"defined-in-config"');
+		expect(file.content).toContain("process.env.ANOTHER_VAR");
+		expect(file.content).not.toContain('"another-original"');
+	});
 
-	it('handles import.meta.env references', async () => {
+	it("handles import.meta.env references", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export const testVar: string = import.meta.env.TEST_VAR;
             `,
-		})
+		});
 
 		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			env: {
-				TEST_VAR: 'test-value',
+				TEST_VAR: "test-value",
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const file = result.files[0]
-		expect(file.content).toContain('"test-value"')
-	})
+		expect(result.success).toBe(true);
+		const file = result.files[0];
+		expect(file.content).toContain('"test-value"');
+	});
 
-	it('inlines environment variables with different types', async () => {
+	it("inlines environment variables with different types", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export const stringVar: string = process.env.STRING_VAR;
                 export const numberVar: number = process.env.NUMBER_VAR;
                 export const booleanVar: boolean = process.env.BOOLEAN_VAR;
                 export const jsonVar: Record<string, string> = process.env.JSON_VAR;
             `,
-		})
+		});
 
 		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			env: {
-				STRING_VAR: 'string-value',
-				NUMBER_VAR: '123',
-				BOOLEAN_VAR: 'true',
+				STRING_VAR: "string-value",
+				NUMBER_VAR: "123",
+				BOOLEAN_VAR: "true",
 				JSON_VAR: '{"key":"value"}',
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const file = result.files[0]
-		expect(file.content).toContain('"string-value"')
-		expect(file.content).toContain('"123"')
-		expect(file.content).toContain('"true"')
-		expect(file.content).toContain('{"key":"value"}')
-	})
+		expect(result.success).toBe(true);
+		const file = result.files[0];
+		expect(file.content).toContain('"string-value"');
+		expect(file.content).toContain('"123"');
+		expect(file.content).toContain('"true"');
+		expect(file.content).toContain('{"key":"value"}');
+	});
 
-	it('works across multiple output formats', async () => {
+	it("works across multiple output formats", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export const formatTest: string = process.env.FORMAT_TEST;
             `,
-		})
+		});
 
 		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: ['esm', 'cjs', 'iife'],
+			entry: "src/index.ts",
+			format: ["esm", "cjs", "iife"],
 			env: {
-				FORMAT_TEST: 'format-value',
+				FORMAT_TEST: "format-value",
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		expect(result.files.length).toBe(3)
+		expect(result.success).toBe(true);
+		expect(result.files.length).toBe(3);
 
 		for (const file of result.files) {
-			expect(file.content).toContain('"format-value"')
+			expect(file.content).toContain('"format-value"');
 		}
-	})
+	});
 
-	it('works with multiple entry points', async () => {
+	it("works with multiple entry points", async () => {
 		createProject({
-			'src/index.ts':
-				'export const indexVar: string = process.env.MULTI_ENTRY;',
-			'src/other.ts':
-				'export const otherVar: string = process.env.MULTI_ENTRY;',
-		})
+			"src/index.ts": "export const indexVar: string = process.env.MULTI_ENTRY;",
+			"src/other.ts": "export const otherVar: string = process.env.MULTI_ENTRY;",
+		});
 
 		const result = await runBuild({
-			entry: ['src/index.ts', 'src/other.ts'],
-			format: 'esm',
+			entry: ["src/index.ts", "src/other.ts"],
+			format: "esm",
 			env: {
-				MULTI_ENTRY: 'multi-value',
+				MULTI_ENTRY: "multi-value",
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		expect(result.files.length).toBe(2)
+		expect(result.success).toBe(true);
+		expect(result.files.length).toBe(2);
 
 		for (const file of result.files) {
-			expect(file.content).toContain('"multi-value"')
+			expect(file.content).toContain('"multi-value"');
 		}
-	})
+	});
 
-	it('interacts correctly with defined environment variables', async () => {
+	it("interacts correctly with defined environment variables", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export const definedEnv: string = process.env.DEFINED_ENV;
                 export const envAndDefine: string = process.env.ENV_AND_DEFINE;
             `,
-		})
+		});
 
 		const result = await runBuild({
-			entry: 'src/index.ts',
-			format: 'esm',
+			entry: "src/index.ts",
+			format: "esm",
 			env: {
-				DEFINED_ENV: 'env-value',
-				ENV_AND_DEFINE: 'env-override',
+				DEFINED_ENV: "env-value",
+				ENV_AND_DEFINE: "env-override",
 			},
 			define: {
-				'process.env.ENV_AND_DEFINE': '"define-value"',
+				"process.env.ENV_AND_DEFINE": '"define-value"',
 			},
-		})
+		});
 
-		expect(result.success).toBe(true)
-		const file = result.files[0]
-		expect(file.content).toContain('"env-value"')
+		expect(result.success).toBe(true);
+		const file = result.files[0];
+		expect(file.content).toContain('"env-value"');
 		// Define should take precedence over env
-		expect(file.content).toContain('"define-value"')
-		expect(file.content).not.toContain('"env-override"')
-	})
-})
+		expect(file.content).toContain('"define-value"');
+		expect(file.content).not.toContain('"env-override"');
+	});
+});

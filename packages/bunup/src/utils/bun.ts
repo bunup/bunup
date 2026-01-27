@@ -1,5 +1,5 @@
-import path from 'node:path'
-import type { BuildMetafile } from 'bun'
+import path from "node:path";
+import type { BuildMetafile } from "bun";
 
 /*
 	This function assumes the `metafile` option is enabled in Bun.build
@@ -10,6 +10,6 @@ export function getOriginalEntrypointFromOutputPath(
 	outputPath: string,
 	rootDir: string,
 ): string {
-	const entryPoint = metafile?.outputs[outputPath]?.entryPoint as string
-	return path.relative(rootDir, entryPoint)
+	const entryPoint = metafile?.outputs[outputPath]?.entryPoint as string;
+	return path.relative(rootDir, entryPoint);
 }

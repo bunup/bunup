@@ -1,73 +1,73 @@
-import pc from 'picocolors'
+import pc from "picocolors";
 
 interface LogOptions {
-	muted?: boolean
-	verticalSpace?: boolean
-	identifier?: string
-	once?: string
-	tick?: boolean
-	icon?: string
-	noIcon?: boolean
-	leftPadding?: boolean | number
+	muted?: boolean;
+	verticalSpace?: boolean;
+	identifier?: string;
+	once?: string;
+	tick?: boolean;
+	icon?: string;
+	noIcon?: boolean;
+	leftPadding?: boolean | number;
 }
 
-export type LogLevel = 'info' | 'warn' | 'error'
+export type LogLevel = "info" | "warn" | "error";
 
 interface FormatMessageOptions extends LogOptions {
-	message: string
-	type?: LogLevel
+	message: string;
+	type?: LogLevel;
 }
 
 export class Logger {
-	private static instance: Logger
-	private readonly loggedOnceMessages = new Set<string>()
-	private silent = false
+	private static instance: Logger;
+	private readonly loggedOnceMessages = new Set<string>();
+	private silent = false;
 
 	private constructor() {}
 
 	public static getInstance(): Logger {
 		if (!Logger.instance) {
-			Logger.instance = new Logger()
+			Logger.instance = new Logger();
 		}
-		return Logger.instance
+		return Logger.instance;
 	}
 
 	public setSilent(value: boolean | undefined): void {
-		this.silent = value ?? false
+		this.silent = value ?? false;
 	}
 
 	public isSilent(): boolean {
-		return this.silent
+		return this.silent;
 	}
 
 	private shouldLog(options?: LogOptions): boolean {
 		if (!options?.once) {
-			return true
+			return true;
 		}
 
 		if (this.loggedOnceMessages.has(options.once)) {
-			return false
+			return false;
 		}
 
-		this.loggedOnceMessages.add(options.once)
-		return true
+		this.loggedOnceMessages.add(options.once);
+		return true;
 	}
 
 	private getIcon(type: LogLevel, tick?: boolean): string {
 		if (tick) {
-			return pc.green('✓')
+			return pc.green("✓");
 		}
 
 		const iconMap: Record<LogLevel, string> = {
-			info: pc.blue('i'),
-			warn: pc.yellow('!'),
-			error: pc.red('✕'),
-		}
-		return iconMap[type]
+			info: pc.blue("i"),
+			warn: pc.yellow("!"),
+			error: pc.red("✕"),
+		};
+		return iconMap[type];
 	}
 
 	private formatIdentifier(identifier?: string): string {
-		return identifier ? `   ${pc.bgBlueBright(` ${identifier} `)}` : ''
+		return identifier ? `   ${pc.bgBlueBright(` ${identifier} `)}` : "";
 	}
 
 	public formatMessage(options: FormatMessageOptions): string {
@@ -76,39 +76,35 @@ export class Logger {
 			identifier,
 			muted = false,
 			tick = false,
-			type = 'info',
+			type = "info",
 			noIcon = false,
 			leftPadding,
-		} = options
+		} = options;
 
-		const icon = noIcon ? '' : (options.icon ?? this.getIcon(type, tick))
+		const icon = noIcon ? "" : (options.icon ?? this.getIcon(type, tick));
 		const styledMessage = muted
 			? pc.dim(message)
-			: type === 'error'
+			: type === "error"
 				? pc.red(message)
-				: type === 'warn'
+				: type === "warn"
 					? pc.yellow(message)
-					: message
+					: message;
 
-		const identifierPart = this.formatIdentifier(identifier)
-		const iconPart = icon ? `${icon} ` : ''
-		const baseMessage = `${iconPart}${styledMessage}${identifierPart}`
+		const identifierPart = this.formatIdentifier(identifier);
+		const iconPart = icon ? `${icon} ` : "";
+		const baseMessage = `${iconPart}${styledMessage}${identifierPart}`;
 
 		const paddingCount =
-			leftPadding === true
-				? 2
-				: typeof leftPadding === 'number'
-					? leftPadding
-					: 0
+			leftPadding === true ? 2 : typeof leftPadding === "number" ? leftPadding : 0;
 		if (paddingCount > 0) {
-			const padding = ' '.repeat(paddingCount)
+			const padding = " ".repeat(paddingCount);
 			return baseMessage
-				.split('\n')
+				.split("\n")
 				.map((line) => `${padding}${line}`)
-				.join('\n')
+				.join("\n");
 		}
 
-		return baseMessage
+		return baseMessage;
 	}
 
 	private output(
@@ -117,17 +113,17 @@ export class Logger {
 		logFn: (...args: any[]) => void = console.log,
 	): void {
 		if (this.silent || !this.shouldLog(options)) {
-			return
+			return;
 		}
 
 		if (options.verticalSpace) {
-			logFn('')
+			logFn("");
 		}
 
-		logFn(message)
+		logFn(message);
 
 		if (options.verticalSpace) {
-			logFn('')
+			logFn("");
 		}
 	}
 
@@ -135,27 +131,27 @@ export class Logger {
 		const formattedMessage = this.formatMessage({
 			...options,
 			message,
-			type: 'info',
-		})
-		this.output(formattedMessage, options)
+			type: "info",
+		});
+		this.output(formattedMessage, options);
 	}
 
 	public warn(message: string, options: LogOptions = {}): void {
 		const formattedMessage = this.formatMessage({
 			...options,
 			message,
-			type: 'warn',
-		})
-		this.output(formattedMessage, options)
+			type: "warn",
+		});
+		this.output(formattedMessage, options);
 	}
 
 	public error(message: string, options: LogOptions = {}): void {
 		const formattedMessage = this.formatMessage({
 			...options,
 			message,
-			type: 'error',
-		})
-		this.output(formattedMessage, options)
+			type: "error",
+		});
+		this.output(formattedMessage, options);
 	}
 
 	public success(message: string, options: LogOptions = {}): void {
@@ -163,13 +159,13 @@ export class Logger {
 			...options,
 			message,
 			tick: true,
-		})
-		this.output(formattedMessage, options)
+		});
+		this.output(formattedMessage, options);
 	}
 
 	public space(): void {
 		if (!this.silent) {
-			console.log('')
+			console.log("");
 		}
 	}
 
@@ -177,53 +173,51 @@ export class Logger {
 		const formattedMessage = this.formatMessage({
 			...options,
 			message,
-			type: 'info',
+			type: "info",
 			noIcon: true,
-		})
-		this.output(formattedMessage, options)
+		});
+		this.output(formattedMessage, options);
 	}
 
 	public list(items: string[], options?: { dim?: boolean }): string {
 		return items
 			.map((item) => {
-				const bullet = pc.cyan('-')
-				const text = options?.dim ? pc.dim(item) : item
-				return `  ${bullet} ${text}`
+				const bullet = pc.cyan("-");
+				const text = options?.dim ? pc.dim(item) : item;
+				return `  ${bullet} ${text}`;
 			})
-			.join('\n')
+			.join("\n");
 	}
 
 	public highlight(code: string): string {
 		const keywords =
-			/\b(const|let|var|function|return|if|else|for|while|class|import|export|from|async|await|new|try|catch|throw|typeof|interface|type|enum)\b/g
-		const strings = /(["'`])(?:(?=(\\?))\2.)*?\1/g
-		const comments = /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm
-		const numbers = /\b(\d+\.?\d*)\b/g
-		const functions = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g
+			/\b(const|let|var|function|return|if|else|for|while|class|import|export|from|async|await|new|try|catch|throw|typeof|interface|type|enum)\b/g;
+		const strings = /(["'`])(?:(?=(\\?))\2.)*?\1/g;
+		const comments = /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm;
+		const numbers = /\b(\d+\.?\d*)\b/g;
+		const functions = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g;
 
-		let result = code
+		let result = code;
 
-		result = result.replace(comments, (match) => pc.dim(match))
-		result = result.replace(strings, (match) => pc.green(match))
-		result = result.replace(keywords, (match) => pc.magenta(match))
-		result = result.replace(numbers, (match) => pc.yellow(match))
-		result = result.replace(functions, (match) => pc.cyan(match))
+		result = result.replace(comments, (match) => pc.dim(match));
+		result = result.replace(strings, (match) => pc.green(match));
+		result = result.replace(keywords, (match) => pc.magenta(match));
+		result = result.replace(numbers, (match) => pc.yellow(match));
+		result = result.replace(functions, (match) => pc.cyan(match));
 
-		return result
+		return result;
 	}
 }
 
 export function logTime(ms: number): string {
-	return ms >= 1000
-		? pc.green(`${(ms / 1000).toFixed(2)}s`)
-		: pc.green(`${Math.round(ms)}ms`)
+	return ms >= 1000 ? pc.green(`${(ms / 1000).toFixed(2)}s`) : pc.green(`${Math.round(ms)}ms`);
 }
 
 export function link(url: string, label?: string): string {
 	if (!label) {
-		label = url
+		label = url;
 	}
-	return `\u001b]8;;${url}\u0007${pc.underline(pc.cyan(label))}\u001b]8;;\u0007`
+	return `\u001b]8;;${url}\u0007${pc.underline(pc.cyan(label))}\u001b]8;;\u0007`;
 }
 
-export const logger: Logger = Logger.getInstance()
+export const logger: Logger = Logger.getInstance();

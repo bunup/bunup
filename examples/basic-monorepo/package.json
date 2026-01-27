@@ -1,7 +1,11 @@
 {
 	"name": "basic-monorepo",
-	"type": "module",
 	"private": true,
+	"license": "MIT",
+	"workspaces": [
+		"packages/*"
+	],
+	"type": "module",
 	"scripts": {
 		"build": "bunup",
 		"dev": "bunup --watch",
@@ -11,9 +15,5 @@
 		"@types/bun": "^1.2.23",
 		"bunup": "^0.14.9",
 		"typescript": "^5.9.3"
-	},
-	"workspaces": [
-		"packages/*"
-	],
-	"license": "MIT"
+	}
 }

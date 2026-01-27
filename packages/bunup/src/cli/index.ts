@@ -1,112 +1,105 @@
 #!/usr/bin/env bun
 
-import { type LoadConfigResult, loadConfig } from 'coffi'
-import pc from 'picocolors'
+import { type LoadConfigResult, loadConfig } from "coffi";
+import pc from "picocolors";
 
-import { version } from '../../package.json'
-import { build } from '../build'
-import { handleErrorAndExit } from '../errors'
-import {
-	type LoadedConfig,
-	type ProcessableConfig,
-	processLoadedConfigs,
-} from '../loaders'
-import type { BuildOptions } from '../options'
-import { logger, logTime } from '../printer/logger'
-import { printBuildReport } from '../printer/print-build-report'
-import { ensureArray } from '../utils/common'
-import { getShortFilePath } from '../utils/path'
-import { watch } from '../watch'
-import { type CliOnlyOptions, parseCliOptions } from './options'
+import { version } from "../../package.json";
+import { build } from "../build";
+import { handleErrorAndExit } from "../errors";
+import { type LoadedConfig, type ProcessableConfig, processLoadedConfigs } from "../loaders";
+import type { BuildOptions } from "../options";
+import { logger, logTime } from "../printer/logger";
+import { printBuildReport } from "../printer/print-build-report";
+import { ensureArray } from "../utils/common";
+import { getShortFilePath } from "../utils/path";
+import { watch } from "../watch";
+import { type CliOnlyOptions, parseCliOptions } from "./options";
 
 async function main(args: string[] = Bun.argv.slice(2)): Promise<void> {
-	const cliOptions = parseCliOptions(args)
+	const cliOptions = parseCliOptions(args);
 
-	const cwd = process.cwd()
+	const cwd = process.cwd();
 
-	let loadedConfig: LoadConfigResult<LoadedConfig> | undefined
+	let loadedConfig: LoadConfigResult<LoadedConfig> | undefined;
 
 	if (cliOptions.config !== false) {
 		loadedConfig = await loadConfig<LoadedConfig>({
-			name: 'bunup.config',
-			extensions: ['.ts', '.js', '.mjs', '.cjs'],
+			name: "bunup.config",
+			extensions: [".ts", ".js", ".mjs", ".cjs"],
 			maxDepth: 1,
-			preferredPath:
-				typeof cliOptions.config === 'string' ? cliOptions.config : undefined,
-			packageJsonProperty: 'bunup',
-		})
+			preferredPath: typeof cliOptions.config === "string" ? cliOptions.config : undefined,
+			packageJsonProperty: "bunup",
+		});
 	}
 
-	const { config, filepath } = loadedConfig ?? {}
+	const { config, filepath } = loadedConfig ?? {};
 
 	const configsToProcess: ProcessableConfig[] = !config
 		? [{ rootDir: cwd, options: cliOptions }]
-		: await processLoadedConfigs(config, cwd, cliOptions.filter)
+		: await processLoadedConfigs(config, cwd, cliOptions.filter);
 
 	const shouldSilent =
 		cliOptions.watch ||
 		cliOptions.silent ||
-		configsToProcess.some((c) => ensureArray(c.options).some((o) => o.silent))
+		configsToProcess.some((c) => ensureArray(c.options).some((o) => o.silent));
 
 	if (shouldSilent) {
-		logger.setSilent(true)
+		logger.setSilent(true);
 	}
 
 	logger.info(`Using bunup v${version} and bun v${Bun.version}`, {
 		muted: true,
-	})
+	});
 
 	if (filepath) {
 		logger.info(`Using ${getShortFilePath(filepath, 2)}`, {
 			muted: true,
-		})
+		});
 	}
 
-	logger.info('Build started')
+	logger.info("Build started");
 
-	let buildTimeMs = 0
+	let buildTimeMs = 0;
 
 	// this is not parallel for a reason
 	// because, can cause race conditions if we are building multiple packages, for example in bunup workspaces which packages uses each other
 	for (const { options, rootDir } of configsToProcess) {
-		const optionsArray = ensureArray(options)
+		const optionsArray = ensureArray(options);
 		for await (const o of optionsArray) {
 			const userOptions: Partial<BuildOptions> = {
 				...o,
 				...removeCliOnlyOptions(cliOptions),
-			}
+			};
 
 			if (userOptions.watch) {
-				await watch(userOptions, rootDir, filepath)
+				await watch(userOptions, rootDir, filepath);
 			} else {
-				const startTime = performance.now()
-				const result = await build(userOptions, rootDir)
-				buildTimeMs += performance.now() - startTime
+				const startTime = performance.now();
+				const result = await build(userOptions, rootDir);
+				buildTimeMs += performance.now() - startTime;
 				if (!cliOptions.watch && !shouldSilent) {
-					await printBuildReport(result)
+					await printBuildReport(result);
 				}
 			}
 		}
 	}
 
 	if (cliOptions.watch) {
-		console.log(
-			`\n  ${pc.bgMagentaBright(' WATCH ')} Watching for file changes...\n`,
-		)
+		console.log(`\n  ${pc.bgMagentaBright(" WATCH ")} Watching for file changes...\n`);
 	}
 
-	logger.space()
-	logger.success(`Build completed in ${pc.green(logTime(buildTimeMs))}`)
+	logger.space();
+	logger.success(`Build completed in ${pc.green(logTime(buildTimeMs))}`);
 }
 
-const CLI_ONLY_OPTIONS: (keyof CliOnlyOptions)[] = ['config', 'filter']
+const CLI_ONLY_OPTIONS: (keyof CliOnlyOptions)[] = ["config", "filter"];
 
 function removeCliOnlyOptions(options: CliOnlyOptions & Partial<BuildOptions>) {
-	const cleanedOptions = { ...options }
+	const cleanedOptions = { ...options };
 	for (const option of CLI_ONLY_OPTIONS) {
-		delete cleanedOptions[option]
+		delete cleanedOptions[option];
 	}
-	return cleanedOptions
+	return cleanedOptions;
 }
 
-main().catch((error) => handleErrorAndExit(error))
+main().catch((error) => handleErrorAndExit(error));

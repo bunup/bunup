@@ -1,49 +1,49 @@
-import { beforeEach, describe, expect, it } from 'bun:test'
-import { cleanProjectDir, createProject, findFile, runCli } from '../utils'
+import { beforeEach, describe, expect, it } from "bun:test";
+import { cleanProjectDir, createProject, findFile, runCli } from "../utils";
 
-describe('CLI Only Options', () => {
+describe("CLI Only Options", () => {
 	beforeEach(() => {
-		cleanProjectDir()
-	})
+		cleanProjectDir();
+	});
 
-	it('should use custom config file', async () => {
+	it("should use custom config file", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export function hello() {
                     return "Hello, world!";
                 }
             `,
-			'custom-bunup.config.ts': `
+			"custom-bunup.config.ts": `
                 export default {
                     entry: "src/index.ts",
                     format: "esm",
                     banner: "// Hello, world!",
                 };
             `,
-		})
+		});
 
-		const result = await runCli('src/index.ts --config custom-bunup.config.ts')
+		const result = await runCli("src/index.ts --config custom-bunup.config.ts");
 
-		expect(result.success).toBe(true)
-		expect(result.stdout).toContain('Using')
-		expect(result.stdout).toContain('custom-bunup.config.ts')
-		const file = findFile(result, 'index', '.mjs')
-		expect(file?.content).toContain('// Hello, world!')
-	})
+		expect(result.success).toBe(true);
+		expect(result.stdout).toContain("Using");
+		expect(result.stdout).toContain("custom-bunup.config.ts");
+		const file = findFile(result, "index", ".mjs");
+		expect(file?.content).toContain("// Hello, world!");
+	});
 
-	it('should log type annotation warnings when generating declaration files', async () => {
+	it("should log type annotation warnings when generating declaration files", async () => {
 		createProject({
-			'src/index.ts': `
+			"src/index.ts": `
                 export * from './utils/helpers';
             `,
-			'src/utils/helpers.ts': `
+			"src/utils/helpers.ts": `
                 export * from '../services/api';
 
                 export const formatData = (data: any): { formatted: any } => {
                     return { formatted: data };
                 };
             `,
-			'src/services/api.ts': `
+			"src/services/api.ts": `
                 // Function without explicit return type
                 export function missingReturnType() {
                     return { name: "test", status: "active" };
@@ -53,10 +53,10 @@ describe('CLI Only Options', () => {
                     return Promise.resolve({ data: "test data" });
                 }
             `,
-		})
+		});
 
-		const result = await runCli('src/index.ts --dts')
+		const result = await runCli("src/index.ts --dts");
 
-		expect(result.stdout).toContain(' Function requires an explicit return')
-	})
-})
+		expect(result.stdout).toContain(" Function requires an explicit return");
+	});
+});

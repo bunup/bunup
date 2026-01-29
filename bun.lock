@@ -30,7 +30,7 @@
         "bunup": "dist/cli/index.js",
       },
       "dependencies": {
-        "@bunup/dts": "^0.14.49",
+        "@bunup/dts": "^0.14.50",
         "@bunup/shared": "workspace:*",
         "chokidar": "^5.0.0",
         "coffi": "^0.1.37",
@@ -201,7 +201,7 @@
 
     "@babel/types": ["@babel/types@7.28.6", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg=="],
 
-    "@bunup/dts": ["@bunup/dts@0.14.49", "", { "dependencies": { "@babel/parser": "^7.28.6", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.16.2", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.10.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-mAni3Zpf1MLxFDNCNStcxjbgNaSZpygc1qqF66WHMoUs3j+NSNKZPKwex9uLGXazJdE8g9MqQ//1QQcETdwY6Q=="],
+    "@bunup/dts": ["@bunup/dts@0.14.50", "", { "dependencies": { "@babel/parser": "^7.28.6", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.16.2", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.10.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-EGQOLwdX5Am8z5CEPupGm7Hx/e+QTwhpnFSGolSJ4HdkjHjtMvLpdevbttnYpKzRZET4M7tDoH7hP1HwJKCl3A=="],
 
     "@bunup/plugin-react-compiler": ["@bunup/plugin-react-compiler@workspace:packages/plugin-react-compiler"],
 

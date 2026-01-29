@@ -50,7 +50,7 @@
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@bunup/dts": "^0.14.49",
+		"@bunup/dts": "^0.14.50",
 		"@bunup/shared": "workspace:*",
 		"chokidar": "^5.0.0",
 		"coffi": "^0.1.37",

@@ -51,7 +51,7 @@ export function reactCompiler(options: ReactCompilerPluginOptions = {}): Bun.Bun
 				const { code, map } = result;
 
 				return {
-					contents: `$${code}\n//# sourceMappingURL=$${toUrl(map)}`,
+					contents: `${code}\n//# sourceMappingURL=${toUrl(map)}`,
 					loader: "tsx",
 				};
 			});

@@ -1,6 +1,6 @@
 {
 	"name": "@bunup/plugin-react-compiler",
-	"version": "0.16.21",
+	"version": "0.16.22",
 	"description": "Bunup plugin for React's new compiler to automatically optimize React component libraries.",
 	"keywords": [
 		"bunup",

@@ -1,8 +1,8 @@
 import type { BuildOptions } from "../options";
-import { getPackageDeps } from "../utils/package";
+import { getPackageExternalDeps, getPackageAllDeps } from "../utils/package";
 
-function getPackageDepsPatterns(packageJson: Record<string, unknown> | null): RegExp[] {
-	return getPackageDeps(packageJson).map((dep) => new RegExp(`^${dep}($|\\/|\\\\)`));
+function getDepsPatterns(deps: string[]): RegExp[] {
+	return deps.map((dep) => new RegExp(`^${dep}($|\\/|\\\\)`));
 }
 
 function matchesPattern(path: string, pattern: string | RegExp): boolean {
@@ -14,7 +14,8 @@ export function isExternalFromPackageJson(
 	options: BuildOptions,
 	packageJson: Record<string, unknown> | null,
 ): boolean | undefined {
-	const packageDepsPatterns = getPackageDepsPatterns(packageJson);
+	const packageExternalDepsPatterns = getDepsPatterns(getPackageExternalDeps(packageJson));
+	const packageAllDepsPatterns = getDepsPatterns(getPackageAllDeps(packageJson));
 
 	if (options.packages === "bundle") {
 		const explicitlyExternal = options.external?.some((pattern) => matchesPattern(path, pattern));
@@ -28,11 +29,11 @@ export function isExternalFromPackageJson(
 			return false;
 		}
 
-		return packageDepsPatterns.some((pattern) => pattern.test(path));
+		return packageAllDepsPatterns.some((pattern) => pattern.test(path));
 	}
 
 	const matchesExternalPattern =
-		packageDepsPatterns.some((pattern) => pattern.test(path)) ||
+		packageExternalDepsPatterns.some((pattern) => pattern.test(path)) ||
 		options.external?.some((pattern) => matchesPattern(path, pattern));
 
 	const isExcludedFromExternal = options.noExternal?.some((pattern) =>

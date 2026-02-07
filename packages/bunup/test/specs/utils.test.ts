@@ -9,7 +9,7 @@ import {
 } from "../../src/utils/extension";
 import { cleanOutDir, isGlobPattern } from "../../src/utils/file";
 import { formatFileSize } from "../../src/utils/format";
-import { getPackageDeps } from "../../src/utils/package";
+import { getPackageAllDeps, getPackageExternalDeps } from "../../src/utils/package";
 import { cleanPath, getShortFilePath } from "../../src/utils/path";
 
 describe("Utils", () => {
@@ -58,16 +58,30 @@ describe("Utils", () => {
 		});
 	});
 
-	describe("getPackageDeps", () => {
+	describe("getPackageExternalDeps", () => {
 		it("returns dependencies and peerDependencies", () => {
 			const packageJson = {
 				dependencies: { dep1: "1.0.0" },
 				peerDependencies: { peerDep1: "^2.0.0" },
 			};
-			expect(getPackageDeps(packageJson)).toEqual(["dep1", "peerDep1"]);
+			expect(getPackageExternalDeps(packageJson)).toEqual(["dep1", "peerDep1"]);
 		});
 		it("returns empty array for no dependencies", () => {
-			expect(getPackageDeps(null)).toEqual([]);
+			expect(getPackageExternalDeps(null)).toEqual([]);
+		});
+	});
+
+	describe("getPackageAllDeps", () => {
+		it("returns dependencies, devDependencies, and peerDependencies", () => {
+			const packageJson = {
+				dependencies: { dep1: "1.0.0" },
+				devDependencies: { dep1: "^1.1.0", devDep1: "^2.0.0" },
+				peerDependencies: { peerDep1: "^3.0.0" },
+			};
+			expect(getPackageAllDeps(packageJson)).toEqual(["dep1", "devDep1", "peerDep1"]);
+		});
+		it("returns empty array for no dependencies", () => {
+			expect(getPackageAllDeps(null)).toEqual([]);
 		});
 	});
 

@@ -127,7 +127,6 @@ export async function build(
 				env: resolvedEnv,
 				ignoreDCEAnnotations: options.ignoreDCEAnnotations,
 				emitDCEAnnotations: options.emitDCEAnnotations,
-				packages: options.packages,
 				jsx: options.jsx,
 				// @ts-expect-error - compile option is a different interface in Bun.build api, but it's valid as is
 				compile: options.compile,

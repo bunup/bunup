@@ -1,3 +1,3 @@
-import { fetch } from "undici";
+import { spinners } from "ora";
 
-fetch("");
+export { spinners };

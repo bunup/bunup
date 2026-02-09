@@ -42,3 +42,35 @@ export function isExternalFromPackageJson(
 
 	return matchesExternalPattern && !isExcludedFromExternal;
 }
+
+export function getBundledDepsForDtsResolve(
+	options: BuildOptions,
+	packageJson: Record<string, unknown> | null,
+): (string | RegExp)[] | undefined {
+	if (options.packages === "bundle") {
+		const allDeps = getPackageAllDeps(packageJson);
+		const bundled = options.external?.length
+			? allDeps.filter((dep) => !options.external!.some((p) => matchesPattern(dep, p)))
+			: allDeps;
+		return bundled.length ? getDepsPatterns(bundled) : undefined;
+	}
+
+	if (options.packages === "external") {
+		return options.noExternal?.length ? [...options.noExternal] : undefined;
+	}
+
+	// Default: devDeps are bundled, noExternal overrides force bundling
+	const externalDeps = new Set(getPackageExternalDeps(packageJson));
+	const allDeps = getPackageAllDeps(packageJson);
+	const devDeps = allDeps.filter((dep) => !externalDeps.has(dep));
+	const bundledDevDeps = options.external?.length
+		? devDeps.filter((dep) => !options.external!.some((p) => matchesPattern(dep, p)))
+		: devDeps;
+
+	const patterns: (string | RegExp)[] = [
+		...getDepsPatterns(bundledDevDeps),
+		...(options.noExternal ?? []),
+	];
+
+	return patterns.length ? patterns : undefined;
+}

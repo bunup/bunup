@@ -10,6 +10,7 @@ import {
 	formatNoEntryPointsFoundError,
 	parseErrorMessage,
 } from "./errors";
+import { getBundledDepsForDtsResolve } from "./helpers/external";
 import { executeOnSuccess } from "./helpers/on-success";
 import { loadPackageJson } from "./loaders";
 import {
@@ -220,8 +221,15 @@ export async function build(
 		!options.compile
 	) {
 		try {
-			const { entry, splitting, ...dtsOptions } =
+			const { entry, splitting, resolve: userDtsResolve, ...dtsOptions } =
 				typeof options.dts === "object" ? options.dts : {};
+
+			const bundledDeps = getBundledDepsForDtsResolve(options, packageJson.data);
+			const dtsResolve = !bundledDeps?.length
+				? userDtsResolve
+				: userDtsResolve === true
+					? true
+					: [...bundledDeps, ...(Array.isArray(userDtsResolve) ? userDtsResolve : [])];
 
 			const dtsResult = await generateDts(ensureArray(entry ?? entrypoints), {
 				cwd: rootDir,
@@ -232,6 +240,7 @@ export async function build(
 				},
 				root: options.sourceBase ? path.resolve(rootDir, options.sourceBase) : undefined,
 				...dtsOptions,
+				resolve: dtsResolve,
 			});
 
 			if (dtsResult.errors.length && !logger.isSilent()) {

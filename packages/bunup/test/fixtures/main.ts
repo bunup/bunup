@@ -1,3 +1,3 @@
-import { spinners } from "ora";
+import { type Color } from "ora";
 
-export { spinners };
+export type {Color};

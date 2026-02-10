@@ -1,7 +1,84 @@
 import { describe, expect, it } from "bun:test";
-import { createProject, findFile, runDtsBuild } from "../utils";
+import { createProject, findFile, runBuild, runDtsBuild } from "../utils";
 
 describe("dts-resolve", () => {
+	it("should not override explicit dts.resolve false for bundled devDependencies", async () => {
+		createProject({
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
+				devDependencies: {
+					"dev-bundled-lib": "^1.0.0",
+				},
+			}),
+			"src/index.ts": `
+                import type { DevBundledType } from "dev-bundled-lib";
+
+                export function process(value: DevBundledType): DevBundledType {
+                    return value;
+                }
+            `,
+			"node_modules/dev-bundled-lib/index.d.ts": `
+                export interface DevBundledType {
+                    regressionSentinel: "dev-bundled";
+                }
+            `,
+		});
+
+		const result = await runBuild({
+			entry: "src/index.ts",
+			format: "esm",
+			dts: {
+				resolve: false,
+			},
+		});
+
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
+		expect(dtsFile?.content).toContain(`from "dev-bundled-lib"`);
+		expect(dtsFile?.content).not.toContain(`regressionSentinel: "dev-bundled"`);
+	});
+
+	it("should not override explicit dts.resolve false for bundled noExternal deps", async () => {
+		createProject({
+			"package.json": JSON.stringify({
+				name: "test-package",
+				version: "1.0.0",
+				dependencies: {
+					"included-lib": "^1.0.0",
+				},
+			}),
+			"src/index.ts": `
+                import type { IncludedType } from "included-lib";
+
+                export function process(value: IncludedType): IncludedType {
+                    return value;
+                }
+            `,
+			"node_modules/included-lib/index.d.ts": `
+                export interface IncludedType {
+                    regressionSentinel: "no-external";
+                }
+            `,
+		});
+
+		const result = await runDtsBuild({
+			entry: "src/index.ts",
+			format: "esm",
+			noExternal: ["included-lib"],
+			dts: {
+				resolve: false,
+			},
+		});
+
+		expect(result.success).toBe(true);
+		const dtsFile = findFile(result, "index", ".d.mts");
+		expect(dtsFile).toBeDefined();
+		expect(dtsFile?.content).toContain(`from "included-lib"`);
+		expect(dtsFile?.content).not.toContain(`regressionSentinel: "no-external"`);
+	});
+
 	it("should respect custom dts.resolve configuration", async () => {
 		createProject({
 			"package.json": JSON.stringify({

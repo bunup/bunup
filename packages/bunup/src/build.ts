@@ -225,7 +225,9 @@ export async function build(
 				typeof options.dts === "object" ? options.dts : {};
 
 			const bundledDeps = getBundledDepsForDtsResolve(options, packageJson.data);
-			const dtsResolve = !bundledDeps?.length
+			const dtsResolve = userDtsResolve === false
+				? false
+				: !bundledDeps?.length
 				? userDtsResolve
 				: userDtsResolve === true
 					? true

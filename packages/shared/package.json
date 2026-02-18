@@ -1,6 +1,6 @@
 {
 	"name": "@bunup/shared",
-	"version": "0.16.27",
+	"version": "0.16.28",
 	"description": "Shared utilities for use across bunup packages and official plugins.",
 	"keywords": [
 		"bunup",

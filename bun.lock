@@ -25,12 +25,12 @@
     },
     "packages/bunup": {
       "name": "bunup",
-      "version": "0.16.23",
+      "version": "0.16.28",
       "bin": {
         "bunup": "dist/cli/index.js",
       },
       "dependencies": {
-        "@bunup/dts": "^0.14.52",
+        "@bunup/dts": "^0.14.53",
         "@bunup/shared": "workspace:*",
         "chokidar": "^5.0.0",
         "coffi": "^0.1.37",
@@ -44,7 +44,7 @@
         "@types/bun": "^1.3.6",
       },
       "peerDependencies": {
-        "typescript": "latest",
+        "typescript": ">=4.5.0",
       },
       "optionalPeers": [
         "typescript",
@@ -86,7 +86,7 @@
     },
     "packages/plugin-react-compiler": {
       "name": "@bunup/plugin-react-compiler",
-      "version": "0.16.23",
+      "version": "0.16.28",
       "dependencies": {
         "@babel/core": "^7.28.6",
         "babel-plugin-react-compiler": "^1.0.0",
@@ -95,7 +95,7 @@
         "@types/babel__core": "^7.20.5",
       },
       "peerDependencies": {
-        "typescript": "latest",
+        "typescript": ">=4.5.0",
       },
       "optionalPeers": [
         "typescript",
@@ -103,7 +103,7 @@
     },
     "packages/plugin-tailwindcss": {
       "name": "@bunup/plugin-tailwindcss",
-      "version": "0.16.23",
+      "version": "0.16.28",
       "dependencies": {
         "@bunup/shared": "workspace:*",
         "@tailwindcss/postcss": "^4.1.18",
@@ -111,7 +111,7 @@
         "postcss": "^8.5.6",
       },
       "peerDependencies": {
-        "typescript": "latest",
+        "typescript": ">=4.5.0",
       },
       "optionalPeers": [
         "typescript",
@@ -119,9 +119,9 @@
     },
     "packages/shared": {
       "name": "@bunup/shared",
-      "version": "0.16.23",
+      "version": "0.16.28",
       "peerDependencies": {
-        "typescript": "latest",
+        "typescript": ">=4.5.0",
       },
       "optionalPeers": [
         "typescript",
@@ -201,7 +201,7 @@
 
     "@babel/types": ["@babel/types@7.28.6", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg=="],
 
-    "@bunup/dts": ["@bunup/dts@0.14.52", "", { "dependencies": { "@babel/parser": "^7.28.6", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.16.2", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.10.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-k4cIT4m3teOBxcQ+Ch3zK86AsAaa3/XAZCSqCTvJSIyT8LfSyx2wYZJu5Sl12DeMf0VtgLgvAbdYqR7wstdbig=="],
+    "@bunup/dts": ["@bunup/dts@0.14.53", "", { "dependencies": { "@babel/parser": "^7.28.6", "coffi": "^0.1.37", "oxc-minify": "^0.93.0", "oxc-resolver": "^11.16.2", "oxc-transform": "^0.93.0", "picocolors": "^1.1.1", "std-env": "^3.10.0", "ts-import-resolver": "^0.1.23" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-qyHgYEYxcghoChICEhuFKfA/EqqRA9WHOHLXcIkR9c70DgLAEXcOlkYhfBPmGxfMKJYL0X4VtQwst0/AMk9D3g=="],
 
     "@bunup/plugin-react-compiler": ["@bunup/plugin-react-compiler@workspace:packages/plugin-react-compiler"],
 

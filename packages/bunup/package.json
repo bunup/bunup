@@ -1,6 +1,6 @@
 {
 	"name": "bunup",
-	"version": "0.16.28",
+	"version": "0.16.29",
 	"description": "⚡ A blazing-fast build tool for your libraries built with Bun.",
 	"keywords": [
 		"bun",

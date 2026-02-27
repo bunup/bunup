@@ -47,19 +47,14 @@ import { cleanOutDir, getFilesFromGlobs, isJavascriptFile } from "./utils/file";
 import { formatListWithAnd } from "./utils/format";
 import { cleanPath } from "./utils/path";
 
-let ac: AbortController | null = null;
-
 export async function build(
 	userOptions: Partial<BuildOptions>,
 	rootDir: string = process.cwd(),
+	ac?: AbortController,
 ): Promise<BuildResult> {
 	ensureMinimumBunVersion();
 
-	if (ac) {
-		ac.abort();
-	}
-
-	ac = new AbortController();
+	const localAc = ac ?? new AbortController();
 
 	const options = resolveBuildOptions(userOptions);
 
@@ -221,17 +216,22 @@ export async function build(
 		!options.compile
 	) {
 		try {
-			const { entry, splitting, resolve: userDtsResolve, ...dtsOptions } =
-				typeof options.dts === "object" ? options.dts : {};
+			const {
+				entry,
+				splitting,
+				resolve: userDtsResolve,
+				...dtsOptions
+			} = typeof options.dts === "object" ? options.dts : {};
 
 			const bundledDeps = getBundledDepsForDtsResolve(options, packageJson.data);
-			const dtsResolve = userDtsResolve === false
-				? false
-				: !bundledDeps?.length
-				? userDtsResolve
-				: userDtsResolve === true
-					? true
-					: [...bundledDeps, ...(Array.isArray(userDtsResolve) ? userDtsResolve : [])];
+			const dtsResolve =
+				userDtsResolve === false
+					? false
+					: !bundledDeps?.length
+						? userDtsResolve
+						: userDtsResolve === true
+							? true
+							: [...bundledDeps, ...(Array.isArray(userDtsResolve) ? userDtsResolve : [])];
 
 			const dtsResult = await generateDts(ensureArray(entry ?? entrypoints), {
 				cwd: rootDir,
@@ -301,7 +301,7 @@ export async function build(
 	});
 
 	if (options.onSuccess) {
-		await executeOnSuccess(options.onSuccess, options, ac.signal);
+		await executeOnSuccess(options.onSuccess, options, localAc.signal);
 	}
 
 	logger.log("");

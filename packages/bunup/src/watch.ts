@@ -79,6 +79,8 @@ export async function watch(
 
 			const buildResult = await build(userOptions, rootDir, ac);
 
+			console.log()
+
 			await printBuildReport(buildResult);
 
 			if (!initial) {

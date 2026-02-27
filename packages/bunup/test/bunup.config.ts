@@ -2,5 +2,5 @@ import { defineConfig } from "../src";
 
 export default defineConfig({
 	entry: ["fixtures/main.ts"],
-	noExternal: ["ora"]
+	noExternal: ["ora"],
 });

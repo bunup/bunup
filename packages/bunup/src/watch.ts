@@ -40,6 +40,7 @@ export async function watch(
 	let isRebuilding = false;
 	let buildCount = 0;
 	let lastChangedFile: string | undefined;
+	let ac: AbortController | null = null;
 
 	const triggerRebuild = async (initial: boolean, changed?: string) => {
 		if (isRebuilding) {
@@ -68,9 +69,15 @@ export async function watch(
 				);
 			}
 
+			if (ac) {
+				ac.abort();
+			}
+
+			ac = new AbortController();
+
 			const start = performance.now();
 
-			const buildResult = await build(userOptions, rootDir);
+			const buildResult = await build(userOptions, rootDir, ac);
 
 			await printBuildReport(buildResult);
 

@@ -1,6 +1,6 @@
 {
 	"name": "@bunup/plugin-tailwindcss",
-	"version": "0.16.30",
+	"version": "0.16.31",
 	"description": "A plugin for Bunup that provides seamless integration with Tailwind CSS.",
 	"keywords": [
 		"bunup",

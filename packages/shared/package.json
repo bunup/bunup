@@ -40,7 +40,7 @@
 		"type-check": "tsc --noEmit"
 	},
 	"peerDependencies": {
-		"typescript": ">=4.5.0"
+		"typescript": "^6.0.2"
 	},
 	"peerDependenciesMeta": {
 		"typescript": {

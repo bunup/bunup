@@ -21,13 +21,13 @@
 		"update-deps": "bun update && bun update --filter '*'"
 	},
 	"devDependencies": {
-		"@types/bun": "^1.3.6",
-		"@typescript/native-preview": "^7.0.0-dev.20260126.1",
-		"bumpp": "^10.4.0",
-		"oxfmt": "^0.27.0",
-		"oxlint": "^1.42.0",
+		"@types/bun": "^1.3.11",
+		"@typescript/native-preview": "^7.0.0-dev.20260330.1",
+		"bumpp": "^11.0.1",
+		"oxfmt": "^0.42.0",
+		"oxlint": "^1.57.0",
 		"simple-git-hooks": "^2.13.1",
-		"typescript": "^5.9.3"
+		"typescript": "^6.0.2"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "bun run lint && bun run type-check"

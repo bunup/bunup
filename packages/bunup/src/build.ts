@@ -124,7 +124,6 @@ export async function build(
 				ignoreDCEAnnotations: options.ignoreDCEAnnotations,
 				emitDCEAnnotations: options.emitDCEAnnotations,
 				jsx: options.jsx,
-				// @ts-expect-error - compile option is a different interface in Bun.build api, but it's valid as is
 				compile: options.compile,
 				// for compiled executables, let Bun handle writing to the outdir unlike we handle writing for js output files manually
 				// for those who don't know, if we provide outdir to Bun.build, Bun will handle writing files to output. if we don't provide it, we can handle it manually using the output result from Bun.build

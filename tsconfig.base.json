@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"types": ["bun"],
 		"lib": ["ESNext", "DOM"],
 		"target": "ES2023",
 		"module": "Preserve",

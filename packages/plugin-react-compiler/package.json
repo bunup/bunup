@@ -42,14 +42,14 @@
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@babel/core": "^7.28.6",
+		"@babel/core": "^7.29.0",
 		"babel-plugin-react-compiler": "^1.0.0"
 	},
 	"devDependencies": {
 		"@types/babel__core": "^7.20.5"
 	},
 	"peerDependencies": {
-		"typescript": ">=4.5.0"
+		"typescript": "^6.0.2"
 	},
 	"peerDependenciesMeta": {
 		"typescript": {

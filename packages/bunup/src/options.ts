@@ -58,7 +58,7 @@ type CSSOptions = {
 	inject?: boolean | InjectStylesOptions;
 };
 
-export type Compile = boolean | Bun.Build.Target | CompileBuildOptions;
+export type Compile = boolean | Bun.Build.CompileTarget | CompileBuildOptions;
 
 export type OnSuccess =
 	| ((options: Partial<BuildOptions>) => MaybePromise<void> | (() => void))

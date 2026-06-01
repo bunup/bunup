@@ -9,7 +9,7 @@
 	"devDependencies": {
 		"micromark-util-decode-string": "^2.0.1",
 		"vitepress": "^1.6.4",
-		"vitepress-plugin-group-icons": "^1.7.3",
-		"vitepress-plugin-llms": "^1.12.0"
+		"vitepress-plugin-group-icons": "^1.7.5",
+		"vitepress-plugin-llms": "^1.13.1"
 	}
 }

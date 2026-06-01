@@ -18,16 +18,16 @@
 		"test:build": "bun run --cwd packages/bunup/test build",
 		"type-check": "bun run --filter './packages/*' type-check",
 		"release": "bumpp -r --commit --push --tag",
-		"update-deps": "bun update && bun update --filter '*'"
+		"update-deps": "bun update --interactive && bun update --interactive --filter '*'"
 	},
 	"devDependencies": {
-		"@types/bun": "^1.3.11",
-		"@typescript/native-preview": "^7.0.0-dev.20260330.1",
-		"bumpp": "^11.0.1",
-		"oxfmt": "^0.42.0",
-		"oxlint": "^1.57.0",
+		"@types/bun": "^1.3.14",
+		"@typescript/native-preview": "^7.0.0-dev.20260527.2",
+		"bumpp": "^11.1.0",
+		"oxfmt": "^0.52.0",
+		"oxlint": "^1.67.0",
 		"simple-git-hooks": "^2.13.1",
-		"typescript": "^6.0.2"
+		"typescript": "^6.0.3"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "bun run lint && bun run type-check"

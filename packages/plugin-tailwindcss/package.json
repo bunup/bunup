@@ -42,9 +42,9 @@
 	},
 	"dependencies": {
 		"@bunup/shared": "workspace:*",
-		"@tailwindcss/postcss": "^4.2.2",
+		"@tailwindcss/postcss": "^4.3.0",
 		"lightningcss": "^1.32.0",
-		"postcss": "^8.5.8"
+		"postcss": "^8.5.15"
 	},
 	"peerDependencies": {
 		"typescript": ">=4.5.0"

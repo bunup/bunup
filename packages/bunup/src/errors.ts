@@ -183,6 +183,10 @@ export function formatBunBuildError(error: BuildMessage | ResolveMessage): strin
 	const padding = " ".repeat(lineNum.length);
 	const caretPos = pos.column;
 
+	if (pos.line < 0 || pos.column < 0) {
+		return `${pc.bold(error.message)}
+    ${pc.dim("at")} ${pc.cyan(getShortFilePath(pos.file))}`;
+	}
 	return `${pc.dim(`${lineNum} |`)} ${logger.highlight(pos.lineText)}
 ${pc.dim(`${padding} |`)} ${" ".repeat(caretPos)}${pc.red("^")}
 
